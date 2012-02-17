@@ -1,0 +1,1112 @@
+# django-helpdesk English language translation
+# Copyright (C) 2011 Ross Poulton
+# This file is distributed under the same license as the django-helpdesk package.
+# Ross Poulton <ross@rossp.org>, 2011.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-01-20 11:41-0800\n"
+"PO-Revision-Date: 2011-07-02 07:12+10Last-Translator: Ross Poulton "
+"<ross@rossp.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: forms.py:113 forms.py:346 models.py:262 views/staff.py:930
+#: views/staff.py:936 views/staff.py:942
+msgid "Queue"
+msgstr ""
+
+#: forms.py:122
+msgid "Summary of the problem"
+msgstr ""
+
+#: forms.py:127
+msgid "Submitter E-Mail Address"
+msgstr ""
+
+#: forms.py:129
+msgid ""
+"This e-mail address will receive copies of all public updates to this ticket."
+msgstr ""
+
+#: forms.py:135
+msgid "Description of Issue"
+msgstr ""
+
+#: forms.py:142
+msgid "Case owner"
+msgstr ""
+
+#: forms.py:143
+msgid ""
+"If you select an owner other than yourself, they'll be e-mailed details of "
+"this ticket immediately."
+msgstr ""
+
+#: forms.py:151 models.py:322 management/commands/escalate_tickets.py:149
+#: views/staff.py:334
+msgid "Priority"
+msgstr ""
+
+#: forms.py:152
+msgid "Please select a priority carefully. If unsure, leave it as '3'."
+msgstr ""
+
+#: forms.py:158 forms.py:387
+msgid "Attach File"
+msgstr ""
+
+#: forms.py:159 forms.py:388
+msgid "You can attach a file such as a document or screenshot to this ticket."
+msgstr ""
+
+#: forms.py:167 views/staff.py:345
+msgid "Tags"
+msgstr ""
+
+#: forms.py:168
+msgid ""
+"Words, separated by spaces, or phrases separated by commas. These should "
+"communicate significant characteristics of this ticket"
+msgstr ""
+
+#: forms.py:261
+msgid "Ticket Opened"
+msgstr ""
+
+#: forms.py:268
+#, python-format
+msgid "Ticket Opened & Assigned to %(name)s"
+msgstr ""
+
+#: forms.py:355
+msgid "Summary of your query"
+msgstr ""
+
+#: forms.py:360
+msgid "Your E-Mail Address"
+msgstr ""
+
+#: forms.py:361
+msgid "We will e-mail you when your ticket is updated."
+msgstr ""
+
+#: forms.py:366
+msgid "Description of your issue"
+msgstr ""
+
+#: forms.py:368
+msgid ""
+"Please be as descriptive as possible, including any details we may need to "
+"address your query."
+msgstr ""
+
+#: forms.py:376
+msgid "Urgency"
+msgstr ""
+
+#: forms.py:377
+msgid "Please select a priority carefully."
+msgstr ""
+
+#: forms.py:382
+msgid "Due on"
+msgstr ""
+
+#: forms.py:470
+msgid "Ticket Opened Via Web"
+msgstr ""
+
+#: forms.py:537
+msgid "Show Ticket List on Login?"
+msgstr ""
+
+#: forms.py:538
+msgid "Display the ticket list upon login? Otherwise, the dashboard is shown."
+msgstr ""
+
+#: forms.py:543
+msgid "E-mail me on ticket change?"
+msgstr ""
+
+#: forms.py:544
+msgid ""
+"If you're the ticket owner and the ticket is changed via the web by somebody "
+"else, do you want to receive an e-mail?"
+msgstr ""
+
+#: forms.py:549
+msgid "E-mail me when assigned a ticket?"
+msgstr ""
+
+#: forms.py:550
+msgid ""
+"If you are assigned a ticket via the web, do you want to receive an e-mail?"
+msgstr ""
+
+#: forms.py:555
+msgid "E-mail me when a ticket is changed via the API?"
+msgstr ""
+
+#: forms.py:556
+msgid "If a ticket is altered by the API, do you want to receive an e-mail?"
+msgstr ""
+
+#: forms.py:561
+msgid "Number of tickets to show per page"
+msgstr ""
+
+#: forms.py:562
+msgid "How many tickets do you want to see on the Ticket List page?"
+msgstr ""
+
+#: forms.py:569
+msgid "Use my e-mail address when submitting tickets?"
+msgstr ""
+
+#: forms.py:570
+msgid ""
+"When you submit a ticket, do you want to automatically use your e-mail "
+"address as the submitter address? You can type a different e-mail address "
+"when entering the ticket if needed, this option only changes the default."
+msgstr ""
+
+#: models.py:32 models.py:256 models.py:484 models.py:781 models.py:815
+#: views/staff.py:324
+msgid "Title"
+msgstr ""
+
+#: models.py:37 models.py:786 models.py:1156
+msgid "Slug"
+msgstr ""
+
+#: models.py:38
+msgid ""
+"This slug is used when building ticket ID's. Once set, try not to change it "
+"or e-mailing may get messy."
+msgstr ""
+
+#: models.py:43 models.py:1009 models.py:1079 models.py:1153
+msgid "E-Mail Address"
+msgstr ""
+
+#: models.py:46
+msgid ""
+"All outgoing e-mails for this queue will use this e-mail address. If you use "
+"IMAP or POP3, this should be the e-mail address for that mailbox."
+msgstr ""
+
+#: models.py:52 models.py:760
+msgid "Locale"
+msgstr ""
+
+#: models.py:56
+msgid ""
+"Locale of this queue. All correspondence in this queue will be in this "
+"language."
+msgstr ""
+
+#: models.py:60
+msgid "Allow Public Submission?"
+msgstr ""
+
+#: models.py:63
+msgid "Should this queue be listed on the public submission form?"
+msgstr ""
+
+#: models.py:68
+msgid "Allow E-Mail Submission?"
+msgstr ""
+
+#: models.py:71
+msgid "Do you want to poll the e-mail box below for new tickets?"
+msgstr ""
+
+#: models.py:76
+msgid "Escalation Days"
+msgstr ""
+
+#: models.py:79
+msgid ""
+"For tickets which are not held, how often do you wish to increase their "
+"priority? Set to 0 for no escalation."
+msgstr ""
+
+#: models.py:84
+msgid "New Ticket CC Address"
+msgstr ""
+
+#: models.py:88
+msgid ""
+"If an e-mail address is entered here, then it will receive notification of "
+"all new tickets created for this queue. Enter a comma between multiple e-"
+"mail addresses."
+msgstr ""
+
+#: models.py:94
+msgid "Updated Ticket CC Address"
+msgstr ""
+
+#: models.py:98
+msgid ""
+"If an e-mail address is entered here, then it will receive notification of "
+"all activity (new tickets, closed tickets, updates, reassignments, etc) for "
+"this queue. Separate multiple addresses with a comma."
+msgstr ""
+
+#: models.py:105
+msgid "E-Mail Box Type"
+msgstr ""
+
+#: models.py:107
+msgid "POP 3"
+msgstr ""
+
+#: models.py:107
+msgid "IMAP"
+msgstr ""
+
+#: models.py:110
+msgid ""
+"E-Mail server type for creating tickets automatically from a mailbox - both "
+"POP3 and IMAP are supported."
+msgstr ""
+
+#: models.py:115
+msgid "E-Mail Hostname"
+msgstr ""
+
+#: models.py:119
+msgid ""
+"Your e-mail server address - either the domain name or IP address. May be "
+"\"localhost\"."
+msgstr ""
+
+#: models.py:124
+msgid "E-Mail Port"
+msgstr ""
+
+#: models.py:127
+msgid ""
+"Port number to use for accessing e-mail. Default for POP3 is \"110\", and "
+"for IMAP is \"143\". This may differ on some servers. Leave it blank to use "
+"the defaults."
+msgstr ""
+
+#: models.py:133
+msgid "Use SSL for E-Mail?"
+msgstr ""
+
+#: models.py:136
+msgid ""
+"Whether to use SSL for IMAP or POP3 - the default ports when using SSL are "
+"993 for IMAP and 995 for POP3."
+msgstr ""
+
+#: models.py:141
+msgid "E-Mail Username"
+msgstr ""
+
+#: models.py:145
+msgid "Username for accessing this mailbox."
+msgstr ""
+
+#: models.py:149
+msgid "E-Mail Password"
+msgstr ""
+
+#: models.py:153
+msgid "Password for the above username"
+msgstr ""
+
+#: models.py:157
+msgid "IMAP Folder"
+msgstr ""
+
+#: models.py:161
+msgid ""
+"If using IMAP, what folder do you wish to fetch messages from? This allows "
+"you to use one IMAP account for multiple queues, by filtering messages on "
+"your IMAP server into separate folders. Default: INBOX."
+msgstr ""
+
+#: models.py:168
+msgid "E-Mail Check Interval"
+msgstr ""
+
+#: models.py:169
+msgid "How often do you wish to check this mailbox? (in Minutes)"
+msgstr ""
+
+#: models.py:240
+msgid "Open"
+msgstr ""
+
+#: models.py:241
+msgid "Reopened"
+msgstr ""
+
+#: models.py:242
+msgid "Resolved"
+msgstr ""
+
+#: models.py:243
+msgid "Closed"
+msgstr ""
+
+#: models.py:244
+msgid "Duplicate"
+msgstr ""
+
+#: models.py:248
+msgid "1. Critical"
+msgstr ""
+
+#: models.py:249
+msgid "2. High"
+msgstr ""
+
+#: models.py:250
+msgid "3. Normal"
+msgstr ""
+
+#: models.py:251
+msgid "4. Low"
+msgstr ""
+
+#: models.py:252
+msgid "5. Very Low"
+msgstr ""
+
+#: models.py:266
+msgid "Created"
+msgstr ""
+
+#: models.py:268
+msgid "Date this ticket was first created"
+msgstr ""
+
+#: models.py:272
+msgid "Modified"
+msgstr ""
+
+#: models.py:274
+msgid "Date this ticket was most recently changed."
+msgstr ""
+
+#: models.py:278
+msgid "Submitter E-Mail"
+msgstr ""
+
+#: models.py:281
+msgid ""
+"The submitter will receive an email for all public follow-ups left for this "
+"task."
+msgstr ""
+
+#: models.py:290
+msgid "Assigned to"
+msgstr ""
+
+#: models.py:294
+msgid "Status"
+msgstr ""
+
+#: models.py:300
+msgid "On Hold"
+msgstr ""
+
+#: models.py:303
+msgid "If a ticket is on hold, it will not automatically be escalated."
+msgstr ""
+
+#: models.py:308 models.py:790
+msgid "Description"
+msgstr ""
+
+#: models.py:311
+msgid "The content of the customers query."
+msgstr ""
+
+#: models.py:315
+msgid "Resolution"
+msgstr ""
+
+#: models.py:318
+msgid "The resolution provided to the customer by our staff."
+msgstr ""
+
+#: models.py:326
+msgid "1 = Highest Priority, 5 = Low Priority"
+msgstr ""
+
+#: models.py:333
+msgid ""
+"The date this ticket was last escalated - updated automatically by "
+"management/commands/escalate_tickets.py."
+msgstr ""
+
+#: models.py:342 views/feeds.py:91 views/feeds.py:117 views/feeds.py:171
+#: views/staff.py:281
+msgid "Unassigned"
+msgstr ""
+
+#: models.py:381
+msgid " - On Hold"
+msgstr ""
+
+#: models.py:475 models.py:1067 models.py:1225 models.py:1250
+msgid "Ticket"
+msgstr ""
+
+#: models.py:479 models.py:708 models.py:1002 models.py:1150
+msgid "Date"
+msgstr ""
+
+#: models.py:491 views/staff.py:295
+msgid "Comment"
+msgstr ""
+
+#: models.py:497
+msgid "Public"
+msgstr ""
+
+#: models.py:500
+msgid ""
+"Public tickets are viewable by the submitter and all staff, but non-public "
+"tickets can only be seen by staff."
+msgstr ""
+
+#: models.py:508 models.py:882 models.py:1075 views/staff.py:906
+#: views/staff.py:912 views/staff.py:918 views/staff.py:924
+msgid "User"
+msgstr ""
+
+#: models.py:512
+msgid "New Status"
+msgstr ""
+
+#: models.py:516
+msgid "If the status was changed, what was it changed to?"
+msgstr ""
+
+#: models.py:545 models.py:602
+msgid "Follow-up"
+msgstr ""
+
+#: models.py:549 models.py:1230
+msgid "Field"
+msgstr ""
+
+#: models.py:554
+msgid "Old Value"
+msgstr ""
+
+#: models.py:560
+msgid "New Value"
+msgstr ""
+
+#: models.py:568
+msgid "removed"
+msgstr ""
+
+#: models.py:570
+#, python-format
+msgid "set to %s"
+msgstr ""
+
+#: models.py:572
+#, python-format
+msgid "changed from \"%(old_value)s\" to \"%(new_value)s\""
+msgstr ""
+
+#: models.py:606
+msgid "File"
+msgstr ""
+
+#: models.py:611
+msgid "Filename"
+msgstr ""
+
+#: models.py:616
+msgid "MIME Type"
+msgstr ""
+
+#: models.py:621
+msgid "Size"
+msgstr ""
+
+#: models.py:622
+msgid "Size of this file in bytes"
+msgstr ""
+
+#: models.py:657
+msgid ""
+"Leave blank to allow this reply to be used for all queues, or select those "
+"queues you wish to limit this reply to."
+msgstr ""
+
+#: models.py:662 models.py:703 models.py:997
+msgid "Name"
+msgstr ""
+
+#: models.py:664
+msgid ""
+"Only used to assist users with selecting a reply - not shown to the user."
+msgstr ""
+
+#: models.py:669
+msgid "Body"
+msgstr ""
+
+#: models.py:670
+msgid ""
+"Context available: {{ ticket }} - ticket object (eg {{ ticket.title }}); "
+"{{ queue }} - The queue; and {{ user }} - the current user."
+msgstr ""
+
+#: models.py:697
+msgid ""
+"Leave blank for this exclusion to be applied to all queues, or select those "
+"queues you wish to exclude with this entry."
+msgstr ""
+
+#: models.py:709
+msgid "Date on which escalation should not happen"
+msgstr ""
+
+#: models.py:726
+msgid "Template Name"
+msgstr ""
+
+#: models.py:731
+msgid "Subject"
+msgstr ""
+
+#: models.py:733
+msgid ""
+"This will be prefixed with \"[ticket.ticket] ticket.title\". We recommend "
+"something simple such as \"(Updated\") or \"(Closed)\" - the same context is "
+"available as in plain_text, below."
+msgstr ""
+
+#: models.py:739
+msgid "Heading"
+msgstr ""
+
+#: models.py:741
+msgid ""
+"In HTML e-mails, this will be the heading at the top of the email - the same "
+"context is available as in plain_text, below."
+msgstr ""
+
+#: models.py:747
+msgid "Plain Text"
+msgstr ""
+
+#: models.py:748
+msgid ""
+"The context available to you includes {{ ticket }}, {{ queue }}, and "
+"depending on the time of the call: {{ resolution }} or {{ comment }}."
+msgstr ""
+
+#: models.py:754
+msgid "HTML"
+msgstr ""
+
+#: models.py:755
+msgid "The same context is available here as in plain_text, above."
+msgstr ""
+
+#: models.py:764
+msgid "Locale of this template."
+msgstr ""
+
+#: models.py:811
+msgid "Category"
+msgstr ""
+
+#: models.py:820
+msgid "Question"
+msgstr ""
+
+#: models.py:824
+msgid "Answer"
+msgstr ""
+
+#: models.py:828
+msgid "Votes"
+msgstr ""
+
+#: models.py:829
+msgid "Total number of votes cast for this item"
+msgstr ""
+
+#: models.py:834
+msgid "Positive Votes"
+msgstr ""
+
+#: models.py:835
+msgid "Number of votes for this item which were POSITIVE."
+msgstr ""
+
+#: models.py:840
+msgid "Last Updated"
+msgstr ""
+
+#: models.py:841
+msgid "The date on which this question was most recently changed."
+msgstr ""
+
+#: models.py:855
+msgid "Unrated"
+msgstr ""
+
+#: models.py:886
+msgid "Query Name"
+msgstr ""
+
+#: models.py:888
+msgid "User-provided name for this query"
+msgstr ""
+
+#: models.py:892
+msgid "Shared With Other Users?"
+msgstr ""
+
+#: models.py:895
+msgid "Should other users see this query?"
+msgstr ""
+
+#: models.py:899
+msgid "Search Query"
+msgstr ""
+
+#: models.py:900
+msgid "Pickled query object. Be wary changing this."
+msgstr ""
+
+#: models.py:921
+msgid "Settings Dictionary"
+msgstr ""
+
+#: models.py:922
+msgid ""
+"This is a base64-encoded representation of a pickled Python dictionary. Do "
+"not change this field via the admin."
+msgstr ""
+
+#: models.py:991
+msgid ""
+"Leave blank for this e-mail to be ignored on all queues, or select those "
+"queues you wish to ignore this e-mail for."
+msgstr ""
+
+#: models.py:1003
+msgid "Date on which this e-mail address was added"
+msgstr ""
+
+#: models.py:1011
+msgid ""
+"Enter a full e-mail address, or portions with wildcards, eg *@domain.com or "
+"postmaster@*."
+msgstr ""
+
+#: models.py:1016
+msgid "Save Emails in Mailbox?"
+msgstr ""
+
+#: models.py:1019
+msgid ""
+"Do you want to save emails from this address in the mailbox? If this is "
+"unticked, emails from this address will be deleted."
+msgstr ""
+
+#: models.py:1074
+msgid "User who wishes to receive updates for this ticket."
+msgstr ""
+
+#: models.py:1082
+msgid "For non-user followers, enter their e-mail address"
+msgstr ""
+
+#: models.py:1086
+msgid "Can View Ticket?"
+msgstr ""
+
+#: models.py:1088
+msgid "Can this CC login to view the ticket details?"
+msgstr ""
+
+#: models.py:1092
+msgid "Can Update Ticket?"
+msgstr ""
+
+#: models.py:1094
+msgid "Can this CC login and update the ticket?"
+msgstr ""
+
+#: models.py:1125
+msgid "Field Name"
+msgstr ""
+
+#: models.py:1126
+msgid ""
+"As used in the database and behind the scenes. Must be unique and consist of "
+"only lowercase letters with no punctuation."
+msgstr ""
+
+#: models.py:1131
+msgid "Label"
+msgstr ""
+
+#: models.py:1133
+msgid "The display label for this field"
+msgstr ""
+
+#: models.py:1137
+msgid "Help Text"
+msgstr ""
+
+#: models.py:1138
+msgid "Shown to the user when editing the ticket"
+msgstr ""
+
+#: models.py:1144
+msgid "Character (single line)"
+msgstr ""
+
+#: models.py:1145
+msgid "Text (multi-line)"
+msgstr ""
+
+#: models.py:1146
+msgid "Integer"
+msgstr ""
+
+#: models.py:1147
+msgid "Decimal"
+msgstr ""
+
+#: models.py:1148
+msgid "List"
+msgstr ""
+
+#: models.py:1149
+msgid "Boolean (checkbox yes/no)"
+msgstr ""
+
+#: models.py:1151
+msgid "Time"
+msgstr ""
+
+#: models.py:1152
+msgid "Date & Time"
+msgstr ""
+
+#: models.py:1154
+msgid "URL"
+msgstr ""
+
+#: models.py:1155
+msgid "IP Address"
+msgstr ""
+
+#: models.py:1160
+msgid "Data Type"
+msgstr ""
+
+#: models.py:1162
+msgid "Allows you to restrict the data entered into this field"
+msgstr ""
+
+#: models.py:1167
+msgid "Maximum Length (characters)"
+msgstr ""
+
+#: models.py:1173
+msgid "Decimal Places"
+msgstr ""
+
+#: models.py:1174
+msgid "Only used for decimal fields"
+msgstr ""
+
+#: models.py:1180
+msgid "Add empty first choice to List?"
+msgstr ""
+
+#: models.py:1181
+msgid ""
+"Only for List: adds an empty first entry to the choices list, which enforces "
+"that the user makes an active choice."
+msgstr ""
+
+#: models.py:1185
+msgid "List Values"
+msgstr ""
+
+#: models.py:1186
+msgid "For list fields only. Enter one option per line."
+msgstr ""
+
+#: models.py:1192
+msgid "Ordering"
+msgstr ""
+
+#: models.py:1193
+msgid "Lower numbers are displayed first; higher numbers are listed later"
+msgstr ""
+
+#: models.py:1207
+msgid "Required?"
+msgstr ""
+
+#: models.py:1208
+msgid "Does the user have to enter a value for this field?"
+msgstr ""
+
+#: models.py:1212
+msgid "Staff Only?"
+msgstr ""
+
+#: models.py:1213
+msgid ""
+"If this is ticked, then the public submission form will NOT show this field"
+msgstr ""
+
+#: models.py:1256
+msgid "Depends On Ticket"
+msgstr ""
+
+#: management/commands/create_usersettings.py:21
+msgid ""
+"Check for user without django-helpdesk UserSettings and create settings if "
+"required. Uses settings.DEFAULT_USER_SETTINGS which can be overridden to "
+"suit your situation."
+msgstr ""
+
+#: management/commands/escalate_tickets.py:143
+#, python-format
+msgid "Ticket escalated after %s days"
+msgstr ""
+
+#: management/commands/get_email.py:151
+msgid "Created from e-mail"
+msgstr ""
+
+#: management/commands/get_email.py:155
+msgid "Unknown Sender"
+msgstr ""
+
+#: management/commands/get_email.py:209
+msgid ""
+"No plain-text email body available. Please see attachment email_html_body."
+"html."
+msgstr ""
+
+#: management/commands/get_email.py:213
+msgid "email_html_body.html"
+msgstr ""
+
+#: management/commands/get_email.py:287
+msgid " (Reopened)"
+msgstr ""
+
+#: management/commands/get_email.py:289
+msgid " (Updated)"
+msgstr ""
+
+#: management/commands/get_email.py:311
+#, python-format
+msgid "E-Mail Received from %(sender_email)s"
+msgstr ""
+
+#: management/commands/get_email.py:319
+#, python-format
+msgid "Ticket Re-Opened by E-Mail Received from %(sender_email)s"
+msgstr ""
+
+#: views/feeds.py:35
+#, python-format
+msgid "Helpdesk: Open Tickets in queue %(queue)s for %(username)s"
+msgstr ""
+
+#: views/feeds.py:40
+#, python-format
+msgid "Helpdesk: Open Tickets for %(username)s"
+msgstr ""
+
+#: views/feeds.py:46
+#, python-format
+msgid "Open and Reopened Tickets in queue %(queue)s for %(username)s"
+msgstr ""
+
+#: views/feeds.py:51
+#, python-format
+msgid "Open and Reopened Tickets for %(username)s"
+msgstr ""
+
+#: views/feeds.py:98
+msgid "Helpdesk: Unassigned Tickets"
+msgstr ""
+
+#: views/feeds.py:99
+msgid "Unassigned Open and Reopened tickets"
+msgstr ""
+
+#: views/feeds.py:124
+msgid "Helpdesk: Recent Followups"
+msgstr ""
+
+#: views/feeds.py:125
+msgid ""
+"Recent FollowUps, such as e-mail replies, comments, attachments and "
+"resolutions"
+msgstr ""
+
+#: views/feeds.py:142
+#, python-format
+msgid "Helpdesk: Open Tickets in queue %(queue)s"
+msgstr ""
+
+#: views/feeds.py:147
+#, python-format
+msgid "Open and Reopened Tickets in queue %(queue)s"
+msgstr ""
+
+#: views/public.py:88
+msgid "Invalid ticket ID or e-mail address. Please try again."
+msgstr ""
+
+#: views/public.py:106
+msgid "Submitter accepted resolution and closed ticket"
+msgstr ""
+
+#: views/staff.py:214
+msgid "Accepted resolution and closed ticket"
+msgstr ""
+
+#: views/staff.py:237
+msgid "Sorry, you need to login to do that."
+msgstr ""
+
+#: views/staff.py:274
+#, python-format
+msgid "Assigned to %(username)s"
+msgstr ""
+
+#: views/staff.py:297
+msgid "Updated"
+msgstr ""
+
+#: views/staff.py:464
+#, python-format
+msgid "Assigned to %(username)s in bulk update"
+msgstr ""
+
+#: views/staff.py:469
+msgid "Unassigned in bulk update"
+msgstr ""
+
+#: views/staff.py:474 views/staff.py:479
+msgid "Closed in bulk update"
+msgstr ""
+
+#: views/staff.py:684
+msgid ""
+"<p><strong>Note:</strong> Your keyword search is case sensitive because of "
+"your database. This means the search will <strong>not</strong> be accurate. "
+"By switching to a different database system you will gain better searching! "
+"For more information, read the <a href=\"http://docs.djangoproject.com/en/"
+"dev/ref/databases/#sqlite-string-matching\">Django Documentation on string "
+"matching in SQLite</a>."
+msgstr ""
+
+#: views/staff.py:797
+msgid "Ticket taken off hold"
+msgstr ""
+
+#: views/staff.py:800
+msgid "Ticket placed on hold"
+msgstr ""
+
+#: views/staff.py:868
+msgid "Jan"
+msgstr ""
+
+#: views/staff.py:869
+msgid "Feb"
+msgstr ""
+
+#: views/staff.py:870
+msgid "Mar"
+msgstr ""
+
+#: views/staff.py:871
+msgid "Apr"
+msgstr ""
+
+#: views/staff.py:872
+msgid "May"
+msgstr ""
+
+#: views/staff.py:873
+msgid "Jun"
+msgstr ""
+
+#: views/staff.py:874
+msgid "Jul"
+msgstr ""
+
+#: views/staff.py:875
+msgid "Aug"
+msgstr ""
+
+#: views/staff.py:876
+msgid "Sep"
+msgstr ""
+
+#: views/staff.py:877
+msgid "Oct"
+msgstr ""
+
+#: views/staff.py:878
+msgid "Nov"
+msgstr ""
+
+#: views/staff.py:879
+msgid "Dec"
+msgstr ""
+
+#: views/staff.py:905
+msgid "User by Priority"
+msgstr ""
+
+#: views/staff.py:911
+msgid "User by Queue"
+msgstr ""
+
+#: views/staff.py:917
+msgid "User by Status"
+msgstr ""
+
+#: views/staff.py:923
+msgid "User by Month"
+msgstr ""
+
+#: views/staff.py:929
+msgid "Queue by Priority"
+msgstr ""
+
+#: views/staff.py:935
+msgid "Queue by Status"
+msgstr ""
+
+#: views/staff.py:941
+msgid "Queue by Month"
+msgstr ""
