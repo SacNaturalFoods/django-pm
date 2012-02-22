@@ -197,3 +197,8 @@ urlpatterns += patterns('',
         },
         name='helpdesk_system_settings'),
 )
+
+
+urlpatterns += patterns('',
+        url(r'^search/', include('haystack.urls')),
+        )
