@@ -1,4 +1,5 @@
 {% extends 'helpdesk/base.html' %}
+{% load helpdesk_filters %} 
 
 {% block helpdesk_body %}
     <h2>Search</h2>
@@ -18,7 +19,6 @@
 {% if query %}
     <!-- Begin faceting. -->
     <h2>By Queue</h2>
-
     <div>
         <dl>
             {% if facets.fields.queue %}
@@ -33,23 +33,7 @@
         </dl>
     </div>
 
-    <h2>By Email</h2>
-
-    <div>
-        <dl>
-            {% if facets.fields.email %}
-                <dt>Email</dt>
-                {# Provide only the top 5 authors #}
-                {% for email in facets.fields.email|slice:":5" %}
-                    <dd><a href="{{ request.get_full_path }}&amp;selected_facets=email_exact:{{ email.0|urlencode }}">{{ email.0 }}</a> ({{ email.1 }})</dd>
-                {% endfor %}
-            {% else %}
-                <p>No Email facets.</p>
-            {% endif %}
-        </dl>
-    </div>
-
-    <!-- End faceting -->
+   <!-- End faceting -->
 
     <!-- Display results... -->
     {% for result in results %}
