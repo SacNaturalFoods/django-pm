@@ -382,7 +382,11 @@ def update_ticket(request, ticket_id, public=False):
     if HAS_TAGGIT_SUPPORT:
         old_tags = [tag.name for tag in ticket.tags.all()]
         old_tags.sort()
-        new_tags = tags.replace(' ','').strip(',').split(',')
+        new_tags = []
+        for tag in tags.split(','):
+            tag = tag.replace(' ', '')
+            if tag:
+                new_tags.append(tag)
         new_tags.sort()
         if new_tags != old_tags:
             c = TicketChange(
