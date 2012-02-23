@@ -70,7 +70,7 @@ function googleTranslateElementInit() {
         <span class='byline'>{{ followup.user.get_full_name }}&nbsp;&nbsp;&nbsp;&nbsp;{{ followup.date }} ({{ followup.date|timesince }} ago)</span> <small>{{ followup.title }}</small>
         {% if not followup.public %} <span class='private'>({% trans "Private" %})</span>{% endif %}
         {% if helpdesk_settings.HELPDESK_SHOW_EDIT_BUTTON_FOLLOW_UP %}
-        {% if followup.user and request.user == followup.user and not followup.ticketchange_set.all %}
+        {% if followup.user and request.user == followup.user %}
         <a href="{% url helpdesk_followup_edit ticket.id followup.id %}" class='followup-edit'><img width="60" height="15" title="Edit" alt="Edit" src="{{ STATIC_URL }}helpdesk/buttons/edit.png"></a>
         {% endif %}
         {% endif %}
