@@ -1,4 +1,7 @@
 {{ object.title }}
+{{ object.assigned_to }}
 {{ object.description }}
+{{ object.priority }}
+{{ object.queue }}
 {{ object.user.get_full_name }}
 {{ object.body }}
