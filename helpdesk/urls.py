@@ -202,16 +202,14 @@ urlpatterns += patterns('',
 from haystack.forms import FacetedSearchForm
 from haystack.query import SearchQuerySet
 from haystack.views import FacetedSearchView
-sqs = SearchQuerySet().facet('queue')
+sqs = SearchQuerySet().facet('queue').facet('assigned_to').facet('priority').facet('tags')
 
+#urlpatterns += patterns('',
+#        url(r'^search/', include('haystack.urls')),
+#        )
 
 urlpatterns += patterns('haystack.views',
-    url(r'^$', FacetedSearchView(form_class=FacetedSearchForm, searchqueryset=sqs), name='haystack_search'),
+    url(r'^search/$', FacetedSearchView(form_class=FacetedSearchForm, searchqueryset=sqs), name='haystack_search'),
 )
-
-urlpatterns += patterns('',
-        url(r'^search/', include('haystack.urls')),
-        )
-
 
 
