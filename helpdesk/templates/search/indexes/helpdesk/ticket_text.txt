@@ -1,7 +1,6 @@
 {{ object.title }}
 {{ object.assigned_to }}
-{{ object.description }}
-{{ object.priority }}
+{{ object.priority_str }}
 {{ object.queue }}
-{{ object.user.get_full_name }}
+{{ object.tags }}
 {{ object.body }}

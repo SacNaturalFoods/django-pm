@@ -386,6 +386,12 @@ class Ticket(models.Model):
         return mark_safe(u"<span class='priority%s'>%s</span>" % (self.priority, self.priority))
     get_priority_span = property(_get_priority_span)
 
+    def priority_str(self):
+        """
+        String representation of the priority.
+        """
+        return dict(self.PRIORITY_CHOICES)[self.priority].split(' ')[-1]
+
     def _get_status(self):
         """
         Displays the ticket status, with an "On Hold" message if needed.

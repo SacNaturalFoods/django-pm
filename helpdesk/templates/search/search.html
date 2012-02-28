@@ -19,6 +19,8 @@
 
 
 {% if query %}
+
+{% comment %}
     <!-- Begin faceting. -->
     <h2>By Queue</h2>
     <div>
@@ -53,14 +55,14 @@
     <h2>By priority</h2>
     <div>
         <dl>
-            {% if facets.fields.priority %}
-                <dt>priority</dt>
+            {% if facets.fields.priority_str %}
+                <dt>priority_str</dt>
                 {# Provide only the top 5 authors #}
-                {% for priority in facets.fields.priority|slice:":5" %}
-                    <dd><a href="{{ request.get_full_path }}&amp;selected_facets=priority_exact:{{ priority.0|urlencode }}">{{ priority.0 }}</a> ({{ priority.1 }})</dd>
+                {% for priority_str in facets.fields.priority_str|slice:":5" %}
+                    <dd><a href="{{ request.get_full_path }}&amp;selected_facets=priority_str_exact:{{ priority_str.0|urlencode }}">{{ priority_str.0 }}</a> ({{ priority_str.1 }})</dd>
                 {% endfor %}
             {% else %}
-                <p>No priority facets.</p>
+                <p>No priority_str facets.</p>
             {% endif %}
         </dl>
     </div>
@@ -84,6 +86,7 @@
 
 
    <!-- End faceting -->
+{% endcomment %}
 
     <!-- Display results... -->
     {% for result in page.object_list %}
