@@ -7,6 +7,8 @@ models.py - Model (and hence database) definitions. This is the core of the
             helpdesk structure.
 """
 
+import os
+import os.path
 from datetime import datetime
 
 from django.contrib.auth.models import User
@@ -604,11 +606,11 @@ def attachment_path(instance, filename):
     """
     import os
     from django.conf import settings
-    os.umask(0)
     path = 'helpdesk/attachments/%s/%s' % (instance.followup.ticket.ticket_for_url, instance.followup.id )
     att_path = os.path.join(settings.MEDIA_ROOT, path)
     if not os.path.exists(att_path):
-        os.makedirs(att_path, 0777)
+        os.makedirs(att_path, 0755)
+    os.umask(0133)
     return os.path.join(path, filename)
 
 
