@@ -260,7 +260,6 @@ def update_ticket(request, ticket_id, public=False):
     due_year = request.POST.get('due_date_year')
     due_month = request.POST.get('due_date_month')
     due_day = request.POST.get('due_date_day')
-    print due_year, due_month, due_day
     try:
         due_date = datetime(int(due_year), int(due_month), int(due_day))
     except:
