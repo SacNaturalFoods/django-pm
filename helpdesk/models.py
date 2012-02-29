@@ -392,7 +392,7 @@ class Ticket(models.Model):
         """
         String representation of the priority.
         """
-        return dict(self.PRIORITY_CHOICES)[self.priority].split(' ')[-1]
+        return dict(self.PRIORITY_CHOICES)[int(self.priority)].split(' ')[-1]
 
     def _get_status(self):
         """
