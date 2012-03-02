@@ -39,6 +39,7 @@ class TabularSearchView(SearchView):
             'id':result.object.pk, 
             'priority':result.object.priority,
             'title':result.object.title,
+            'description':result.object.description[:40]+'...',
             'queue':result.object.queue,
             'status':result.object.status,
             } for result in self.results])
