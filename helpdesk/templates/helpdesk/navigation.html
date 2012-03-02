@@ -10,6 +10,7 @@
     {% if helpdesk_settings.HELPDESK_KB_ENABLED_STAFF %}
     <li><a href='{% url helpdesk_kb_index %}'>{% trans "Knowledgebase" %}</a></li>
     {% endif %}
+    {% comment %}
     {% if user_saved_queries_ %}
         <li class="headerlink"><a>{% trans "Load Saved Query" %}</a>
             <ul>
@@ -22,6 +23,7 @@
            </ul>
        </li>
     {% endif %}
+    {% endcomment %}
 
     <li><a href='{% url haystack_search %}'>{% trans "Search" %}</a></li>
 
