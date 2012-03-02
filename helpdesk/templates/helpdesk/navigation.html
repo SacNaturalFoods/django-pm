@@ -29,10 +29,10 @@
 
 {% endif %}
 
-</ul>
-
-<ul>
 {% if not request.path == '/helpdesk/login/' or user.is_authenticated %}
-<li>{% if user.is_authenticated %}<a href='{% url logout %}'>{% trans "Logout" %}</a>{% else %}<a href='{% url login %}?next={% if next %}{{ next|escape }}{% else %}{% url helpdesk_dashboard %}{% endif %}'>{% trans "Log In" %}</a>{% endif %}</li>
+	{% if user.is_authenticated %}<li><a href='{% url logout %}'>{% trans "Logout" %}</a></li>
+	{% else %}<ul><li>
+			<a href='{% url login %}?next={% if next %}{{ next|escape }}{% else %}{% url helpdesk_dashboard %}{% endif %}'>{% trans "Log In" %}</a>
+		  </li></ul>
+	{% endif %}
 {% endif %}
-</ul>
