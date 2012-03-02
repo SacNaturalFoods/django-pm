@@ -1,5 +1,6 @@
 {% extends 'helpdesk/base.html' %}
 {% load helpdesk_filters %} 
+{% load render_table from django_tables2 %} 
 
 {% block helpdesk_body %}
     <h2>Search</h2>
@@ -89,15 +90,22 @@
 {% endcomment %}
 
     <!-- Display results... -->
+    {% comment %}
     {% for result in page.object_list %}
         <div class="search_result">
             <h3><a href="{{ result.object.get_absolute_url }}">{{ result.object.title }}</a></h3>
 
-            <p>{{ result.object.body|truncatewords:80 }}</p>
+            <p>{{ result.object.status }}</p>
         </div>
     {% empty %}
         <p>Sorry, no results found.</p>
     {% endfor %}
+    {% endcomment %}
+
+    {% render_table table %}
+    
+
+
 {% endif %}
 
 

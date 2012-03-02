@@ -202,13 +202,15 @@ urlpatterns += patterns('',
 #from haystack.query import SearchQuerySet
 #from haystack.forms import FacetedSearchForm
 #from haystack.views import FacetedSearchView
+from helpdesk.views.search import TabularSearchView
 #sqs = SearchQuerySet().facet('queue').facet('assigned_to').facet('priority_str').facet('tags')
 
-urlpatterns += patterns('',
-        url(r'^search/', include('haystack.urls')),
-        )
+#urlpatterns += patterns('',
+#        url(r'^search/', include('haystack.urls')),
+#        )
 
 urlpatterns += patterns('helpdesk.views.search',
+    url(r'^search/$', TabularSearchView(), name='haystack_search'),
     url(r'^search/autocomplete/$','autocomplete_search'),
     )
 
