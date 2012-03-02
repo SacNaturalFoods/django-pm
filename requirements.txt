@@ -7,4 +7,4 @@ httplib2==0.7.2
 lxml==2.3
 markup==0.2
 Whoosh==2.3.2
-django-tables==0.9.4
+django-tables2==0.9.4
