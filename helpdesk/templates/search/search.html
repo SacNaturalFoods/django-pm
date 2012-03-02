@@ -17,94 +17,9 @@
     </table>
 </form>
 
-
-
 {% if query %}
 
-{% comment %}
-    <!-- Begin faceting. -->
-    <h2>By Queue</h2>
-    <div>
-        <dl>
-            {% if facets.fields.queue %}
-                <dt>Queue</dt>
-                {# Provide only the top 5 authors #}
-                {% for queue in facets.fields.queue|slice:":5" %}
-                    <dd><a href="{{ request.get_full_path }}&amp;selected_facets=queue_exact:{{ queue.0|urlencode }}">{{ queue.0 }}</a> ({{ queue.1 }})</dd>
-                {% endfor %}
-            {% else %}
-                <p>No Queue facets.</p>
-            {% endif %}
-        </dl>
-    </div>
-
-    <h2>By assigned_to</h2>
-    <div>
-        <dl>
-            {% if facets.fields.assigned_to %}
-                <dt>assigned_to</dt>
-                {# Provide only the top 5 authors #}
-                {% for assigned_to in facets.fields.assigned_to|slice:":5" %}
-                    <dd><a href="{{ request.get_full_path }}&amp;selected_facets=assigned_to_exact:{{ assigned_to.0|urlencode }}">{{ assigned_to.0 }}</a> ({{ assigned_to.1 }})</dd>
-                {% endfor %}
-            {% else %}
-                <p>No assigned_to facets.</p>
-            {% endif %}
-        </dl>
-    </div>
-
-    <h2>By priority</h2>
-    <div>
-        <dl>
-            {% if facets.fields.priority_str %}
-                <dt>priority_str</dt>
-                {# Provide only the top 5 authors #}
-                {% for priority_str in facets.fields.priority_str|slice:":5" %}
-                    <dd><a href="{{ request.get_full_path }}&amp;selected_facets=priority_str_exact:{{ priority_str.0|urlencode }}">{{ priority_str.0 }}</a> ({{ priority_str.1 }})</dd>
-                {% endfor %}
-            {% else %}
-                <p>No priority_str facets.</p>
-            {% endif %}
-        </dl>
-    </div>
-
-    <h2>By tags</h2>
-    <div>
-        <dl>
-            {% if facets.fields.tags %}
-                <dt>tags</dt>
-                {# Provide only the top 5 authors #}
-                {% for tags in facets.fields.tags|slice:":5" %}
-                    <dd><a href="{{ request.get_full_path }}&amp;selected_facets=tags_exact:{{ tags.0|urlencode }}">{{ tags.0 }}</a> ({{ tags.1 }})</dd>
-                {% endfor %}
-            {% else %}
-                <p>No tags facets.</p>
-            {% endif %}
-        </dl>
-    </div>
-
-
-
-
-   <!-- End faceting -->
-{% endcomment %}
-
-    <!-- Display results... -->
-    {% comment %}
-    {% for result in page.object_list %}
-        <div class="search_result">
-            <h3><a href="{{ result.object.get_absolute_url }}">{{ result.object.title }}</a></h3>
-
-            <p>{{ result.object.status }}</p>
-        </div>
-    {% empty %}
-        <p>Sorry, no results found.</p>
-    {% endfor %}
-    {% endcomment %}
-
     {% render_table table %}
-    
-
 
 {% endif %}
 

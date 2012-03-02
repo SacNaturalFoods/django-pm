@@ -14,4 +14,7 @@ class TicketTable(tables.Table):
     title = tables.Column()
     queue = tables.Column()
     status = tables.Column()
+
+    class Meta:
+        attrs = {'class': 'paleblue'}
     

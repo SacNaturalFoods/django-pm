@@ -34,27 +34,6 @@ class TabularSearchView(SearchView):
     def __name__(self):
         return "TabularSearchView"
 
-    #def build_page(self):
-    #    page = super(TabularSearchView, self).build_page()
-    #    return None 
-
-    #def get_results(self):
-    #    results = super(TabularSearchView, self).get_results()
-
-    #    table = TicketTable(results)
-
-    #    return table 
-
-    #def extra_context(self):
-    #    extra = super(TabularSearchView, self).extra_context()
-
-    #    table = TicketTable([{'id':result.object.pk, 'title':result.object.title} for result in self.results])
-    #    RequestConfig(self.request).configure(table)
-    #    extra['table'] = table 
-    #    #extra['table'] = TicketTable([{'name':'foo', 'id':'bar'}, {'name':'baz', 'id':'gazi'}])
-
-    #    return extra
-
     def create_response(self):
         table = TicketTable([{
             'id':result.object.pk, 
