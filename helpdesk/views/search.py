@@ -48,6 +48,7 @@ class TabularSearchView(SearchView):
             'query': self.query,
             'form': self.form,
             'table': table,
+            'saved_searches': 'bar',
         }
 
         return render_to_response(self.template, context, context_instance=RequestContext(self.request))
