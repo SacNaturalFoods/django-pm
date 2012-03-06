@@ -11,7 +11,7 @@
             <tr>
                 <td><input type="text" name="q" id="id_q"/></td>
                 <td><input type="submit" value="Search"></td>
-                <td><a href="" id="save">Save</a></td>
+                <td><span class="link" id="save">Save</button></td>
             </tr>
         </tbody>
     </table>
@@ -31,7 +31,10 @@
 $(function() {
 
     // TODO: saved search functionality
-    //$('#save').click(alert('foo!'));
+    $('#save').click(function() {
+        var title = prompt('Please enter a name for your search.');
+        $('#saved_searches').load('save', {'title': title, 'csrfmiddlewaretoken': '{{ csrf_token }}'});
+    });
 
     function split( val ) {
         return val.split( /,\s*/ );

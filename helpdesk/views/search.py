@@ -26,7 +26,7 @@ from django.template import RequestContext
 from haystack.views import SearchView
 from django_tables2 import RequestConfig
 
-from helpdesk.models import Ticket, Queue
+from helpdesk.models import Ticket, Queue, SavedSearch
 from helpdesk.tables import TicketTable
 
 
@@ -64,4 +64,10 @@ def autocomplete_search(request):
         + [{'label': 'ticket', 'value': ticket.title} for ticket in tickets]
         + [{'label': 'queue', 'value': queue.title} for queue in queues]
         ))
+
+def save_search(request):
+    #SavedSearch.objects.create(title=request.GET.get('title'), user=request.user, query='foo')
+    return HttpResponse('hey')
+
+    
 
