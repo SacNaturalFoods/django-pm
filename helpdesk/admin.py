@@ -1,7 +1,7 @@
 from django.contrib import admin
 from helpdesk.models import Queue, Ticket, FollowUp, PreSetReply, KBCategory
 from helpdesk.models import EscalationExclusion, EmailTemplate, KBItem
-from helpdesk.models import TicketChange, Attachment, IgnoreEmail
+from helpdesk.models import TicketChange, Attachment, IgnoreEmail, SavedSearch
 from helpdesk.models import CustomField
 
 class QueueAdmin(admin.ModelAdmin):
@@ -41,4 +41,5 @@ admin.site.register(EmailTemplate, EmailTemplateAdmin)
 admin.site.register(KBCategory)
 admin.site.register(KBItem, KBItemAdmin)
 admin.site.register(IgnoreEmail)
+admin.site.register(SavedSearch)
 admin.site.register(CustomField, CustomFieldAdmin)

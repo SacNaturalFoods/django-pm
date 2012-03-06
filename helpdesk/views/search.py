@@ -45,16 +45,22 @@ class TabularSearchView(SearchView):
             'queue':result.object.queue,
             'status':result.object.status,
             } for result in self.results])
-        RequestConfig(self.request).configure(table)
-        context = {
-            'query': self.query,
-            'form': self.form,
-            'table': table,
-            'saved_searches': ' '.join([
-                str(saved_search) for saved_search in SavedSearch.objects.filter(user=self.request.user).all()]),
-        }
+        RequestConfig(self.request, paginate={"per_page": 10}).configure(table)
+        if self.request.GET.get('sticky',''):
+            template = 'helpdesk/table.html'
+            context = {'table': table}
+        else:
+            template = self.template
+            context = {
+                'query': self.query,
+                'form': self.form,
+                'table': table,
+                'saved_searches': ' '.join([
+                    str(saved_search) for saved_search in SavedSearch.objects.filter(user=self.request.user).all()]),
+                'sticky_searches': SavedSearch.objects.filter(user=self.request.user, sticky=True).all(),
+            }
 
-        return render_to_response(self.template, context, context_instance=RequestContext(self.request))
+        return render_to_response(template, context, context_instance=RequestContext(self.request))
 
 
 def autocomplete_search(request):

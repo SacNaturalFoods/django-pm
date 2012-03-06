@@ -21,14 +21,20 @@
 
 {% if query %}
 
-    {% render_table table %}
+    {% render_table table "helpdesk/table.html"%}
 
 {% endif %}
 
 
-<script type="text/javascript">
+{% for sticky_search in sticky_searches %}
+<iframe frameborder="0" scrolling="no" width="100%" height="350px" src="?{{ sticky_search.query }}&sticky=true"></iframe>
+{% endfor %}
 
+
+<script type="text/javascript">
+    
 $(function() {
+
 
     // TODO: saved search functionality
     $('#save').click(function() {

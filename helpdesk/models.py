@@ -918,6 +918,13 @@ class SavedSearch(models.Model):
         help_text=_('Should other users see this query?'),
         )
 
+    sticky = models.BooleanField(
+        _('Sticky?'),
+        blank=True,
+        default=False,
+        help_text=_('Always show these search results.'),
+        )
+
     query = models.TextField(
         _('Search Query'),
         help_text=_('Pickled query object. Be wary changing this.'),
