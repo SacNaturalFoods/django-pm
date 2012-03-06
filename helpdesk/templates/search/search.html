@@ -11,13 +11,13 @@
             <tr>
                 <td><input type="text" name="q" id="id_q"/></td>
                 <td><input type="submit" value="Search"></td>
-                <td><span class="link" id="save">Save</button></td>
+                <td><span class="link" id="save">Save</span></td>
             </tr>
         </tbody>
     </table>
 </form>
 
-<p><b>Saved searches:</b><span id="saved_searches"> {{ saved_searches }} </span></p>
+<p><b>Saved searches:</b><span id="saved_searches"> {{ saved_searches|safe }} </span></p>
 
 {% if query %}
 
@@ -33,7 +33,11 @@ $(function() {
     // TODO: saved search functionality
     $('#save').click(function() {
         var title = prompt('Please enter a name for your search.');
-        $('#saved_searches').load('save', {'title': title, 'csrfmiddlewaretoken': '{{ csrf_token }}'});
+        $('#saved_searches').load('save', {'title': title, 'href': location.href, 'csrfmiddlewaretoken': '{{ csrf_token }}'});
+    });
+
+    $('#[id*=delete_saved_search]').live('click', function() {
+        $('#saved_searches').load('delete', {'saved_search__pk': $(this).attr('id').split('__')[1], 'csrfmiddlewaretoken': '{{ csrf_token }}'});
     });
 
     function split( val ) {

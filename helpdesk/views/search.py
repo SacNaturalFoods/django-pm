@@ -17,6 +17,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+from urlparse import urlparse
+
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.utils import simplejson as json
@@ -48,7 +50,8 @@ class TabularSearchView(SearchView):
             'query': self.query,
             'form': self.form,
             'table': table,
-            'saved_searches': 'bar',
+            'saved_searches': ' '.join([
+                str(saved_search) for saved_search in SavedSearch.objects.filter(user=self.request.user).all()]),
         }
 
         return render_to_response(self.template, context, context_instance=RequestContext(self.request))
@@ -66,8 +69,17 @@ def autocomplete_search(request):
         ))
 
 def save_search(request):
-    #SavedSearch.objects.create(title=request.GET.get('title'), user=request.user, query='foo')
-    return HttpResponse('hey')
+    SavedSearch.objects.create(
+            title=request.POST.get('title'), 
+            user=request.user, 
+            query=urlparse(request.POST.get('href')).query,
+            )
+    saved_searches = SavedSearch.objects.filter(user=request.user).all()
+    return HttpResponse(saved_searches)
 
+def delete_search(request):
+    SavedSearch.objects.get(pk=request.POST.get('saved_search__pk')).delete()
+    saved_searches = SavedSearch.objects.filter(user=request.user).all()
+    return HttpResponse(saved_searches)
     
 

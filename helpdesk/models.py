@@ -927,7 +927,7 @@ class SavedSearch(models.Model):
         if self.shared:
             return u'%s (*)' % self.title
         else:
-            return u'%s' % self.title
+            return u'<span><a href="?%s">%s</a> <span id="delete_saved_search__%s" class="link">x</span></span>' % (self.query, self.title, self.pk)
 
 class UserSettings(models.Model):
     """

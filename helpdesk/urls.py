@@ -213,6 +213,7 @@ urlpatterns += patterns('helpdesk.views.search',
     url(r'^search/$', TabularSearchView(), name='haystack_search'),
     url(r'^search/autocomplete/$','autocomplete_search'),
     url(r'^search/save$','save_search'),
+    url(r'^search/delete$','delete_search'),
     )
 
 #urlpatterns += patterns('haystack.views',
