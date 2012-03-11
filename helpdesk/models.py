@@ -930,11 +930,15 @@ class SavedSearch(models.Model):
         help_text=_('Pickled query object. Be wary changing this.'),
         )
 
+    def _html(self):
+        return u'<span><a href="?%s">%s</a> <span id="delete_saved_search__%s" class="link">x</span></span>' % (self.query, self.title, self.pk)
+    html = property(_html)
+
     def __unicode__(self):
         if self.shared:
             return u'%s (*)' % self.title
         else:
-            return u'<span><a href="?%s">%s</a> <span id="delete_saved_search__%s" class="link">x</span></span>' % (self.query, self.title, self.pk)
+            return u'%s' % self.title
 
 class UserSettings(models.Model):
     """

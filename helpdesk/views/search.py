@@ -56,7 +56,7 @@ class TabularSearchView(SearchView):
                 'form': self.form,
                 'table': table,
                 'saved_searches': ' '.join([
-                    str(saved_search) for saved_search in SavedSearch.objects.filter(user=self.request.user).all()]),
+                    search.html for search in SavedSearch.objects.filter(user=self.request.user).all()]),
                 'sticky_searches': SavedSearch.objects.filter(user=self.request.user, sticky=True).all(),
             }
 
@@ -80,12 +80,13 @@ def save_search(request):
             user=request.user, 
             query=urlparse(request.POST.get('href')).query,
             )
-    saved_searches = SavedSearch.objects.filter(user=request.user).all()
+    saved_searches = [search.html for search in SavedSearch.objects.filter(user=request.user).all()]
     return HttpResponse(saved_searches)
 
 def delete_search(request):
     SavedSearch.objects.get(pk=request.POST.get('saved_search__pk')).delete()
-    saved_searches = SavedSearch.objects.filter(user=request.user).all()
+    # use manager to return html property?
+    saved_searches = [search.html for search in SavedSearch.objects.filter(user=request.user).all()]
     return HttpResponse(saved_searches)
     
 
