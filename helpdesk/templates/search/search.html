@@ -21,24 +21,53 @@
 
 {% if query %}
 
+<div id="results">
     {% render_table table "helpdesk/table.html"%}
+</div>
 
 {% endif %}
 
 
 {% for sticky_search in sticky_searches %}
-<iframe frameborder="0" scrolling="no" width="100%" height="350px" src="?{{ sticky_search.query }}&sticky=true"></iframe>
+    <span class="search_title">{{ sticky_search.title }}</span>
+    <iframe frameborder="0" scrolling="no" width="100%" height="350px" src="?{{ sticky_search.query }}&sticky=true"></iframe>
 {% endfor %}
 
 
 <script type="text/javascript">
+
+    // resize iframes after load
+    $(window).load(function() {
+        $('iframe').each(function(i, iframe) {
+            // max height less header and footer
+            //var height = parseInt($(iframe).attr('height').replace('px','')) - 60;
+            var header_footer = 120;
+            var rows = $(iframe).contents().find('table tr').length * 20;
+            $(iframe).attr('height', header_footer + rows  + 'px');
+        });
+    });
     
 $(function() {
 
-    // TODO: saved search functionality
-    $('#save').click(function() {
-        var title = prompt('Please enter a name for your search.');
-        $('#saved_searches').load('save', {'title': title, 'href': location.href, 'csrfmiddlewaretoken': '{{ csrf_token }}'});
+    $('#save, #disabled_sticky').click(function() {
+        var existing_saved_search = false;
+        var title = null;
+        {% if existing_saved_search %}
+            existing_saved_search = true;
+        {% else %}
+            title = prompt('Please enter a name for your search.');
+        {% endif %}
+        if (title || existing_saved_search) {
+            $('#saved_searches').load('save', {
+                'title': title, 
+                'href': location.href, 
+                'sticky': true ? $(this).id == 'disabled_sticky' : false, 
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            });
+        } else {
+            $('#active_sticky').attr('hidden', true);
+            $('#disabled_sticky').attr('hidden', false);
+        }
     });
 
     $('#[id*=delete_saved_search]').live('click', function() {

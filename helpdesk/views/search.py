@@ -48,13 +48,15 @@ class TabularSearchView(SearchView):
         RequestConfig(self.request, paginate={"per_page": 10}).configure(table)
         if self.request.GET.get('sticky',''):
             template = 'helpdesk/table.html'
-            context = {'table': table}
+            context = {'table': table, 'sticky':True}
         else:
             template = self.template
             context = {
                 'query': self.query,
                 'form': self.form,
                 'table': table,
+                'existing_saved_search': SavedSearch.objects.filter(
+                    query=self.request.META.get('QUERY_STRING'), user=self.request.user).exists(),
                 'saved_searches': ' '.join([
                     search.html for search in SavedSearch.objects.filter(user=self.request.user).all()]),
                 'sticky_searches': SavedSearch.objects.filter(user=self.request.user, sticky=True).all(),
@@ -75,11 +77,14 @@ def autocomplete_search(request):
         ))
 
 def save_search(request):
-    SavedSearch.objects.create(
-            title=request.POST.get('title'), 
+    saved_search, created = SavedSearch.objects.get_or_create(
             user=request.user, 
             query=urlparse(request.POST.get('href')).query,
             )
+    saved_search.sticky=request.POST.get('sticky') 
+    if created:
+        saved_search.title=request.POST.get('title')
+    saved_search.save()
     saved_searches = [search.html for search in SavedSearch.objects.filter(user=request.user).all()]
     return HttpResponse(saved_searches)
 
@@ -89,4 +94,17 @@ def delete_search(request):
     saved_searches = [search.html for search in SavedSearch.objects.filter(user=request.user).all()]
     return HttpResponse(saved_searches)
     
+def toggle_sticky_search(request):
+    href = request.POST.get('href')
+    if href:
+        try:
+            saved_search = SavedSearch.objects.filter(query=urlparse(href).query)[0]
+            # change search name
+        except:
+            # create new search if none exists
+            pass
+        saved_search.sticky = not saved_search.sticky
+        saved_search.save()
+    return HttpResponse(status=200)
+     
 

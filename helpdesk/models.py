@@ -927,7 +927,6 @@ class SavedSearch(models.Model):
 
     query = models.TextField(
         _('Search Query'),
-        help_text=_('Pickled query object. Be wary changing this.'),
         )
 
     def _html(self):

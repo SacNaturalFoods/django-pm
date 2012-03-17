@@ -1,13 +1,18 @@
+<script src='{{ STATIC_URL }}helpdesk/jquery-1.5.min.js' type='text/javascript' language='javascript'></script>
+<script src='{{ STATIC_URL }}helpdesk/jquery-ui-1.8.9.custom.min.js' type='text/javascript' language='javascript'></script>
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}helpdesk/paleblue/css/screen.css" />
 {% spaceless %}
 {% load querystring from django_tables2 %}
 {% load trans blocktrans from i18n %}
 {% if table.page %}
 <div class="table-container">
-    <img id="sticky" src="{{ STATIC_URL }}helpdesk/buttons/disabled_tack.png"/> 
-    {% comment %}
-    <img id="sticky" src="{{ STATIC_URL }}helpdesk/buttons/active_tack.png"/> 
-    {% endcomment %}
+    {% if sticky %}
+        <img id="active_sticky" class="sticky" src="{{ STATIC_URL }}helpdesk/buttons/active_tack.png"/> 
+        <img id="disabled_sticky" class="sticky" src="{{ STATIC_URL }}helpdesk/buttons/disabled_tack.png" hidden/> 
+    {% else %}
+        <img id="active_sticky" class="sticky" src="{{ STATIC_URL }}helpdesk/buttons/active_tack.png" hidden/> 
+        <img id="disabled_sticky" class="sticky" src="{{ STATIC_URL }}helpdesk/buttons/disabled_tack.png"/> 
+    {% endif %}
 {% endif %}
 {% block table %}
 <table{% if table.attrs %} {{ table.attrs.as_html }}{% endif %}>
@@ -70,6 +75,26 @@
 <script type="text/javascript">
 
 $(function() {
+
+    function toggle_sticky() {
+        $.post('toggle_sticky', {
+            'href': location.href.replace('&sticky=true',''), 
+            'csrfmiddlewaretoken': '{{ csrf_token }}'
+        });
+    }
+
+    $('#active_sticky').click(function() {
+        $('#active_sticky').attr('hidden', true);
+        $('#disabled_sticky').attr('hidden', false);
+        toggle_sticky();
+    });
+
+    $('#disabled_sticky').click(function() {
+        $('#disabled_sticky').attr('hidden', true);
+        $('#active_sticky').attr('hidden', false);
+        toggle_sticky();
+    });
+
 });
 
 </script>
