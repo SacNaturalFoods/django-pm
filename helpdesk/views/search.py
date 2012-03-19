@@ -85,6 +85,8 @@ def save_search(request):
     if created:
         saved_search.title=request.POST.get('title')
     saved_search.save()
+    # TODO: hide this in model?
+    saved_search.reorder()
     saved_searches = [search.html for search in SavedSearch.objects.filter(user=request.user).all()]
     return HttpResponse(saved_searches)
 
@@ -96,15 +98,19 @@ def delete_search(request):
     
 def toggle_sticky_search(request):
     href = request.POST.get('href')
-    if href:
-        try:
-            saved_search = SavedSearch.objects.filter(query=urlparse(href).query)[0]
-            # change search name
-        except:
-            # create new search if none exists
-            pass
-        saved_search.sticky = not saved_search.sticky
-        saved_search.save()
+    try:
+        if href:
+            try:
+                saved_search = SavedSearch.objects.filter(user=request.user, query=urlparse(href).query)[0]
+            except:
+                saved_search = None
+        if saved_search:
+            saved_search.sticky = not saved_search.sticky
+            saved_search.reorder()
+            saved_search.order = 1
+            saved_search.save()
+    except Exception, e:
+        print e
     return HttpResponse(status=200)
      
 

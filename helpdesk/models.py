@@ -929,15 +929,33 @@ class SavedSearch(models.Model):
         _('Search Query'),
         )
 
+    order = models.IntegerField(
+        _('Order'),
+        default=1,
+        )
+
     def _html(self):
         return u'<span><a href="?%s">%s</a> <span id="delete_saved_search__%s" class="link">x</span></span>' % (self.query, self.title, self.pk)
     html = property(_html)
+
+    def reorder(self):
+        for ss in self.user.savedsearch_set.all():
+            if ss.order >= self.order:
+                ss.order += 1
+                ss.save()
+        self.order = 1
+        self.save()
 
     def __unicode__(self):
         if self.shared:
             return u'%s (*)' % self.title
         else:
             return u'%s' % self.title
+
+    class Meta:
+        ordering = ['order',]
+
+
 
 class UserSettings(models.Model):
     """
