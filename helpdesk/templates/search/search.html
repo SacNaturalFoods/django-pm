@@ -58,7 +58,7 @@ $(function() {
             title = prompt('Please enter a name for your search.');
         {% endif %}
         if (title || existing_saved_search) {
-            $('#saved_searches').load('save', {
+            $('#saved_searches').load('{% url save_search %}', {
                 'title': title, 
                 'href': location.href, 
                 'sticky': true ? $(this).id == 'disabled_sticky' : false, 
@@ -71,7 +71,7 @@ $(function() {
     });
 
     $('#[id*=delete_saved_search]').live('click', function() {
-        $('#saved_searches').load('delete', {'saved_search__pk': $(this).attr('id').split('__')[1], 'csrfmiddlewaretoken': '{{ csrf_token }}'});
+        $('#saved_searches').load('{% url save_search %}', {'saved_search__pk': $(this).attr('id').split('__')[1], 'csrfmiddlewaretoken': '{{ csrf_token }}'});
     });
 
     function split( val ) {
@@ -89,7 +89,7 @@ $(function() {
         })
         .autocomplete({
             source: function( request, response ) {
-                $.getJSON( "/helpdesk/search/autocomplete", {
+                $.getJSON("{% url autocomplete_search %}", {
                     term: extractLast( request.term )
                 }, response );
             },

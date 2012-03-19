@@ -77,7 +77,7 @@
 $(function() {
 
     function toggle_sticky() {
-        $.post('toggle_sticky', {
+        $.post('{% url toggle_sticky %}', {
             'href': location.href.replace('&sticky=true',''), 
             'csrfmiddlewaretoken': '{{ csrf_token }}'
         });
