@@ -39,10 +39,8 @@
     // resize iframes after load
     $(window).load(function() {
         $('iframe').each(function(i, iframe) {
-            // max height less header and footer
-            //var height = parseInt($(iframe).attr('height').replace('px','')) - 60;
             var header_footer = 120;
-            var rows = $(iframe).contents().find('table tr').length * 20;
+            var height = $(iframe).contents().find('table').height();
             $(iframe).attr('height', header_footer + rows  + 'px');
         });
     });
