@@ -5,6 +5,7 @@ from helpdesk.models import Ticket
 class TicketIndex(indexes.RealTimeSearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
     title = indexes.CharField(model_attr='title')
+    description = indexes.CharField(model_attr='description', null=True)
     assigned_to = indexes.CharField(model_attr='assigned_to', null=True)
     priority_str = indexes.CharField(model_attr='priority_str')
     queue = indexes.CharField(model_attr='queue')

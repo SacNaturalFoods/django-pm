@@ -71,9 +71,9 @@ def autocomplete_search(request):
     tickets = Ticket.objects.filter(title__icontains=term).order_by('title')
     queues = Queue.objects.filter(title__icontains=term).order_by('title')
     return HttpResponse(json.dumps(
-        [{'label': 'username', 'value': user.username} for user in users]
+        [{'label': 'queue', 'value': queue.title} for queue in queues]
+        + [{'label': 'username', 'value': user.username} for user in users]
         + [{'label': 'ticket', 'value': ticket.title} for ticket in tickets]
-        + [{'label': 'queue', 'value': queue.title} for queue in queues]
         ))
 
 def save_search(request):
