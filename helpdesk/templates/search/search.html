@@ -71,7 +71,7 @@ $(function() {
     });
 
     $('#[id*=delete_saved_search]').live('click', function() {
-        $('#saved_searches').load('{% url save_search %}', {'saved_search__pk': $(this).attr('id').split('__')[1], 'csrfmiddlewaretoken': '{{ csrf_token }}'});
+        $('#saved_searches').load('{% url delete_search %}', {'saved_search__pk': $(this).attr('id').split('__')[1], 'csrfmiddlewaretoken': '{{ csrf_token }}'});
     });
 
     function split( val ) {
