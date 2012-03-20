@@ -2,6 +2,7 @@
 {{ object.description }}
 {{ object.assigned_to }}
 {{ object.priority_str }}
+{{ object.followup_str }}
 {{ object.queue }}
 {{ object.tags }}
 {{ object.body }}

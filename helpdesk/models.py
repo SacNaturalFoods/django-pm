@@ -394,6 +394,12 @@ class Ticket(models.Model):
         """
         return dict(self.PRIORITY_CHOICES)[int(self.priority)].split(' ')[-1]
 
+    def followup_str(self):
+        """
+        String representation of ticket comments.
+        """
+        return ' '.join([unicode(followup.comment) for followup in self.followup_set.all()])
+
     def _get_status(self):
         """
         Displays the ticket status, with an "On Hold" message if needed.

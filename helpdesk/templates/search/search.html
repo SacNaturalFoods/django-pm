@@ -41,7 +41,7 @@
         $('iframe').each(function(i, iframe) {
             var header_footer = 120;
             var height = $(iframe).contents().find('table').height();
-            $(iframe).attr('height', header_footer + rows  + 'px');
+            $(iframe).attr('height', header_footer + height  + 'px');
         });
     });
     

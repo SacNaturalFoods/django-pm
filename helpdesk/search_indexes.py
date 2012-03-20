@@ -8,11 +8,17 @@ class TicketIndex(indexes.RealTimeSearchIndex, indexes.Indexable):
     description = indexes.CharField(model_attr='description', null=True)
     assigned_to = indexes.CharField(model_attr='assigned_to', null=True)
     priority_str = indexes.CharField(model_attr='priority_str')
+    followup_str = indexes.CharField(model_attr='followup_str')
     queue = indexes.CharField(model_attr='queue')
+    #followups = indexes.MultiValueField(null=True)
     tags = indexes.MultiValueField(faceted=True, null=True)
 
     def prepare_tags(self, obj):
         return [tag.name for tag in obj.tags.all()]
+
+    def prepare_followups(self, obj):
+        return unicode(' '.join([unicode(followup.comment) for followup in obj.followup_set.all()]))
+
 
     #def prepare_assigned_to(self, obj):
     #    if obj.assigned_to:
