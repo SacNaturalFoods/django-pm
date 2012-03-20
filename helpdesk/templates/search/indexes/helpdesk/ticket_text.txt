@@ -1,7 +1,9 @@
 {{ object.title }}
 {{ object.description }}
 {{ object.assigned_to }}
+{{ object.submitted_by }}
 {{ object.priority_str }}
+{{ object.status_str }}
 {{ object.followup_str }}
 {{ object.queue }}
 {{ object.tags }}

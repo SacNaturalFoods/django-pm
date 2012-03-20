@@ -39,11 +39,13 @@ class TabularSearchView(SearchView):
     def create_response(self):
         table = TicketTable([{
             'id':result.object.pk, 
-            'priority':result.object.priority,
-            'title':result.object.title,
-            'description':result.object.description[:40]+'...',
+            'priority':result.object.priority_str,
+            'title':result.object.title if len(result.object.title) < 31 else result.object.title[:30]+'...',
+            'description':result.object.description if len(result.object.description) < 31 else result.object.description[:30]+'...',
+            'assigned_to':result.object.assigned_to.username if result.object.assigned_to else None,
             'queue':result.object.queue,
-            'status':result.object.status,
+            'status':result.object.status_str,
+            'created':result.object.created.strftime('%Y-%m-%d'),
             } for result in self.results])
         RequestConfig(self.request, paginate={"per_page": 10}).configure(table)
         if self.request.GET.get('sticky',''):

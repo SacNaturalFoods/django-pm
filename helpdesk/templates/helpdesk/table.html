@@ -1,5 +1,6 @@
 <script src='{{ STATIC_URL }}helpdesk/jquery-1.5.min.js' type='text/javascript' language='javascript'></script>
 <script src='{{ STATIC_URL }}helpdesk/jquery-ui-1.8.9.custom.min.js' type='text/javascript' language='javascript'></script>
+<base target="_parent" />
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}helpdesk/paleblue/css/screen.css" />
 {% spaceless %}
 {% load querystring from django_tables2 %}
@@ -20,7 +21,7 @@
     <thead>
         <tr>
         {% for column in table.columns %}
-            <th {{ column.attrs.th.as_html }}><a href="{% querystring table.prefixed_order_by_field=column.order_by.opposite|default:column.name %}">{{ column.header }}</a></th>
+            <th {{ column.attrs.th.as_html }}><a href="{% querystring table.prefixed_order_by_field=column.order_by.opposite|default:column.name %}" target="_self">{{ column.header }}</a></th>
         {% endfor %}
         </tr>
     </thead>
@@ -55,7 +56,7 @@
 <ul class="pagination">
     {% if table.page.has_previous %}
     {% block pagination.previous %}
-    <li class="previous"><a href="{% querystring table.prefixed_page_field=table.page.previous_page_number %}">{% trans "Previous" %}</a></li>
+    <li class="previous"><a href="{% querystring table.prefixed_page_field=table.page.previous_page_number %}" target="_self">{% trans "Previous" %}</a></li>
     {% endblock pagination.previous %}
     {% endif %}
     {% block pagination.current %}
@@ -63,7 +64,7 @@
     {% endblock pagination.current %}
     {% if table.page.has_next %}
     {% block pagination.next %}
-    <li class="next"><a href="{% querystring table.prefixed_page_field=table.page.next_page_number %}">{% trans "Next" %}</a></li>
+    <li class="next"><a href="{% querystring table.prefixed_page_field=table.page.next_page_number %}" target="_self">{% trans "Next" %}</a></li>
     {% endblock pagination.next %}
     {% endif %}
 </ul>

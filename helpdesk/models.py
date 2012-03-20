@@ -394,6 +394,21 @@ class Ticket(models.Model):
         """
         return dict(self.PRIORITY_CHOICES)[int(self.priority)].split(' ')[-1]
 
+    def status_str(self):
+        """
+        String representation of the status.
+        """
+        return dict(self.STATUS_CHOICES)[int(self.status)]
+
+    def submitted_by(self):
+        """
+        Get submitter username from email (if exists).
+        """
+        try:
+            return User.objects.get(email=self.submitter_email)
+        except:
+            return None
+
     def followup_str(self):
         """
         String representation of ticket comments.
