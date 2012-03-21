@@ -16,6 +16,8 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 
+from haystack.forms import FacetedSearchForm
+
 from helpdesk.lib import send_templated_mail, safe_template_context
 from helpdesk.models import Ticket, Queue, FollowUp, Attachment, IgnoreEmail, TicketCC, CustomField, TicketCustomFieldValue, TicketDependency
 from helpdesk.settings import HAS_TAGGING_SUPPORT, HAS_TAGGIT_SUPPORT
@@ -626,3 +628,31 @@ class TicketDependencyForm(forms.ModelForm):
     class Meta:
         model = TicketDependency
         exclude = ('ticket',)
+
+
+class AllResultsFacetedSearchForm(FacetedSearchForm):
+
+    def search(self):
+        if not self.is_valid():
+            return self.no_query_found()
+
+        sqs = self.searchqueryset.auto_query(self.cleaned_data['q'])
+
+        if self.load_all:
+            sqs = sqs.load_all()
+
+
+       # We need to process each facet to ensure that the field name and the
+        # value are quoted correctly and separately:
+        for facet in self.selected_facets:
+            if ":" not in facet:
+                continue
+
+            field, value = facet.split(":", 1)
+            
+            if value:
+                sqs = sqs.narrow(u'%s:"%s"' % (field, sqs.query.clean(value)))
+
+       
+        return sqs
+

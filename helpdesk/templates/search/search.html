@@ -5,12 +5,12 @@
 {% block helpdesk_body %}
     <h2>Search</h2>
 
-<form method="get" action=".">
+<form id="search_form" method="get" action=".">
     <table>
         <tbody>
             <tr>
-                <td><input type="text" name="q" id="id_q"/></td>
-                <td><input type="submit" value="Search"></td>
+                <td><input size="50" type="text" name="q" id="id_q"/></td>
+                <td><input id="search_button" type="submit" value="Search"></td>
                 <td><span class="link" id="save">Save</span></td>
             </tr>
         </tbody>
@@ -19,13 +19,11 @@
 
 <p><b>Saved searches:</b><span id="saved_searches"> {{ saved_searches|safe }} </span></p>
 
-{% if query %}
 
 <div id="results">
     {% render_table table "helpdesk/table.html"%}
 </div>
 
-{% endif %}
 
 
 {% for sticky_search in sticky_searches %}
@@ -107,8 +105,8 @@ $(function() {
                 // remove the current input
                 terms.pop();
                 // add the selected item
-                //terms.push( ui.item.label + '=' + ui.item.value );
-                terms.push( ui.item.value );
+                terms.push( ui.item.label + ':' + ui.item.value );
+                //terms.push( ui.item.value );
                 // add placeholder to get the comma-and-space at the end
                 terms.push( "" );
                 this.value = terms.join( "," );
@@ -121,6 +119,38 @@ $(function() {
                 .append( "<a><b>" + item.label + ":</b> " + item.value + "</a>" )
                 .appendTo( ul );
         };
+
+        function format_search(search_str) {
+            var search_str = search_str.replace(/:/g,'_exact:');
+            searches = search_str.split(',');
+            var search_q = '';
+            var facets = '';
+            for (i in searches) {
+               var search = searches[i];
+               if (search.match(':')) {
+                  facets += '&selected_facets=' + search; 
+               } else if (search) {
+                  search_q += search + ',';
+               }
+            }
+            search_q = 'q=' + search_q + facets;
+            //$('#id_q').val(search_q);
+            location.href = '{% url haystack_search %}?'+search_q;
+        }
+
+        $('#search_button').click(function(e) {
+            e.preventDefault();
+            format_search($('#id_q').val());
+        });
+
+        $('#id_q').keypress(function(e) {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+                format_search($('#id_q').val());
+            }
+        });
+
+
 
 });
 

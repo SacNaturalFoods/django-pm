@@ -27,46 +27,18 @@ from django.utils import simplejson as json
 from django.contrib.auth.models import User
 from django.template import RequestContext
 
-from haystack.views import SearchView
+from haystack.views import FacetedSearchView
 from haystack.query import SearchQuerySet
 from django_tables2 import RequestConfig
+from taggit.models import Tag
 
 from helpdesk.models import Ticket, Queue, SavedSearch
 from helpdesk.tables import TicketTable
 
 
-class TabularSearchView(SearchView):
+class TabularSearchView(FacetedSearchView):
     def __name__(self):
         return "TabularSearchView"
-
-    #def __init__(self, *args, **kwargs):
-    #    super(TabularSearchView, self).__init__(*args, **kwargs)
-    #    q = self.get_query()
-    #    print q
-    #    searchqueryset = SearchQuerySet().filter(assigned_to='tonys')
-
-    #def __call__(self, request):
-    #    q = parse_qs(request.GET.get('q','').replace(',',';').replace('=','__in='))
-    #    print request.META.get('QUERY_STRING')
-    #    #print parse_qs(request.GET.get('q'))
-    #    #import ipdb; ipdb.set_trace()   
-    #    self.request = request
-    #    self.form = super(TabularSearchView, self).build_form()
-    #    query = super(TabularSearchView, self).get_query()
-    #    self.query = re.sub('(^| |,)[^=]+=',',',query)
-    #    #import ipdb; ipdb.set_trace()    
-    #    print self.query
-    #    self.searchqueryset = SearchQuerySet().filter(**q)
-    #    return super(TabularSearchView, self).__call__(request)
-
-    #def get_query(self):
-    #    q = super(TabularSearchView, self).get_query()
-    #    #filters = parse_qs(q.replace(',',';').replace('=','__in='))
-    #    #print filters 
-    #    #print q
-    #    #self.searchqueryset = SearchQuerySet().filter(**filters)
-    #    #self.searchqueryset = SearchQuerySet().filter(assigned_to__in=['tonys'])
-    #    return re.sub('(^| )[^=]+=','',q)
 
     def create_response(self):
         table = TicketTable([{
@@ -102,12 +74,25 @@ class TabularSearchView(SearchView):
 def autocomplete_search(request):
     term = request.GET.get('term','')
     users = User.objects.filter(is_active=True, is_staff=True).filter(username__icontains=term).order_by('username')
+    priorities = []
+    for priority in ['critical', 'high', 'normal', 'low', 'very low']:
+        if term.lower() in priority:
+            priorities.append(priority.capitalize())
+    statuses = []
+    for status in ['open', 'resolved', 'closed']:
+        if term.lower() in status:
+            statuses.append(status.capitalize())
+    tags = Tag.objects.filter(name__icontains=term)
     tickets = Ticket.objects.filter(title__icontains=term).order_by('title')
     queues = Queue.objects.filter(title__icontains=term).order_by('title')
     return HttpResponse(json.dumps(
         [{'label': 'queue', 'value': queue.title} for queue in queues]
         + [{'label': 'assigned_to', 'value': user.username} for user in users]
-        + [{'label': 'description', 'value': ticket.title} for ticket in tickets]
+        + [{'label': 'submitted_by', 'value': user.username} for user in users]
+        + [{'label': 'priority_str', 'value': priority} for priority in priorities]
+        + [{'label': 'status_str', 'value': status} for status in statuses]
+        + [{'label': 'tags', 'value': tag.name} for tag in tags]
+        + [{'label': 'title', 'value': ticket.title} for ticket in tickets]
         ))
 
 def save_search(request):

@@ -199,27 +199,18 @@ urlpatterns += patterns('',
 )
 
 
-#from haystack.query import SearchQuerySet
-#from haystack.forms import FacetedSearchForm
-#from haystack.views import FacetedSearchView
+from haystack.query import SearchQuerySet
+from haystack.forms import FacetedSearchForm
+from helpdesk.forms import AllResultsFacetedSearchForm
+from haystack.views import FacetedSearchView
 from helpdesk.views.search import TabularSearchView
-#sqs = SearchQuerySet().facet('queue').facet('assigned_to').facet('priority_str').facet('tags')
-
-#urlpatterns += patterns('',
-#        url(r'^search/', include('haystack.urls')),
-#        )
+sqs = SearchQuerySet().facet('tags').facet('status_str')
 
 urlpatterns += patterns('helpdesk.views.search',
-    url(r'^search/$', TabularSearchView(), name='haystack_search'),
+    url(r'^search/$', TabularSearchView(form_class=AllResultsFacetedSearchForm, searchqueryset=sqs, load_all=True), name='haystack_search'),
     url(r'^search/autocomplete/$','autocomplete_search', name='autocomplete_search'),
     url(r'^search/save$','save_search', name='save_search'),
     url(r'^search/delete$','delete_search', name='delete_search'),
     url(r'^search/toggle_sticky$','toggle_sticky_search', name='toggle_sticky'),
     )
-
-#urlpatterns += patterns('haystack.views',
-#    url(r'^search/$', FacetedSearchView(form_class=FacetedSearchForm, searchqueryset=sqs), name='haystack_search'),
-#    #url(r'^autosearch/$', AutocompleteFacetedSearchView(form_class=FacetedSearchForm), name='haystack_search'),
-#)
-
 
