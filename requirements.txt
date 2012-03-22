@@ -8,3 +8,4 @@ lxml==2.3
 markup==0.2
 Whoosh==2.3.2
 django-tables2==0.9.4
+pysolr==2.1.0-beta
