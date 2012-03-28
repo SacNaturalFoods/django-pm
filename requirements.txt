@@ -1,4 +1,5 @@
 Django==1.3
+django-tables2==0.9.4
 South==0.7.3
 -e git+https://github.com/toastdriven/django-haystack.git@4fb267623b58c5581be96a9a9504ca10a72eb0d8#egg=django_haystack-dev
 django-taggit==0.9.3
@@ -6,6 +7,5 @@ gdata==2.0.15
 httplib2==0.7.2
 lxml==2.3
 markup==0.2
-Whoosh==2.3.2
-django-tables2==0.9.4
 pysolr==2.1.0-beta
+Whoosh==2.3.2

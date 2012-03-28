@@ -10,10 +10,11 @@ urls.py - Mapping of URL's to our various views. Note we always used NAMED
 from django.conf import settings
 from django.conf.urls.defaults import *
 from django.contrib.auth.decorators import login_required
-from django.contrib.syndication.views import feed as django_feed
+# deprecated in Django 1.4
+#from django.contrib.syndication.views import feed as django_feed
 
 from helpdesk import settings as helpdesk_settings
-from helpdesk.views.feeds import feed_setup
+#from helpdesk.views.feeds import feed_setup
 
 
 urlpatterns = patterns('helpdesk.views.staff',
@@ -141,10 +142,11 @@ urlpatterns += patterns('helpdesk.views.public',
 )
 
 urlpatterns += patterns('',
-    url(r'^rss/(?P<url>.*)/$',
-        login_required(django_feed),
-        {'feed_dict': feed_setup},
-        name='helpdesk_rss'),
+    # deprecated pattern in Django 1.4
+    #url(r'^rss/(?P<url>.*)/$',
+    #    login_required(django_feed),
+    #    {'feed_dict': feed_setup},
+    #    name='helpdesk_rss'),
 
     url(r'^api/(?P<method>[a-z_-]+)/$',
         'helpdesk.views.api.api',
