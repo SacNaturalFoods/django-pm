@@ -1,7 +1,7 @@
 Installation
 ============
 
-django-helpdesk installation isn't difficult, but it requires you have a bit of existing know-how about Django.
+django-pm installation isn't difficult, but it requires you have a bit of existing know-how about Django.
 
 
 Getting The Code
@@ -10,19 +10,20 @@ Getting The Code
 Installing using PIP
 ~~~~~~~~~~~~~~~~~~~~
 
-Try using ``pip install django-helpdesk``. Go and have a beer to celebrate Python packaging.
+Try using #TODO: ``pip install django-pm``. Go and have a beer to celebrate Python packaging.
 
 GIT Checkout (Cutting Edge)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you're planning on editing the code or just want to get whatever is the latest and greatest, you can clone the official Git repository with ``git clone git://github.com/rossp/django-helpdesk.git``
+If you're planning on editing the code or just want to get whatever is the latest and greatest, you can 
+clone the official Git repository with ``git clone git://github.com/SacNaturalFoods/django-pm.git``
 
 Copy the ``helpdesk`` folder into your ``PYTHONPATH``.
 
 I just want a .tar.gz!
 ~~~~~~~~~~~~~~~~~~~~~~
 
-You can download the latest PyPi package from http://pypi.python.org/pypi/django-helpdesk/
+#TODO: You can download the latest PyPi package from http://pypi.python.org/pypi/django-pm/
 
 Download, extract, and drop ``helpdesk`` into your ``PYTHONPATH``
 
@@ -38,11 +39,15 @@ Adding To Your Django Project
         'django.contrib.sites',
         'django.contrib.admin', # Required for helpdesk admin/maintenance
         'django.contrib.markup', # Required for text display
-        'south', # Highly recommended to make database migrations simpler.
+        'south', 
+        'taggit',
+        'taggit_autosuggest',
+        'django_tables2',
+        'social_auth',
         'helpdesk', # This is new!
     )
 
-2. Make sure django-helpdesk is accessible via ``urls.py``. Add the following line to ``urls.py``::
+2. Make sure django-pm is accessible via ``urls.py``. Add the following line to ``urls.py``::
 
      (r'helpdesk/', include('helpdesk.urls')),
 

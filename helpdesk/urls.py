@@ -90,9 +90,9 @@ urlpatterns = patterns('helpdesk.views.staff',
         'raw_details',
         name='helpdesk_raw'),
 
-    url(r'^rss/$',
-        'rss_list',
-        name='helpdesk_rss_index'),
+    #url(r'^rss/$',
+    #    'rss_list',
+    #    name='helpdesk_rss_index'),
 
     url(r'^reports/$',
         'report_index',
