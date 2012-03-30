@@ -1,5 +1,6 @@
 Django==1.3
 django-tables2==0.9.4
+django-social-auth==0.6.7
 South==0.7.3
 -e git+https://github.com/toastdriven/django-haystack.git@4fb267623b58c5581be96a9a9504ca10a72eb0d8#egg=django_haystack-dev
 django-taggit==0.9.3
