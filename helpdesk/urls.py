@@ -161,6 +161,11 @@ urlpatterns += patterns('',
         'django.contrib.auth.views.logout',
         {'template_name': 'helpdesk/registration/login.html', 'next_page': '../'},
         name='logout'),
+
+    url(r'helpdesk/', include('social_auth.urls')),
+
+    url(r'^taggit_autosuggest/', include('taggit_autosuggest.urls')),
+    
 )
 
 if helpdesk_settings.HELPDESK_KB_ENABLED:
