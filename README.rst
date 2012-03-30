@@ -19,22 +19,22 @@ all future modifications and new files be subject to the AGPLv3.
 Dependencies
 ============
 
- Python 2.5+
- git (to fetch the source for the django-haystack 2.0 beta)
- libxslt1-dev (to support the python lxml and gdata libraries for Google Apps integration)
+- Python 2.5+
+- git (to fetch the source for the django-haystack 2.0 beta)
+- libxslt1-dev (to support the python lxml and gdata libraries for Google Apps integration)
 
 All other dependencies should be listed in `requirements.txt`.  As of this writing, they include the following:
 
- Django==1.4 #to support native Selenium testing
- django-tables2==0.9.4
- South==0.7.3
- -e git+https://github.com/toastdriven/django-haystack.git@4fb267623b58c5581be96a9a9504ca10a72eb0d8#egg=django_haystack-dev
- django-taggit==0.9.3
- gdata==2.0.15
- httplib2==0.7.2
- lxml==2.3
- markup==0.2
- pysolr==2.1.0-beta 
+- Django==1.4 #to support native Selenium testing
+- django-tables2==0.9.4
+- South==0.7.3
+- -e git+https://github.com/toastdriven/django-haystack.git@4fb267623b58c5581be96a9a9504ca10a72eb0d8#egg=django_haystack-dev
+- django-taggit==0.9.3
+- gdata==2.0.15
+- httplib2==0.7.2
+- lxml==2.3
+- markup==0.2
+- pysolr==2.1.0-beta 
 
 You will also need to set up a working Django project with a database, etc., before installing this app.
 
