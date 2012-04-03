@@ -26,6 +26,7 @@ from django.core.management.base import BaseCommand
 from django.db.models import Q
 from django.utils.translation import ugettext as _
 from django.conf import settings
+from django.utils import timezone
 
 from helpdesk.lib import send_templated_mail, safe_template_context
 from helpdesk.models import Queue, Ticket, FollowUp, Attachment, IgnoreEmail
@@ -64,7 +65,7 @@ def process_email(quiet=False):
 
         queue_time_delta = timedelta(minutes=q.email_box_interval)
 
-        if (q.email_box_last_check + queue_time_delta) > datetime.now():
+        if (q.email_box_last_check + queue_time_delta) > timezone.now():
             continue
 
         process_queue(q, quiet=quiet)
