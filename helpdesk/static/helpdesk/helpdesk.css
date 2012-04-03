@@ -11,7 +11,7 @@ table {
 }
 
 #container {
-    width: 700px;
+    width: 75%;
     margin: 0 auto;
     text-align: left;
 }
@@ -141,7 +141,7 @@ th {
 }
 
 td a, th a {
-    color: inherit;
+    color: blue;
     text-decoration: none;
 }
 
@@ -311,3 +311,21 @@ a.tooltip:hover span {
   text-align: left;
 }
 
+span.link {
+    cursor: pointer;
+}
+
+span#save {
+    color: blue;
+    padding: 5px;
+}
+
+span#saved_searches span {
+    padding: 5px;
+}
+
+span.search_title {
+    font-weight: bold;
+    position: relative;
+    bottom: -20px;
+}
