@@ -44,6 +44,7 @@ Adding To Your Django Project
         'taggit_autosuggest',
         'django_tables2',
         'social_auth',
+        'haystack', # for search
         'helpdesk', # This is new!
     )
 
@@ -101,3 +102,12 @@ Adding To Your Django Project
       LOGIN_URL = '/helpdesk/login/'
 
    Alter the URL to suit your installation path.
+
+
+Configuring Solr
+----------------
+
+django-pm uses django-haystack + Apache Solr for faster searching.
+
+Configuring Apache with mod_wsgi
+--------------------------------

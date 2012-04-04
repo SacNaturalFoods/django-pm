@@ -15,9 +15,11 @@
         <img id="disabled_sticky" class="sticky" src="{{ STATIC_URL }}helpdesk/buttons/disabled_tack.png"/> 
     {% endif %}
 {% endif %}
+
 {% block table %}
 <table{% if table.attrs %} {{ table.attrs.as_html }}{% endif %}>
     {% block table.thead %}
+    {% if table.page %}
     <thead>
         <tr>
         {% for column in table.columns %}
@@ -25,6 +27,7 @@
         {% endfor %}
         </tr>
     </thead>
+{% endif %}
     {% endblock table.thead %}
     {% block table.tbody %}
     <tbody>

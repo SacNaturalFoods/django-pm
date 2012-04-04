@@ -45,7 +45,6 @@ class TabularSearchView(FacetedSearchView):
             'id':result.object.pk, 
             'priority':result.object.priority_str,
             'title':result.object.title if len(result.object.title) < 31 else result.object.title[:30]+'...',
-            'description':result.object.description if len(result.object.description) < 31 else result.object.description[:30]+'...',
             'assigned_to':result.object.assigned_to.username if result.object.assigned_to else None,
             'queue':result.object.queue,
             'status':result.object.status_str,

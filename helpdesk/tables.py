@@ -14,7 +14,6 @@ class TicketTable(tables.Table):
     id = tables.Column(sortable=True)
     priority = tables.Column(sortable=True)
     title = tables.LinkColumn('helpdesk_view', args=[A('id')], sortable=True)
-    description = tables.Column(sortable=True)
     assigned_to = tables.Column(verbose_name='owner', sortable=True)
     queue = tables.Column(sortable=True)
     status = tables.Column(sortable=True)
