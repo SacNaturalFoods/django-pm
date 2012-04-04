@@ -43,7 +43,7 @@ class TabularSearchView(FacetedSearchView):
     def create_response(self):
         table = TicketTable([{
             'id':result.object.pk, 
-            'priority':result.object.priority_str,
+            'priority':result.object.priority,
             'title':result.object.title if len(result.object.title) < 31 else result.object.title[:30]+'...',
             'assigned_to':result.object.assigned_to.username if result.object.assigned_to else None,
             'queue':result.object.queue,

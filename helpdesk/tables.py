@@ -10,6 +10,8 @@ import django_tables2 as tables
 from django_tables2.utils import A
 from django_tables2 import Attrs
 
+from helpdesk.models import Ticket 
+
 class TicketTable(tables.Table):
     id = tables.Column(sortable=True)
     priority = tables.Column(sortable=True)
@@ -18,6 +20,9 @@ class TicketTable(tables.Table):
     queue = tables.Column(sortable=True)
     status = tables.Column(sortable=True)
     created = tables.Column(sortable=True)
+
+    def render_priority(self, value):
+        return dict(Ticket.PRIORITY_CHOICES)[int(value)].split(' ')[-1]
     
     class Meta:
         attrs = {'class': 'paleblue'}
