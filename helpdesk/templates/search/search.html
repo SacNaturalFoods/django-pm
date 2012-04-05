@@ -24,7 +24,6 @@
 </div>
 
 
-
 {% for sticky_search in sticky_searches %}
     <span class="search_title">{{ sticky_search.title }}</span>
     <iframe frameborder="0" scrolling="no" width="100%" height="350px" src="?{{ sticky_search.query }}&sticky=true"></iframe>
@@ -41,6 +40,8 @@
             $(iframe).attr('height', header_footer + height  + 'px');
         });
     });
+
+    
     
 $(function() {
 

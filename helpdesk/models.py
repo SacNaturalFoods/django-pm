@@ -13,6 +13,7 @@ from datetime import datetime
 
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models.aggregates import Max
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _, ugettext
 from helpdesk.settings import HAS_TAGGING_SUPPORT, HAS_TAGGIT_SUPPORT, HELPDESK_STAFF_ONLY_TICKET_OWNERS
@@ -348,6 +349,29 @@ class Ticket(models.Model):
         help_text=_('The date this ticket was last escalated - updated '
             'automatically by management/commands/escalate_tickets.py.'),
         )
+
+    # TODO: order field with default order (max) and reorder routine
+    #order = models.IntegerField(
+    #        _('Order'),
+    #        default=Ticket._get_next_order_num(),
+    #        )
+
+    #def reorder(self):
+    #    for t in self.queue.ticket_set.all():
+    #        if t.order >= self.order:
+    #            t.order += 1
+    #            t.save()
+    #    self.save()
+
+
+    #def save(self, *args, **kwargs):
+    #    if not self.id:
+    #        # This is a new ticket as no ID yet exists.
+    #        self.created = datetime.now()
+
+
+    def _get_next_order_num(self):
+        return self.queue.ticket_set.aggregate(Max('pk'))['pk__max'] + 1
 
     def _get_assigned_to(self):
         """ Custom property to allow us to easily print 'Unassigned' if a

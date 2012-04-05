@@ -80,12 +80,24 @@
 
 $(function() {
 
+    // HACK: pagination and sorting jacked because paginator is getting query for previous iframe request an not current!
+    var page = location.href.replace(/&page=.+$/, '') + '&{{table.prefixed_page_field}}={{table.page.next_page_number}}' + '&sticky=true';
+    $('.next a').attr('href', page);
+    // column sorting only jacked on first page
+    $('table th a').each(function(i, a) {
+        if (!$(a).attr('href').match(/page=/)) {
+            var sort = $(a).attr('href').match(/&sort=.+$/)[0];
+            $(a).attr('href', location.href.replace(/&sort=.+$/,'') + sort); 
+        }
+    });
+
     function toggle_sticky() {
         $.post('{% url toggle_sticky %}', {
             'href': location.href.replace('&sticky=true',''), 
             'csrfmiddlewaretoken': '{{ csrf_token }}'
         });
     }
+
 
     $('#active_sticky').click(function() {
         $('#active_sticky').attr('hidden', true);
