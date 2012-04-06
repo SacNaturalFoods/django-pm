@@ -79,7 +79,35 @@
 
 <script type="text/javascript">
 
+
 $(function() {
+
+    $('#disabled_sticky').click(function() {
+        var existing_saved_search = false;
+        var title = null;
+        {% if existing_saved_search %}
+            existing_saved_search = true;
+        {% else %}
+            title = prompt('Please enter a name for your search.');
+        {% endif %}
+        if (title || existing_saved_search) {
+            $.post('{% url save_search %}', {
+                'title': title, 
+                'href': location.href, 
+                'sticky': 'true', 
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                function () {
+                    window.parent.location.href = "{% url haystack_search %}";
+                }
+                );
+        } else {
+            $('#active_sticky').attr('hidden', true);
+            $('#disabled_sticky').attr('hidden', false);
+        }
+
+    });
+
 
     function toggle_sticky() {
         $.post('{% url toggle_sticky %}', {
@@ -87,7 +115,6 @@ $(function() {
             'csrfmiddlewaretoken': '{{ csrf_token }}'
         });
     }
-
 
     $('#active_sticky').click(function() {
         $('#active_sticky').attr('hidden', true);

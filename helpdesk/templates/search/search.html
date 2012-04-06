@@ -22,9 +22,10 @@
 {% for sticky_search in sticky_searches %}
     {% if forloop.first and query %}
         <iframe frameborder="0" scrolling="no" width="100%" height="350px" src="?{{ query }}&sticky=false"></iframe>
+    {% else %}
+        <span class="search_title">{{ sticky_search.title }}</span>
+        <iframe frameborder="0" scrolling="no" width="100%" height="350px" src="?{{ sticky_search.query }}&sticky=true"></iframe>
     {% endif %}
-    <span class="search_title">{{ sticky_search.title }}</span>
-    <iframe frameborder="0" scrolling="no" width="100%" height="350px" src="?{{ sticky_search.query }}&sticky=true"></iframe>
 {% endfor %}
 
 
@@ -44,14 +45,8 @@
 $(function() {
 
     $('#save, #disabled_sticky').click(function() {
-        var existing_saved_search = false;
-        var title = null;
-        {% if existing_saved_search %}
-            existing_saved_search = true;
-        {% else %}
-            title = prompt('Please enter a name for your search.');
-        {% endif %}
-        if (title || existing_saved_search) {
+        var title = prompt('Please enter a name for your search.');
+        if (title) {
             $('#saved_searches').load('{% url save_search %}', {
                 'title': title, 
                 'href': location.href, 

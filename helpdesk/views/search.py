@@ -17,8 +17,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from urlparse import urlparse
-from urlparse import parse_qs
+from urllib import urlencode
+from urlparse import urlparse, parse_qs
 import re
 
 from django.http import HttpResponse
@@ -68,7 +68,11 @@ class TabularSearchView(FacetedSearchView):
         if sticky is not None:
             sticky = True if sticky == 'true' else False
             template = 'helpdesk/table.html'
-            context = {'table': table, 'sticky':sticky}
+            q = request.GET.copy()
+            del q['sticky']
+            existing_saved_search = SavedSearch.objects.filter(
+                    query=urlencode(q), user=self.request.user).exists()
+            context = {'table': table, 'sticky':sticky, 'existing_saved_search': existing_saved_search}
             return render_to_response(template, context, context_instance=RequestContext(request))
         else:
             query = self.request.META['QUERY_STRING']
@@ -115,13 +119,16 @@ def autocomplete_search(request):
         ))
 
 def save_search(request):
+    q = parse_qs(urlparse(request.POST.get('href')).query)
+    if q.has_key('sticky'):
+        del q['sticky']
     saved_search, created = SavedSearch.objects.get_or_create(
             user=request.user, 
-            query=urlparse(request.POST.get('href')).query,
+            query=urlencode(q, True),
             )
-    saved_search.sticky=request.POST.get('sticky') 
-    if created:
-        saved_search.title=request.POST.get('title')
+    saved_search.sticky = True if request.POST.get('sticky') == 'true' else False
+    if request.POST.get('title') != 'null':
+        saved_search.title = request.POST.get('title')
     saved_search.save()
     # TODO: hide this in model?
     saved_search.reorder()
@@ -135,11 +142,11 @@ def delete_search(request):
     return HttpResponse(saved_searches)
     
 def toggle_sticky_search(request):
-    href = request.POST.get('href')
+    href = urlparse(request.POST.get('href')).query
     try:
         if href:
             try:
-                saved_search = SavedSearch.objects.filter(user=request.user, query=urlparse(href).query)[0]
+                saved_search = SavedSearch.objects.filter(user=request.user, query=urlencode(parse_qs(href), True))[0]
             except:
                 saved_search = None
         if saved_search:
