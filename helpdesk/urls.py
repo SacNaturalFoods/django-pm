@@ -209,7 +209,6 @@ urlpatterns += patterns('',
 from haystack.query import SearchQuerySet
 from haystack.forms import FacetedSearchForm
 from helpdesk.forms import AllResultsFacetedSearchForm
-from haystack.views import FacetedSearchView
 from helpdesk.views.search import TabularSearchView
 sqs = SearchQuerySet().facet('tags').facet('status_str')
 

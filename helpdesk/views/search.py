@@ -37,23 +37,37 @@ from helpdesk.tables import TicketTable
 
 
 class TabularSearchView(FacetedSearchView):
+
     def __name__(self):
         return "TabularSearchView"
 
-    def create_response(self):
+    # funky request action - iframes keep parent request in templates, screws up pagination and sorting
+    # need to pass new requests to response if iframes, but not main page
+    def __call__(self, request):
+        self.request = request
+
+        self.form = self.build_form()
+        self.query = self.get_query()
+        self.results = self.get_results()
+
+        return self.create_response(request)
+
+
+    def create_response(self, request):
         table = TicketTable([{
             'id':result.object.pk, 
             'priority':result.object.priority,
-            'title':result.object.title if len(result.object.title) < 31 else result.object.title[:30]+'...',
+            'title':result.object.title if len(result.object.title) < 51 else result.object.title[:50]+'...',
             'assigned_to':result.object.assigned_to.username if result.object.assigned_to else None,
             'queue':result.object.queue,
             'status':result.object.status_str,
             'created':result.object.created.strftime('%Y-%m-%d'),
             } for result in self.results])
-        RequestConfig(self.request, paginate={"per_page": 10}).configure(table)
-        if self.request.GET.get('sticky',''):
+        RequestConfig(request, paginate={"per_page": 10}).configure(table)
+        if request.GET.get('sticky',''):
             template = 'helpdesk/table.html'
             context = {'table': table, 'sticky':True}
+            return render_to_response(template, context, context_instance=RequestContext(request))
         else:
             template = self.template
             context = {
@@ -66,8 +80,7 @@ class TabularSearchView(FacetedSearchView):
                     search.html for search in SavedSearch.objects.filter(user=self.request.user).all()]),
                 'sticky_searches': SavedSearch.objects.filter(user=self.request.user, sticky=True).all(),
             }
-
-        return render_to_response(template, context, context_instance=RequestContext(self.request))
+            return render_to_response(template, context, context_instance=RequestContext(self.request))
 
 
 def autocomplete_search(request):

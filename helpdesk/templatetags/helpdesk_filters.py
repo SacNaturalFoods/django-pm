@@ -7,5 +7,3 @@ register = template.Library()
 def ipdb(element):
     import ipdb; ipdb.set_trace()
     return element
-
-
