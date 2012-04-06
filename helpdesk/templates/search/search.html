@@ -19,11 +19,10 @@
 
 <p><b>Saved searches:</b><span id="saved_searches"> {{ saved_searches|safe }} </span></p>
 
-<div id="results">
-    {% render_table table "helpdesk/table.html"%}
-</div>
-
 {% for sticky_search in sticky_searches %}
+    {% if forloop.first and query %}
+        <iframe frameborder="0" scrolling="no" width="100%" height="350px" src="?{{ query }}&sticky=false"></iframe>
+    {% endif %}
     <span class="search_title">{{ sticky_search.title }}</span>
     <iframe frameborder="0" scrolling="no" width="100%" height="350px" src="?{{ sticky_search.query }}&sticky=true"></iframe>
 {% endfor %}

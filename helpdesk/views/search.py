@@ -52,7 +52,7 @@ class TabularSearchView(FacetedSearchView):
 
         return self.create_response(request)
 
-
+    # TODO: refactor, explain iframe/request wierdness
     def create_response(self, request):
         table = TicketTable([{
             'id':result.object.pk, 
@@ -64,23 +64,30 @@ class TabularSearchView(FacetedSearchView):
             'created':result.object.created.strftime('%Y-%m-%d'),
             } for result in self.results])
         RequestConfig(request, paginate={"per_page": 10}).configure(table)
-        if request.GET.get('sticky',''):
+        sticky = request.GET.get('sticky', None)
+        if sticky is not None:
+            sticky = True if sticky == 'true' else False
             template = 'helpdesk/table.html'
-            context = {'table': table, 'sticky':True}
+            context = {'table': table, 'sticky':sticky}
             return render_to_response(template, context, context_instance=RequestContext(request))
         else:
+            query = self.request.META['QUERY_STRING']
             template = self.template
+            sticky_searches = [s for s in SavedSearch.objects.filter(user=self.request.user, sticky=True).all()]
+            if query:
+                sticky_searches = [SavedSearch(query=query)] + sticky_searches
             context = {
-                'query': self.query,
+                'query': query,
                 'form': self.form,
                 'table': table,
                 'existing_saved_search': SavedSearch.objects.filter(
                     query=self.request.META.get('QUERY_STRING'), user=self.request.user).exists(),
                 'saved_searches': ' '.join([
                     search.html for search in SavedSearch.objects.filter(user=self.request.user).all()]),
-                'sticky_searches': SavedSearch.objects.filter(user=self.request.user, sticky=True).all(),
+                'sticky_searches': sticky_searches,
             }
             return render_to_response(template, context, context_instance=RequestContext(self.request))
+
 
 
 def autocomplete_search(request):
