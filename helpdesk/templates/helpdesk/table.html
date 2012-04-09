@@ -24,7 +24,12 @@
     <thead>
         <tr>
         {% for column in table.columns %}
+<th {{ column.attrs.th.as_html }}> <a href="{% if column.is_ordered %} {% querystring table.prefixed_order_by_field=column.order_by_alias.opposite %} {% else %} {% querystring table.prefixed_order_by_field=column.order_by_alias %} {% endif %}" target="_self">{{ column.header }}</a></th>
+
+{% comment %}
+{## order_by functionality is funky... ##}
             <th {{ column.attrs.th.as_html }}><a href="{% querystring table.prefixed_order_by_field=column.order_by.opposite|default:column.name %}" target="_self">{{ column.header }}</a></th>
+{% endcomment %}
         {% endfor %}
         </tr>
     </thead>
@@ -36,7 +41,7 @@
         {% block table.tbody.row %}
         <tr class="{% cycle "odd" "even" %}">
             {% for column, cell in row.items %}
-                <td {{ column.attrs.td.as_html }}>{{ cell }}</td>
+                <td {{ column.attrs.td.as_html }}>{{ cell|safe }}</td>
             {% endfor %}
         </tr>
         {% endblock table.tbody.row %}
@@ -127,6 +132,38 @@ $(function() {
         $('#active_sticky').attr('hidden', false);
         toggle_sticky();
     });
+
+    function change_ticket_order(el) {
+        $.post(
+            '{% url change_ticket_order %}', 
+            {
+            'ticket_id': el.id.split('__')[1], 
+            'new_order': el.value,
+            'csrfmiddlewaretoken': '{{ csrf_token }}'
+            } 
+        );
+    }
+
+    $('.ticket_order')
+        .keydown(function(e) {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+                change_ticket_order(this);
+            }
+        })
+        .keyup(function(e) {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+                window.parent.location.href = "{% url haystack_search %}";
+            }
+        })
+        .click(function() {
+            this.select();
+        })
+        .change(function() {
+            change_ticket_order(this);
+            window.parent.location.href = "{% url haystack_search %}";
+        });
 
 });
 
