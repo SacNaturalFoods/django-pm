@@ -49,7 +49,7 @@ $(function() {
         if (title) {
             $('#saved_searches').load('{% url save_search %}', {
                 'title': title, 
-                'href': location.href, 
+                'href': $('iframe')[0].contentWindow.location.href, 
                 'sticky': true ? $(this).id == 'disabled_sticky' : false, 
                 'csrfmiddlewaretoken': '{{ csrf_token }}'
             });

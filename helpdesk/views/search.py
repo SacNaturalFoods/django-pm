@@ -55,6 +55,9 @@ class TabularSearchView(FacetedSearchView):
     # TODO: refactor, explain iframe/request wierdness
     def create_response(self, request):
         table = TicketTable([{
+            #'order':'<input id="ticket__%s" class="ticket_order" type="text" size="2" value="%s"/>' % (result.object.pk, result.object.order),
+            'order':result.object.order,
+            'order_html':result.object.order_html(),
             'id':result.object.pk, 
             'priority':result.object.priority,
             'title':result.object.title if len(result.object.title) < 51 else result.object.title[:50]+'...',
@@ -65,15 +68,17 @@ class TabularSearchView(FacetedSearchView):
             } for result in self.results])
         RequestConfig(request, paginate={"per_page": 10}).configure(table)
         sticky = request.GET.get('sticky', None)
+        # iframes
         if sticky is not None:
             sticky = True if sticky == 'true' else False
             template = 'helpdesk/table.html'
             q = request.GET.copy()
             del q['sticky']
             existing_saved_search = SavedSearch.objects.filter(
-                    query=urlencode(q), user=self.request.user).exists()
+                    query=q.urlencode(), user=self.request.user).exists()
             context = {'table': table, 'sticky':sticky, 'existing_saved_search': existing_saved_search}
             return render_to_response(template, context, context_instance=RequestContext(request))
+        # main page
         else:
             query = self.request.META['QUERY_STRING']
             template = self.template
@@ -158,4 +163,10 @@ def toggle_sticky_search(request):
         print e
     return HttpResponse(status=200)
      
+def change_ticket_order(request):
+    ticket_id = request.POST.get('ticket_id')
+    new_order = request.POST.get('new_order')
+    Ticket.objects.get(pk=int(ticket_id)).reorder(int(new_order))
+
+
 

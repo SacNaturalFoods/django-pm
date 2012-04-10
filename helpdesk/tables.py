@@ -13,6 +13,8 @@ from django_tables2 import Attrs
 from helpdesk.models import Ticket 
 
 class TicketTable(tables.Table):
+    #order = tables.Column(sortable=True, order_by=('order',))
+    order_html = tables.Column(sortable=True, order_by=('order',))
     id = tables.Column(sortable=True)
     priority = tables.Column(sortable=True)
     title = tables.LinkColumn('helpdesk_view', args=[A('id')], sortable=True)
@@ -23,6 +25,10 @@ class TicketTable(tables.Table):
 
     def render_priority(self, value):
         return dict(Ticket.PRIORITY_CHOICES)[int(value)].split(' ')[-1]
+
+    # can't get record values?
+    #def render_order(self, value):
+    #    return '<input id="ticket__%s" class="order" type="text" size="2" value="%s"/>' % (self.id, value)
     
     class Meta:
         attrs = {'class': 'paleblue'}

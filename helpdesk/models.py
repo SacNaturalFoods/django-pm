@@ -351,27 +351,22 @@ class Ticket(models.Model):
         )
 
     # TODO: order field with default order (max) and reorder routine
-    #order = models.IntegerField(
-    #        _('Order'),
-    #        default=Ticket._get_next_order_num(),
-    #        )
+    order = models.IntegerField(
+            _('Order'),
+            null=True,
+            )
 
-    #def reorder(self):
-    #    for t in self.queue.ticket_set.all():
-    #        if t.order >= self.order:
-    #            t.order += 1
-    #            t.save()
-    #    self.save()
+    def reorder(self, new_order):
+        old_order = self.order
+        self.order = new_order
+        for t in self.queue.ticket_set.exclude(pk=self.pk).all():
+            if t.order >= new_order:
+                t.order += 1
+                t.save()
+        self.save()
 
-
-    #def save(self, *args, **kwargs):
-    #    if not self.id:
-    #        # This is a new ticket as no ID yet exists.
-    #        self.created = datetime.now()
-
-
-    def _get_next_order_num(self):
-        return self.queue.ticket_set.aggregate(Max('pk'))['pk__max'] + 1
+    def order_html(self):
+        return '<input id="ticket__%s" class="ticket_order" type="text" size="2" value="%s"/>' % (self.pk, self.order)
 
     def _get_assigned_to(self):
         """ Custom property to allow us to easily print 'Unassigned' if a
@@ -510,7 +505,10 @@ class Ticket(models.Model):
             self.created = datetime.now()
 
         if not self.priority:
-            self.priority = 3
+            self.priority = 3 
+
+        if not self.order:
+            self.order = self.queue.ticket_set.aggregate(Max('pk'))['pk__max'] + 1
 
         self.modified = datetime.now()
 

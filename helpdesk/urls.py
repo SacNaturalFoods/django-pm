@@ -218,5 +218,6 @@ urlpatterns += patterns('helpdesk.views.search',
     url(r'^search/save$','save_search', name='save_search'),
     url(r'^search/delete$','delete_search', name='delete_search'),
     url(r'^search/toggle_sticky$','toggle_sticky_search', name='toggle_sticky'),
+    url(r'^search/change_ticket_order$','change_ticket_order', name='change_ticket_order'),
     )
 
