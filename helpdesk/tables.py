@@ -13,8 +13,7 @@ from django_tables2 import Attrs
 from helpdesk.models import Ticket 
 
 class TicketTable(tables.Table):
-    #order = tables.Column(sortable=True, order_by=('order',))
-    order_html = tables.Column(sortable=True, order_by=('order',))
+    order_html = tables.Column(verbose_name='order', sortable=True, order_by=('order',))
     id = tables.Column(sortable=True)
     priority = tables.Column(sortable=True)
     title = tables.LinkColumn('helpdesk_view', args=[A('id')], sortable=True)

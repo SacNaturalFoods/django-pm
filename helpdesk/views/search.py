@@ -55,7 +55,6 @@ class TabularSearchView(FacetedSearchView):
     # TODO: refactor, explain iframe/request wierdness
     def create_response(self, request):
         table = TicketTable([{
-            #'order':'<input id="ticket__%s" class="ticket_order" type="text" size="2" value="%s"/>' % (result.object.pk, result.object.order),
             'order':result.object.order,
             'order_html':result.object.order_html(),
             'id':result.object.pk, 

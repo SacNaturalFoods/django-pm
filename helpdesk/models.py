@@ -360,19 +360,27 @@ class Ticket(models.Model):
         old_order = self.order
         self.order = new_order
         for t in self.queue.ticket_set.exclude(pk=self.pk).exclude(order=0).all():
+            # order out
+            if new_order == 0:
+                if t.order > old_order:
+                    t.order -= 1
+            # order in
+            elif old_order == 0:
+                if t.order >= new_order:
+                    t.order += 1
             # order up
-            if new_order < old_order:
+            elif new_order < old_order:
                 if old_order > t.order >= new_order:
                     t.order += 1
             # order down
-            if new_order > old_order:
-                if t.order >= old_order:
+            elif new_order > old_order:
+                if  new_order >= t.order >= old_order:
                     t.order -= 1
             t.save()
         self.save()
 
     def order_html(self):
-        return '<input id="ticket__%s" class="ticket_order" type="text" size="2" value="%s"/>' % (self.pk, self.order)
+        return '<input id="ticket__%s" class="ticket_order" type="text" size="1" value="%s"/>' % (self.pk, self.order)
 
     def _get_assigned_to(self):
         """ Custom property to allow us to easily print 'Unassigned' if a
@@ -514,7 +522,7 @@ class Ticket(models.Model):
             self.priority = 3 
 
         if self.order is None:
-            self.order = self.queue.ticket_set.aggregate(Max('pk'))['pk__max'] + 1
+            self.order = self.queue.ticket_set.aggregate(Max('order'))['order__max'] + 1
 
         self.modified = datetime.now()
 
