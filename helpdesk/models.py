@@ -360,7 +360,7 @@ class Ticket(models.Model):
         old_order = self.order
         self.order = new_order
         for t in self.queue.ticket_set.exclude(pk=self.pk).all():
-            if t.order >= new_order:
+            if old_order > t.order >= new_order:
                 t.order += 1
                 t.save()
         self.save()
@@ -507,7 +507,7 @@ class Ticket(models.Model):
         if not self.priority:
             self.priority = 3 
 
-        if not self.order:
+        if self.order is None:
             self.order = self.queue.ticket_set.aggregate(Max('pk'))['pk__max'] + 1
 
         self.modified = datetime.now()
