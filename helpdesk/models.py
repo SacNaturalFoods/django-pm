@@ -359,10 +359,16 @@ class Ticket(models.Model):
     def reorder(self, new_order):
         old_order = self.order
         self.order = new_order
-        for t in self.queue.ticket_set.exclude(pk=self.pk).all():
-            if old_order > t.order >= new_order:
-                t.order += 1
-                t.save()
+        for t in self.queue.ticket_set.exclude(pk=self.pk).exclude(order=0).all():
+            # order up
+            if new_order < old_order:
+                if old_order > t.order >= new_order:
+                    t.order += 1
+            # order down
+            if new_order > old_order:
+                if t.order >= old_order:
+                    t.order -= 1
+            t.save()
         self.save()
 
     def order_html(self):

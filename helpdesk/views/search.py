@@ -167,6 +167,7 @@ def change_ticket_order(request):
     ticket_id = request.POST.get('ticket_id')
     new_order = request.POST.get('new_order')
     Ticket.objects.get(pk=int(ticket_id)).reorder(int(new_order))
+    return HttpResponse(status=200)
 
 
 
