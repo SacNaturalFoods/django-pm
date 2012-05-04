@@ -67,7 +67,7 @@
     <th colspan='2'>{% trans "Description" %}</th>
 </tr>
 <tr class='{% cycle rowcolors %}'>
-    <td colspan='2'>{{ ticket.description|force_escape|urlizetrunc:50|linebreaksbr }}</td>
+    <td colspan='2'>{{ ticket.description|safe|urlizetrunc:50 }}</td>
 </tr>
 
 {% if ticket.resolution %}<tr class='{% cycle rowcolors %}'>
