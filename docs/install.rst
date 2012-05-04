@@ -110,6 +110,10 @@ Adding To Your Django Project
      (r'', include('helpdesk.urls')),
 
    This line will have to come *after* any other lines in your urls.py such as those used by the Django admin.
+   
+   You will also need to add the django_socialauth urls for oauth login::
+
+     (r'login/$', 'social_auth.views.auth', {'backend': 'google-oauth'}),
 
 3. Create the required database tables. I'd suggest using *South*, however the following will work::
 
