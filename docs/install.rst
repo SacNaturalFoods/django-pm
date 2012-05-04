@@ -49,7 +49,7 @@ Adding To Your Django Project
         'helpdesk', # This is new!
     )
 
-    # for django_tables2
+    # django-tables2
     TEMPLATE_CONTEXT_PROCESSORS = (
         "django.contrib.auth.context_processors.auth",
         "django.core.context_processors.debug",
@@ -60,11 +60,17 @@ Adding To Your Django Project
         "django.core.context_processors.request",
     )
 
-    # for social_auth
+    # required for social-auth
     AUTHENTICATION_BACKENDS = (
         'social_auth.backends.google.GoogleOAuthBackend',
         'django.contrib.auth.backends.ModelBackend',
         )
+
+    # django-wysiwyg
+    DJANGO_WYSIWYG_FLAVOR = 'ckeditor'
+    DJANGO_WYSIWYG_MEDIA_URL = "%s/ckeditor/" % STATIC_URL
+
+
 
     # for search
     HAYSTACK_CONNECTIONS = {
@@ -101,10 +107,6 @@ Adding To Your Django Project
     GOOGLE_OAUTH_EXTRA_SCOPE = ['https://www.google.com/calendar/feeds/']
     GOOGLE_WHITE_LISTED_DOMAINS = ['yourdomain.com']
     GOOGLE_WHITE_LISTED_EMAILS = ['someoutsideemail@gmail.com']
-
-    # django-wysiwyg settings
-    DJANGO_WYSIWYG_FLAVOR = 'ckeditor'
-    DJANGO_WYSIWYG_MEDIA_URL = "%s/ckeditor/" % STATIC_URL
 
 2. Make sure django-pm is accessible via ``urls.py``. Add the following line to ``urls.py``::
 

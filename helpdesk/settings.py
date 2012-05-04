@@ -20,6 +20,7 @@ try:
 except ImportError:
         HAS_TAGGIT_SUPPORT = False
 
+# dependency settings
 
 
 try:
