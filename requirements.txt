@@ -10,3 +10,5 @@ httplib2==0.7.2
 lxml==2.3
 markup==0.2
 pysolr==2.1.0-beta
+django-wysiwyg==0.4.1
+
