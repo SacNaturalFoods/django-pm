@@ -1,4 +1,5 @@
 {% extends "helpdesk/base.html" %}{% load i18n %}
+{% load wysiwyg %}
 {% block helpdesk_title %}{% trans "Edit followup" %}{% endblock %}
 {% block helpdesk_head %}{% endblock helpdesk_head %}
 
@@ -18,6 +19,7 @@
             </dt>
             <dt><label for="id_comment">{% trans "Comment:" %}</label></dt>
             <dd>{{ form.comment }}</dd>
+            {% wysiwyg_editor "id_comment" %}
             </dt>
             <dt><label for="id_public">Public:</label></dt>
             <dd>{{ form.public }}</dd>

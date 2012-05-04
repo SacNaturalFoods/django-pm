@@ -44,6 +44,7 @@ Adding To Your Django Project
         'taggit_autosuggest',
         'django_tables2',
         'social_auth',
+        'django_wysiwyg',
         'haystack', # for search
         'helpdesk', # This is new!
     )
@@ -100,6 +101,10 @@ Adding To Your Django Project
     GOOGLE_OAUTH_EXTRA_SCOPE = ['https://www.google.com/calendar/feeds/']
     GOOGLE_WHITE_LISTED_DOMAINS = ['yourdomain.com']
     GOOGLE_WHITE_LISTED_EMAILS = ['someoutsideemail@gmail.com']
+
+    # django-wysiwyg settings
+    DJANGO_WYSIWYG_FLAVOR = 'ckeditor'
+    DJANGO_WYSIWYG_MEDIA_URL = "%s/ckeditor/" % STATIC_URL
 
 2. Make sure django-pm is accessible via ``urls.py``. Add the following line to ``urls.py``::
 
