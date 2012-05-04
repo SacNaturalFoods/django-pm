@@ -1,4 +1,5 @@
 {% extends "helpdesk/base.html" %}{% load i18n %}
+{% load wysiwyg %}
 {% block helpdesk_title %}{% trans "View Ticket Details" %}{% endblock %}
 {% block helpdesk_head %}
 <script type="text/javascript">
@@ -86,7 +87,7 @@ function googleTranslateElementInit() {
         {% endif %}
     </div>
 {% endif %}
-<span class='followup-desc'>{% if followup.comment %}{{ followup.comment|force_escape|urlizetrunc:50|num_to_link|linebreaksbr }}{% endif %}</span>
+<span class='followup-desc'>{% if followup.comment %}{{ followup.comment|safe|urlizetrunc:50|num_to_link }}{% endif %}</span>
 {% for change in followup.ticketchange_set.all %}
 {% if forloop.first %}<div class='changes'><ul>{% endif %}
 <li>{% blocktrans with change.field as field and change.old_value as old_value and change.new_value as new_value %}Changed {{ field }} from {{ old_value }} to {{ new_value }}.{% endblocktrans %}</li>
@@ -122,6 +123,7 @@ function googleTranslateElementInit() {
 
         <dt><label for='commentBox'>{% trans "Comment / Resolution" %}</label></dt>
         <dd><textarea rows='8' cols='70' name='comment' id='commentBox'></textarea></dd>
+        {% wysiwyg_editor "commentBox" %}
         <dd class='form_help_text'>{% trans "You can insert ticket and queue details in your message. For more information, see the <a href='../../help/context/'>context help page</a>." %}</dd>
 
         <dt><label>{% trans "New Status" %}</label></dt>

@@ -1,6 +1,7 @@
 {% load i18n %}
 {% load saved_queries %}
 {% load load_helpdesk_settings %}
+{% load wysiwyg %}
 {% with request|load_helpdesk_settings as helpdesk_settings %}
 {% with request|saved_queries as user_saved_queries_ %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -14,6 +15,10 @@
 
         <script src='{{ STATIC_URL }}helpdesk/jquery-1.5.min.js' type='text/javascript' language='javascript'></script>
         <script src='{{ STATIC_URL }}helpdesk/jquery-ui-1.8.9.custom.min.js' type='text/javascript' language='javascript'></script>
+        
+        {% wysiwyg_setup %}
+
+
         {% comment %}
         <script src='{{ STATIC_URL }}helpdesk/jquery.translate-debug-all.js' type='text/javascript' language='javascript'></script>
         {% endcomment %}
