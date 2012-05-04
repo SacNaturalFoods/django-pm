@@ -48,6 +48,59 @@ Adding To Your Django Project
         'helpdesk', # This is new!
     )
 
+    # for django_tables2
+    TEMPLATE_CONTEXT_PROCESSORS = (
+        "django.contrib.auth.context_processors.auth",
+        "django.core.context_processors.debug",
+        "django.core.context_processors.i18n",
+        "django.core.context_processors.media",
+        "django.core.context_processors.static",
+        "django.contrib.messages.context_processors.messages",
+        "django.core.context_processors.request",
+    )
+
+    # for social_auth
+    AUTHENTICATION_BACKENDS = (
+        'social_auth.backends.google.GoogleOAuthBackend',
+        'django.contrib.auth.backends.ModelBackend',
+        )
+
+    # for search
+    HAYSTACK_CONNECTIONS = {
+        'default': {
+            'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+            'URL': 'http://127.0.0.1:8983/solr'
+        },
+    }
+
+    # your django-pm settings (example)
+    HELPDESK_ALLOW_NON_STAFF_TICKET_UPDATE = True 
+    HELPDESK_NAVIGATION_ENABLED = True 
+    HELPDESK_CUSTOM_WELCOME = True 
+    HELPDESK_VIEW_A_TICKET_PUBLIC = False 
+    HELPDESK_SUBMIT_A_TICKET_PUBLIC = False 
+    HELPDESK_KB_ENABLED_STAFF = True
+    HELPDESK_STAFF_ONLY_TICKET_OWNERS = True
+    HELPDESK_STAFF_ONLY_TICKET_CC = True
+    HELPDESK_CALENDAR = 'google'
+    HELPDESK_UPDATE_CALENDAR = False 
+    HELPDESK_FOLLOWUP_MOD = True
+    HELPDESK_INCLUDE_DESCRIPTION_IN_FOLLOWUP = False
+
+    QUEUE_EMAIL_BOX_TYPE = 'imap'
+    QUEUE_EMAIL_BOX_SSL = True 
+    QUEUE_EMAIL_BOX_HOST = 'imap.gmail.com'
+    QUEUE_EMAIL_BOX_USER = 'yourqueueemail@yourdomain.com'
+    QUEUE_EMAIL_BOX_PASSWORD = 'yourqueueemailpassword'
+
+    # Social auth settings (example)
+    SOCIAL_AUTH_ASSOCIATE_BY_MAIL = True
+    GOOGLE_CONSUMER_KEY = 'yourconsumerkey'
+    GOOGLE_CONSUMER_SECRET = 'yourconsumersecret'
+    GOOGLE_OAUTH_EXTRA_SCOPE = ['https://www.google.com/calendar/feeds/']
+    GOOGLE_WHITE_LISTED_DOMAINS = ['yourdomain.com']
+    GOOGLE_WHITE_LISTED_EMAILS = ['someoutsideemail@gmail.com']
+
 2. Make sure django-pm is accessible via ``urls.py``. Add the following line to ``urls.py``::
 
      (r'helpdesk/', include('helpdesk.urls')),
