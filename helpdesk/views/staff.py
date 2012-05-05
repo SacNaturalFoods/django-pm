@@ -359,7 +359,8 @@ def update_ticket(request, ticket_id, public=False):
         c.save()
         ticket.priority = priority
 
-    due_date = timezone.make_aware(due_date, timezone.utc)
+    if due_date:
+        due_date = timezone.make_aware(due_date, timezone.utc)
     if due_date != ticket.due_date:
         c = TicketChange(
             followup=f,
