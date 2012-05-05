@@ -24,6 +24,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import loader, Context, RequestContext
 from django.utils.translation import ugettext as _
 from django.utils.html import escape
+from django.utils import timezone
 from django import forms
 
 from helpdesk.forms import TicketForm, UserSettingsForm, EmailIgnoreForm, EditTicketForm, TicketCCForm, EditFollowUpForm, TicketDependencyForm
@@ -358,6 +359,7 @@ def update_ticket(request, ticket_id, public=False):
         c.save()
         ticket.priority = priority
 
+    due_date = timezone.make_aware(due_date, timezone.utc)
     if due_date != ticket.due_date:
         c = TicketChange(
             followup=f,

@@ -27,7 +27,6 @@ from django.core.management.base import BaseCommand
 from django.db.models import Q
 from django.utils.translation import ugettext as _
 from django.conf import settings
-from django.utils import timezone
 
 from helpdesk.lib import send_templated_mail, safe_template_context
 from helpdesk.models import Queue, Ticket, FollowUp, Attachment, IgnoreEmail
