@@ -10,7 +10,7 @@
     {% if helpdesk_settings.HELPDESK_SHOW_HOLD_BUTTON_TICKET_TOP %}
     {% if ticket.on_hold %}<a href='unhold/' class="ticket-hold">{% trans "Unhold" %}</a>{% else %}<a href='hold/' class="ticket-hold">{% trans "Hold" %}</a>{% endif %}
     {% endif %}</span></td></tr>
-<tr class='row_columnheads'><th colspan='2'>{% blocktrans with ticket.queue as queue %}Queue: {{ queue }}{% endblocktrans %}</th></tr>
+<tr class='row_columnheads'><th colspan='2'>{% trans "Queue" %}: {% blocktrans with ticket.queue as queue %} {{ queue }}{% endblocktrans %}</th></tr>
 
 <tr class='{% cycle 'row_odd' 'row_even' as rowcolors %}'>
     <th>{% trans "Submitted On" %}</th>
