@@ -27,7 +27,7 @@ from django.utils import simplejson as json
 from django.contrib.auth.models import User
 from django.template import RequestContext
 
-from haystack.views import FacetedSearchView
+from haystack.views import SearchView
 from haystack.query import SearchQuerySet
 from django_tables2 import RequestConfig
 from taggit.models import Tag
@@ -36,7 +36,7 @@ from helpdesk.models import Ticket, Queue, SavedSearch
 from helpdesk.tables import TicketTable
 
 
-class TabularSearchView(FacetedSearchView):
+class TabularSearchView(SearchView):
 
     def __name__(self):
         return "TabularSearchView"

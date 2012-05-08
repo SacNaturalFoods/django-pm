@@ -16,7 +16,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 
-from haystack.forms import FacetedSearchForm
+from haystack.forms import SearchForm
 
 from helpdesk.lib import send_templated_mail, safe_template_context
 from helpdesk.models import Ticket, Queue, FollowUp, Attachment, IgnoreEmail, TicketCC, CustomField, TicketCustomFieldValue, TicketDependency
@@ -630,7 +630,8 @@ class TicketDependencyForm(forms.ModelForm):
         exclude = ('ticket',)
 
 
-class AllResultsFacetedSearchForm(FacetedSearchForm):
+from haystack.forms import FacetedSearchForm
+class AllResultsSearchForm(FacetedSearchForm):
 
     def search(self):
         if not self.is_valid():
@@ -641,17 +642,29 @@ class AllResultsFacetedSearchForm(FacetedSearchForm):
         if self.load_all:
             sqs = sqs.load_all()
 
+        # apply specific operators (these aren't really "facets")
+        # group operators
+        operators = {}
+        for operator in self.data.getlist('selected_facets'):
+            o, v = operator.split(':')
+            if operators.get(o):
+                operators[o] += [v] 
+            else:
+                operators[o] = [v]
 
-       # We need to process each facet to ensure that the field name and the
+        for operator in operators:
+            sqs = sqs.filter(**{'%s__in' % operator: operators[operator]})
+
+        # We need to process each facet to ensure that the field name and the
         # value are quoted correctly and separately:
-        for facet in self.selected_facets:
-            if ":" not in facet:
-                continue
+        #for facet in self.selected_facets:
+        #    if ":" not in facet:
+        #        continue
 
-            field, value = facet.split(":", 1)
-            
-            if value:
-                sqs = sqs.narrow(u'%s:"%s"' % (field, sqs.query.clean(value)))
+        #    field, value = facet.split(":", 1)
+        #    
+        #    if value:
+        #        sqs = sqs.narrow(u'%s:"%s"' % (field, sqs.query.clean(value)))
 
        
         return sqs

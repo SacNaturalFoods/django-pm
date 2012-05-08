@@ -207,13 +207,13 @@ urlpatterns += patterns('',
 
 
 from haystack.query import SearchQuerySet
-from haystack.forms import FacetedSearchForm
-from helpdesk.forms import AllResultsFacetedSearchForm
+from haystack.forms import SearchForm
+from helpdesk.forms import AllResultsSearchForm
 from helpdesk.views.search import TabularSearchView
-sqs = SearchQuerySet().facet('tags').facet('status_str')
+sqs = SearchQuerySet()
 
 urlpatterns += patterns('helpdesk.views.search',
-    url(r'^search/$', TabularSearchView(form_class=AllResultsFacetedSearchForm, searchqueryset=sqs, load_all=True), name='haystack_search'),
+    url(r'^search/$', TabularSearchView(form_class=AllResultsSearchForm, searchqueryset=sqs, load_all=True), name='haystack_search'),
     url(r'^search/autocomplete/$','autocomplete_search', name='autocomplete_search'),
     url(r'^search/save$','save_search', name='save_search'),
     url(r'^search/delete$','delete_search', name='delete_search'),
