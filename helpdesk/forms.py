@@ -653,7 +653,9 @@ class AllResultsSearchForm(FacetedSearchForm):
                 operators[o] = [v]
 
         for operator in operators:
-            sqs = sqs.filter(**{'%s__in' % operator: operators[operator]})
+            # TODO: internationalize this better
+            operator_name = operator.replace('list', 'queue')
+            sqs = sqs.filter(**{'%s__in' % operator_name: operators[operator]})
 
         # We need to process each facet to ensure that the field name and the
         # value are quoted correctly and separately:

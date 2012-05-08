@@ -18,7 +18,7 @@ class TicketTable(tables.Table):
     priority = tables.Column(sortable=True)
     title = tables.LinkColumn('helpdesk_view', args=[A('id')], sortable=True)
     assigned_to = tables.Column(verbose_name='owner', sortable=True)
-    queue = tables.Column(sortable=True)
+    queue = tables.Column(sortable=True, verbose_name='list')
     status = tables.Column(sortable=True)
     created = tables.Column(sortable=True)
 
