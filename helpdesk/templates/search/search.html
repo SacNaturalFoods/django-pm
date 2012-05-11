@@ -114,21 +114,26 @@ $(function() {
         };
 
         function format_search(search_str) {
-            //var search_str = search_str.replace(/:/g,'_exact:');
-            searches = search_str.split(',');
-            var search_q = '';
-            var facets = '';
-            for (i in searches) {
-               var search = searches[i];
-               if (search.match(':')) {
-                  facets += '&selected_facets=' + search; 
-               } else if (search) {
-                  search_q += search + ',';
-               }
+            // return ticket if begin with #
+            var ticket_id_search = search_str.match(/^#(\d+)/);
+            if (ticket_id_search) {
+                console.log(ticket_id_search);
+                location.href = '{% url helpdesk_view %}' + ticket_id_search[1];
+            } else {
+                searches = search_str.split(',');
+                var search_q = '';
+                var facets = '';
+                for (i in searches) {
+                   var search = searches[i];
+                   if (search.match(':')) {
+                      facets += '&selected_facets=' + search; 
+                   } else if (search) {
+                      search_q += encodeURIComponent(search) + ',';
+                   }
+                }
+                search_q = 'q=' + search_q + facets;
+                location.href = '{% url haystack_search %}?'+search_q;
             }
-            search_q = 'q=' + search_q + facets;
-            //$('#id_q').val(search_q);
-            location.href = '{% url haystack_search %}?'+search_q;
         }
 
         $('#search_button').click(function(e) {

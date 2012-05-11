@@ -34,7 +34,7 @@ urlpatterns = patterns('helpdesk.views.staff',
         'create_ticket',
         name='helpdesk_submit'),
 
-    url(r'^tickets/(?P<ticket_id>[0-9]+)/$',
+    url(r'^tickets/(?P<ticket_id>[0-9]+)?',
         'view_ticket',
         name='helpdesk_view'),
 
