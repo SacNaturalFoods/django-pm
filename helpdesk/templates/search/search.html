@@ -118,7 +118,7 @@ $(function() {
             var ticket_id_search = search_str.match(/^#(\d+)/);
             if (ticket_id_search) {
                 console.log(ticket_id_search);
-                location.href = '{% url helpdesk_view %}' + ticket_id_search[1];
+                location.href = '{% url helpdesk_list %}' + ticket_id_search[1];
             } else {
                 searches = search_str.split(',');
                 var search_q = '';
