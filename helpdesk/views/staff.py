@@ -590,215 +590,217 @@ def mass_update(request):
 mass_update = staff_member_required(mass_update)
 
 def ticket_list(request):
-    context = {}
-
-    # Query_params will hold a dictionary of paramaters relating to
-    # a query, to be saved if needed:
-    query_params = {
-        'filtering': {},
-        'sorting': None,
-        'sortreverse': False,
-        'keyword': None,
-        'other_filter': None,
-        }
-
-    from_saved_query = False
-
-    # If the user is coming from the header/navigation search box, lets' first
-    # look at their query to see if they have entered a valid ticket number. If
-    # they have, just redirect to that ticket number. Otherwise, we treat it as
-    # a keyword search.
-
-    if request.GET.get('search_type', None) == 'header':
-        query = request.GET.get('q')
-        filter = None
-        if query.find('-') > 0:
-            queue, id = query.split('-')
-            try:
-                id = int(id)
-            except ValueError:
-                id = None
-
-            if id:
-                filter = {'queue__slug': queue, 'id': id }
-        else:
-            try:
-                query = int(query)
-            except ValueError:
-                query = None
-
-            if query:
-                filter = {'id': int(query) }
-
-        if filter:
-            try:
-                ticket = Ticket.objects.get(**filter)
-                return HttpResponseRedirect(ticket.staff_url)
-            except Ticket.DoesNotExist:
-                # Go on to standard keyword searching
-                pass
-
-    saved_query = None
-    if request.GET.get('saved_query', None):
-        from_saved_query = True
-        try:
-            saved_query = SavedSearch.objects.get(pk=request.GET.get('saved_query'))
-        except SavedSearch.DoesNotExist:
-            return HttpResponseRedirect(reverse('helpdesk_list'))
-        if not (saved_query.shared or saved_query.user == request.user):
-            return HttpResponseRedirect(reverse('helpdesk_list'))
-
-        import cPickle
-        from helpdesk.lib import b64decode
-        query_params = cPickle.loads(b64decode(str(saved_query.query)))
-    elif not (  request.GET.has_key('queue')
-            or  request.GET.has_key('assigned_to')
-            or  request.GET.has_key('status')
-            or  request.GET.has_key('q')
-            or  request.GET.has_key('sort')
-            or  request.GET.has_key('sortreverse') 
-            or  request.GET.has_key('tags') ):
-
-        # Fall-back if no querying is being done, force the list to only
-        # show open/reopened/resolved (not closed) cases sorted by creation
-        # date.
-
-        query_params = {
-            'filtering': {'status__in': [1, 2, 3]},
-            'sorting': 'created',
-        }
-    else:
-        queues = request.GET.getlist('queue')
-        if queues:
-             try:
-                queues = [int(q) for q in queues]
-                query_params['filtering']['queue__id__in'] = queues
-             except ValueError:
-                pass
-
-        owners = request.GET.getlist('assigned_to')
-        if owners:
-             try:
-                owners = [int(u) for u in owners]
-                query_params['filtering']['assigned_to__id__in'] = owners
-             except ValueError:
-                pass
-
-        statuses = request.GET.getlist('status')
-        if statuses:
-            try:
-                statuses = [int(s) for s in statuses]
-                query_params['filtering']['status__in'] = statuses
-            except ValueError:
-                pass
-
-
-        date_from = request.GET.get('date_from')
-        if date_from:
-            query_params['filtering']['created__gte'] = date_from
-        
-        date_to = request.GET.get('date_to')
-        if date_to:
-            query_params['filtering']['created__lte'] = date_to
-
-        ### KEYWORD SEARCHING
-        q = request.GET.get('q', None)
-
-        if q:
-            qset = (
-                Q(title__icontains=q) |
-                Q(description__icontains=q) |
-                Q(resolution__icontains=q) |
-                Q(submitter_email__icontains=q)
-            )
-            context = dict(context, query=q)
-
-            query_params['other_filter'] = qset
-
-        ### SORTING
-        sort = request.GET.get('sort', None)
-        if sort not in ('status', 'assigned_to', 'created', 'title', 'queue', 'priority'):
-            sort = 'created'
-        query_params['sorting'] = sort
-
-        sortreverse = request.GET.get('sortreverse', None)
-        query_params['sortreverse'] = sortreverse
-
-    try:
-        ticket_qs = apply_query(Ticket.objects.select_related(), query_params)
-    except ValidationError:
-        # invalid parameters in query, return default query
-        query_params = {
-            'filtering': {'status__in': [1, 2, 3]},
-            'sorting': 'created',
-        }
-        ticket_qs = apply_query(Ticket.objects.select_related(), query_params)
-
-    ## TAG MATCHING
-    if HAS_TAGGING_SUPPORT:
-        tags = request.GET.getlist('tags')
-        if tags:
-            ticket_qs = TaggedItem.objects.get_by_model(ticket_qs, tags)
-            query_params['tags'] = tags
-
-    if HAS_TAGGIT_SUPPORT:
-        tags = request.GET.getlist('tags')
-        if tags:
-            ticket_qs = Ticket.objects.filter(tags__name__in=tags)
-            query_params['tags'] = tags
-
-
-    ticket_paginator = paginator.Paginator(ticket_qs, request.user.usersettings.settings.get('tickets_per_page') or 20)
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-         page = 1
-
-    try:
-        tickets = ticket_paginator.page(page)
-    except (paginator.EmptyPage, paginator.InvalidPage):
-        tickets = ticket_paginator.page(ticket_paginator.num_pages)
-
-    search_message = ''
-    if context.has_key('query') and settings.DATABASE_ENGINE.startswith('sqlite'):
-        search_message = _('<p><strong>Note:</strong> Your keyword search is case sensitive because of your database. This means the search will <strong>not</strong> be accurate. By switching to a different database system you will gain better searching! For more information, read the <a href="http://docs.djangoproject.com/en/dev/ref/databases/#sqlite-string-matching">Django Documentation on string matching in SQLite</a>.')
-
-
-    import cPickle
-    from helpdesk.lib import b64encode
-    urlsafe_query = b64encode(cPickle.dumps(query_params))
-
-    user_saved_queries = SavedSearch.objects.filter(Q(user=request.user) | Q(shared__exact=True))
-
-    query_string = []
-    for get_key, get_value in request.GET.iteritems():
-        if get_key != "page":
-            query_string.append("%s=%s" % (get_key, get_value))
-
-    tag_choices = [] 
-    if HAS_TAGGING_SUPPORT or HAS_TAGGIT_SUPPORT:
-        # FIXME: restrict this to tags that are actually in use
-        tag_choices = Tag.objects.all()
-
-    return render_to_response('helpdesk/ticket_list.html',
-        RequestContext(request, dict(
-            context,
-            query_string="&".join(query_string),
-            tickets=tickets,
-            user_choices=User.objects.filter(is_active=True),
-            queue_choices=Queue.objects.all(),
-            status_choices=Ticket.STATUS_CHOICES,
-            tag_choices=tag_choices,
-            urlsafe_query=urlsafe_query,
-            user_saved_queries=user_saved_queries,
-            query_params=query_params,
-            from_saved_query=from_saved_query,
-            saved_query=saved_query,
-            search_message=search_message,
-            tagging_enabled=HAS_TAGGING_SUPPORT,
-            taggit_enabled=HAS_TAGGIT_SUPPORT,
-        )))
-ticket_list = staff_member_required(ticket_list)
+    return HttpResponseRedirect(reverse('haystack_search'))
+#def ticket_list(request):
+#    context = {}
+#
+#    # Query_params will hold a dictionary of paramaters relating to
+#    # a query, to be saved if needed:
+#    query_params = {
+#        'filtering': {},
+#        'sorting': None,
+#        'sortreverse': False,
+#        'keyword': None,
+#        'other_filter': None,
+#        }
+#
+#    from_saved_query = False
+#
+#    # If the user is coming from the header/navigation search box, lets' first
+#    # look at their query to see if they have entered a valid ticket number. If
+#    # they have, just redirect to that ticket number. Otherwise, we treat it as
+#    # a keyword search.
+#
+#    if request.GET.get('search_type', None) == 'header':
+#        query = request.GET.get('q')
+#        filter = None
+#        if query.find('-') > 0:
+#            queue, id = query.split('-')
+#            try:
+#                id = int(id)
+#            except ValueError:
+#                id = None
+#
+#            if id:
+#                filter = {'queue__slug': queue, 'id': id }
+#        else:
+#            try:
+#                query = int(query)
+#            except ValueError:
+#                query = None
+#
+#            if query:
+#                filter = {'id': int(query) }
+#
+#        if filter:
+#            try:
+#                ticket = Ticket.objects.get(**filter)
+#                return HttpResponseRedirect(ticket.staff_url)
+#            except Ticket.DoesNotExist:
+#                # Go on to standard keyword searching
+#                pass
+#
+#    saved_query = None
+#    if request.GET.get('saved_query', None):
+#        from_saved_query = True
+#        try:
+#            saved_query = SavedSearch.objects.get(pk=request.GET.get('saved_query'))
+#        except SavedSearch.DoesNotExist:
+#            return HttpResponseRedirect(reverse('helpdesk_list'))
+#        if not (saved_query.shared or saved_query.user == request.user):
+#            return HttpResponseRedirect(reverse('helpdesk_list'))
+#
+#        import cPickle
+#        from helpdesk.lib import b64decode
+#        query_params = cPickle.loads(b64decode(str(saved_query.query)))
+#    elif not (  request.GET.has_key('queue')
+#            or  request.GET.has_key('assigned_to')
+#            or  request.GET.has_key('status')
+#            or  request.GET.has_key('q')
+#            or  request.GET.has_key('sort')
+#            or  request.GET.has_key('sortreverse') 
+#            or  request.GET.has_key('tags') ):
+#
+#        # Fall-back if no querying is being done, force the list to only
+#        # show open/reopened/resolved (not closed) cases sorted by creation
+#        # date.
+#
+#        query_params = {
+#            'filtering': {'status__in': [1, 2, 3]},
+#            'sorting': 'created',
+#        }
+#    else:
+#        queues = request.GET.getlist('queue')
+#        if queues:
+#             try:
+#                queues = [int(q) for q in queues]
+#                query_params['filtering']['queue__id__in'] = queues
+#             except ValueError:
+#                pass
+#
+#        owners = request.GET.getlist('assigned_to')
+#        if owners:
+#             try:
+#                owners = [int(u) for u in owners]
+#                query_params['filtering']['assigned_to__id__in'] = owners
+#             except ValueError:
+#                pass
+#
+#        statuses = request.GET.getlist('status')
+#        if statuses:
+#            try:
+#                statuses = [int(s) for s in statuses]
+#                query_params['filtering']['status__in'] = statuses
+#            except ValueError:
+#                pass
+#
+#
+#        date_from = request.GET.get('date_from')
+#        if date_from:
+#            query_params['filtering']['created__gte'] = date_from
+#        
+#        date_to = request.GET.get('date_to')
+#        if date_to:
+#            query_params['filtering']['created__lte'] = date_to
+#
+#        ### KEYWORD SEARCHING
+#        q = request.GET.get('q', None)
+#
+#        if q:
+#            qset = (
+#                Q(title__icontains=q) |
+#                Q(description__icontains=q) |
+#                Q(resolution__icontains=q) |
+#                Q(submitter_email__icontains=q)
+#            )
+#            context = dict(context, query=q)
+#
+#            query_params['other_filter'] = qset
+#
+#        ### SORTING
+#        sort = request.GET.get('sort', None)
+#        if sort not in ('status', 'assigned_to', 'created', 'title', 'queue', 'priority'):
+#            sort = 'created'
+#        query_params['sorting'] = sort
+#
+#        sortreverse = request.GET.get('sortreverse', None)
+#        query_params['sortreverse'] = sortreverse
+#
+#    try:
+#        ticket_qs = apply_query(Ticket.objects.select_related(), query_params)
+#    except ValidationError:
+#        # invalid parameters in query, return default query
+#        query_params = {
+#            'filtering': {'status__in': [1, 2, 3]},
+#            'sorting': 'created',
+#        }
+#        ticket_qs = apply_query(Ticket.objects.select_related(), query_params)
+#
+#    ## TAG MATCHING
+#    if HAS_TAGGING_SUPPORT:
+#        tags = request.GET.getlist('tags')
+#        if tags:
+#            ticket_qs = TaggedItem.objects.get_by_model(ticket_qs, tags)
+#            query_params['tags'] = tags
+#
+#    if HAS_TAGGIT_SUPPORT:
+#        tags = request.GET.getlist('tags')
+#        if tags:
+#            ticket_qs = Ticket.objects.filter(tags__name__in=tags)
+#            query_params['tags'] = tags
+#
+#
+#    ticket_paginator = paginator.Paginator(ticket_qs, request.user.usersettings.settings.get('tickets_per_page') or 20)
+#    try:
+#        page = int(request.GET.get('page', '1'))
+#    except ValueError:
+#         page = 1
+#
+#    try:
+#        tickets = ticket_paginator.page(page)
+#    except (paginator.EmptyPage, paginator.InvalidPage):
+#        tickets = ticket_paginator.page(ticket_paginator.num_pages)
+#
+#    search_message = ''
+#    if context.has_key('query') and settings.DATABASE_ENGINE.startswith('sqlite'):
+#        search_message = _('<p><strong>Note:</strong> Your keyword search is case sensitive because of your database. This means the search will <strong>not</strong> be accurate. By switching to a different database system you will gain better searching! For more information, read the <a href="http://docs.djangoproject.com/en/dev/ref/databases/#sqlite-string-matching">Django Documentation on string matching in SQLite</a>.')
+#
+#
+#    import cPickle
+#    from helpdesk.lib import b64encode
+#    urlsafe_query = b64encode(cPickle.dumps(query_params))
+#
+#    user_saved_queries = SavedSearch.objects.filter(Q(user=request.user) | Q(shared__exact=True))
+#
+#    query_string = []
+#    for get_key, get_value in request.GET.iteritems():
+#        if get_key != "page":
+#            query_string.append("%s=%s" % (get_key, get_value))
+#
+#    tag_choices = [] 
+#    if HAS_TAGGING_SUPPORT or HAS_TAGGIT_SUPPORT:
+#        # FIXME: restrict this to tags that are actually in use
+#        tag_choices = Tag.objects.all()
+#
+#    return render_to_response('helpdesk/ticket_list.html',
+#        RequestContext(request, dict(
+#            context,
+#            query_string="&".join(query_string),
+#            tickets=tickets,
+#            user_choices=User.objects.filter(is_active=True),
+#            queue_choices=Queue.objects.all(),
+#            status_choices=Ticket.STATUS_CHOICES,
+#            tag_choices=tag_choices,
+#            urlsafe_query=urlsafe_query,
+#            user_saved_queries=user_saved_queries,
+#            query_params=query_params,
+#            from_saved_query=from_saved_query,
+#            saved_query=saved_query,
+#            search_message=search_message,
+#            tagging_enabled=HAS_TAGGING_SUPPORT,
+#            taggit_enabled=HAS_TAGGIT_SUPPORT,
+#        )))
+#ticket_list = staff_member_required(ticket_list)
 
 
 def edit_ticket(request, ticket_id):
