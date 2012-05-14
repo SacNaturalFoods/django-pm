@@ -2,9 +2,9 @@
 {% load helpdesk_filters %} 
 {% load render_table from django_tables2 %} 
 
-{% block helpdesk_body %}
     <h2>Search</h2>
 
+    {% block helpdesk_header %}
 <form id="search_form" method="get" action=".">
     <table>
         <tbody>
@@ -17,8 +17,12 @@
     </table>
 </form>
 
+{% comment %}
 <p><b>Saved searches:</b><span id="saved_searches"> {{ saved_searches|safe }} </span></p>
+{% endcomment %}
+    {% endblock %}
 
+{% block helpdesk_body %}
 {% for sticky_search in sticky_searches %}
     {% if forloop.first and query %}
         <iframe frameborder="0" scrolling="no" width="100%" height="350px" src="?{{ query }}&sticky=false"></iframe>

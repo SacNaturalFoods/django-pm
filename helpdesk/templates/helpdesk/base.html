@@ -110,13 +110,25 @@
     <body>
         <div id='container'>
             <div id='header'>
-                <h1>{% trans "Helpdesk" %}</h1>
-                {% include "helpdesk/navigation.html" %}
+                {% if helpdesk_settings.PM_LOGO_URL %}
+                    <div id="logo_div">
+                        <img id="logo" src="{{ helpdesk_settings.PM_LOGO_URL }}"/> 
+                    </div>
+                {% endif %}
+                    <h1>{% trans "Helpdesk" %}</h1>
+                <div id="header_buttons">
+                    {% block helpdesk_header %}{% endblock %}
+                    <div id="navigation">
+                    {% include "helpdesk/navigation.html" %}
+                    </div>
+                </div>
             </div>
-
+            
+            <div id="body_wrap">
             <div id='body'>
                 {% block helpdesk_body %}{% endblock %}
             </div>
+        </div>
 
             <div id='footer'>
                 <p>{% include "helpdesk/attribution.html" %}

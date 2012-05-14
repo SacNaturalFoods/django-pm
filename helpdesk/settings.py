@@ -151,7 +151,6 @@ QUEUE_EMAIL_BOX_HOST = getattr(settings, 'QUEUE_EMAIL_BOX_HOST', None)
 QUEUE_EMAIL_BOX_USER = getattr(settings, 'QUEUE_EMAIL_BOX_USER', None)
 QUEUE_EMAIL_BOX_PASSWORD = getattr(settings, 'QUEUE_EMAIL_BOX_PASSWORD', None)
 
-
 ''' calendar options '''
 # these settings determine whether a calendar will be integrated with the helpdesk
 
@@ -160,3 +159,6 @@ HELPDESK_UPDATE_CALENDAR = getattr(settings, 'HELPDESK_UPDATE_CALENDAR', False)
 
 # specify the calendar to update - selects a python module to run the update code
 HELPDESK_CALENDAR = getattr(settings, 'HELPDESK_CALENDAR', None)
+
+# media options
+PM_LOGO_URL = getattr(settings, 'PM_LOGO_URL', None)
