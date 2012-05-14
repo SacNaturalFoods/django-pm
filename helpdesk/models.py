@@ -433,6 +433,12 @@ class Ticket(models.Model):
         """
         return dict(self.STATUS_CHOICES)[int(self.status)]
 
+    def tags_str(self):
+        """
+        String representation of all tags (for search).
+        """
+        return ' '.join([tag.name for tag in self.tags.all()]) 
+
     def submitted_by(self):
         """
         Get submitter username from email (if exists).

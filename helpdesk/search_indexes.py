@@ -12,7 +12,9 @@ class TicketIndex(indexes.RealTimeSearchIndex, indexes.Indexable):
     priority_str = indexes.CharField(model_attr='priority_str')
     status_str = indexes.CharField(model_attr='status_str')
     queue = indexes.CharField(model_attr='queue')
+    #tags = indexes.MultiValueField(null=True)
     tags = indexes.MultiValueField(null=True)
+    tags_str = indexes.CharField(model_attr='tags_str', null=True)
 
     def prepare_tags(self, obj):
         return [tag.name for tag in obj.tags.all()]
@@ -22,5 +24,4 @@ class TicketIndex(indexes.RealTimeSearchIndex, indexes.Indexable):
 
     def index_queryset(self):
         """Used when the entire index for model is updated."""
-        #return self.get_model().objects.filter(pub_date__lte=datetime.datetime.now())
         return self.get_model().objects.all()
