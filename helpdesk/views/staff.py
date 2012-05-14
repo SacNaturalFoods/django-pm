@@ -262,7 +262,7 @@ def update_ticket(request, ticket_id, public=False):
     due_month = request.POST.get('due_date_month')
     due_day = request.POST.get('due_date_day')
     try:
-        due_date = datetime(int(due_year), int(due_month), int(due_day))
+        due_date = datetime(int(due_year), int(due_month), int(due_day), tzinfo=timezone.utc)
     except:
         due_date = ticket.due_date
     tags = request.POST.get('tags', '')
@@ -359,8 +359,8 @@ def update_ticket(request, ticket_id, public=False):
         c.save()
         ticket.priority = priority
 
-    if due_date:
-        due_date = timezone.make_aware(due_date, timezone.utc)
+    #if due_date:
+    #    due_date = timezone.make_aware(due_date, timezone.utc)
     if due_date != ticket.due_date:
         c = TicketChange(
             followup=f,

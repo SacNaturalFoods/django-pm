@@ -169,7 +169,7 @@ class TicketForm(forms.ModelForm):
             'as \'3\'.'),
         )
 
-    due_date = forms.DateTimeField(
+    due_date = forms.DateField(
         widget=extras.SelectDateWidget,
         required=False,
         label=_('Due on'),
@@ -417,6 +417,7 @@ class PublicTicketForm(forms.Form):
         required=False,
         label=_('Due on'),
         )
+
 
     attachment = forms.FileField(
         required=False,

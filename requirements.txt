@@ -11,3 +11,4 @@ lxml==2.3
 markup==0.2
 django-wysiwyg==0.4.1
 Whoosh==2.4.0
+pytz==2012c
