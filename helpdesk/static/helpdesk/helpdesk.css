@@ -20,6 +20,13 @@ table {
 
 #header {
     height: 125px;
+    border-bottom: 1px solid #E5E5E5;
+}
+
+.roll-under {
+    box-shadow: 0 2px 2px -1px rgba(0,0,0,.1);
+    -webkit-box-shadow: 0 2px 2px -1px rgba(0,0,0,.1);
+    -mox-box-shadow: 0 2px 2px -1px rgba(0,0,0,.1);
 }
 
 
