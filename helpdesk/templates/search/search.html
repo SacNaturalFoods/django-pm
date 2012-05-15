@@ -20,6 +20,7 @@
             </tr>
         </tbody>
     </table>
+            <div id="saved_searches" class="saved_searches">adfadsfasdf</div>
 </form>
 
 {% comment %}
@@ -40,6 +41,7 @@
 
 <script type="text/javascript">
 
+
     // resize iframes after load
     $(window).load(function() {
         $('iframe').each(function(i, iframe) {
@@ -47,13 +49,20 @@
             var height = $(iframe).contents().find('table').height();
             $(iframe).attr('height', header_footer + height  + 'px');
         });
+
+        // size and locate hidden saved search div according to search bar
+        var pos = $('#id_q').position();
+        var height = $('#id_q').attr('offsetHeight');
+        var width = $('#id_q').attr('offsetWidth');
+        $('#saved_searches').css({position: 'absolute', top: pos.top + height, left: pos.left, width: width - 2});
+
     });
 
     
     
 $(function() {
 
-    $('#save, #disabled_sticky').click(function() {
+        $('#save, #disabled_sticky').click(function() {
         var title = prompt('Please enter a name for your search.');
         if (title) {
             $('#saved_searches').load('{% url save_search %}', {

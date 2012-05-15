@@ -80,8 +80,17 @@ table {
     cursor: pointer;
 }
 
+#search_field_container {
+    margin-right: -15px;
+}
+
 #search_form #saved_search_dropdown_button:hover {
     background: url("/static/helpdesk/buttons/dark-grey-arrow-down.png") center no-repeat;
+}
+
+#search_form #saved_searches {
+    border: 1px solid gray;
+    margin: 2px;
 }
 
 #navigation {
@@ -398,9 +407,11 @@ span#save {
     padding: 5px;
 }
 
+/*
 span#saved_searches span {
     padding: 5px;
 }
+*/
 
 span.search_title {
     font-weight: bold;

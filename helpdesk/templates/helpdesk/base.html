@@ -13,8 +13,12 @@
         <script src='{{ STATIC_URL }}admin/js/jquery.min.js' type='text/javascript' language='javascript'></script>
         <script src='{{ STATIC_URL }}admin/js/jquery.init.js' type='text/javascript' language='javascript'></script>
 
+        {% comment %}
+        {## TODO: cant seem to upgrade jquery ##}
+        <script src='{{ STATIC_URL }}helpdesk/jquery-1.7.2.min.js' type='text/javascript' language='javascript'></script>
+        <script src='{{ STATIC_URL }}helpdesk/jquery-ui-1.8.20.custom.min.js' type='text/javascript' language='javascript'></script>
+        {% endcomment %}
         <script src='{{ STATIC_URL }}helpdesk/jquery-1.5.min.js' type='text/javascript' language='javascript'></script>
-        <script src='{{ STATIC_URL }}helpdesk/jquery-ui-1.8.9.custom.min.js' type='text/javascript' language='javascript'></script>
         <script src='{{ STATIC_URL }}helpdesk/jquery.mousewheel.min.js' type='text/javascript' language='javascript'></script>
         <script src='{{ STATIC_URL }}helpdesk/jScrollPane.js' type='text/javascript' language='javascript'></script>
         
@@ -40,6 +44,12 @@
 
         $(function() {
             $('.scroll-pane').jScrollPane();
+
+
+        $('#saved_search_dropdown_button').click(function() {
+            $('#saved_searches').toggle();
+        });
+
         });
 
         </script>
