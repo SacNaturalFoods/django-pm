@@ -40,13 +40,18 @@ table {
     height: 700px;
     margin: auto;
 }
+
 #body_wrap {
+    /*
     width: 975px;
     overflow: hidden;
     margin: auto;
+    */
 }
 
-
+.jScrollPaneContainer {
+    margin: auto;
+}
 
 #header h1 {
     display: block;
@@ -63,6 +68,20 @@ table {
 
 #search_form {
     float: left;
+}
+
+#search_form #saved_search_dropdown_button {
+    background: url("/static/helpdesk/buttons/light-grey-arrow-down.png") center no-repeat;
+    display: inline;
+    width: 10px;
+    padding: 0 5px;
+    position: relative;
+    right: 22px;
+    cursor: pointer;
+}
+
+#search_form #saved_search_dropdown_button:hover {
+    background: url("/static/helpdesk/buttons/dark-grey-arrow-down.png") center no-repeat;
 }
 
 #navigation {

@@ -15,6 +15,8 @@
 
         <script src='{{ STATIC_URL }}helpdesk/jquery-1.5.min.js' type='text/javascript' language='javascript'></script>
         <script src='{{ STATIC_URL }}helpdesk/jquery-ui-1.8.9.custom.min.js' type='text/javascript' language='javascript'></script>
+        <script src='{{ STATIC_URL }}helpdesk/jquery.mousewheel.min.js' type='text/javascript' language='javascript'></script>
+        <script src='{{ STATIC_URL }}helpdesk/jScrollPane.js' type='text/javascript' language='javascript'></script>
         
         {% wysiwyg_setup %}
 
@@ -25,6 +27,7 @@
         <link rel='stylesheet' href='{{ STATIC_URL }}helpdesk/helpdesk.css' type='text/css'  media="screen" />
         <link rel='stylesheet' href='{{ STATIC_URL }}helpdesk/helpdesk-print.css' type='text/css' media="print" />
         <link rel='stylesheet' href='{{ STATIC_URL }}helpdesk/jquery-smoothness-theme/jquery-ui-1.8.9.custom.css' type='text/css' />
+        <link rel='stylesheet' href='{{ STATIC_URL }}helpdesk/jScrollPane.css' type='text/css' />
         {% comment %}
         <link rel='alternate' href='{% url helpdesk_rss "user" %}{{ user.username }}/' type='application/rss+xml' title='{% trans "My Open Tickets" %}' />
         <link rel='alternate' href='{% url helpdesk_rss "recent_activity" %}' type='application/rss+xml' title='{% trans "All Recent Activity" %}' />
@@ -36,14 +39,9 @@
         <script type="text/javascript">
 
         $(function() {
-
-            // create roll-under shadow when scrolling under header
-            $('#header').click(function() {
-                alert('adfadf');
-            });
-
-
+            $('.scroll-pane').jScrollPane();
         });
+
         </script>
         
         <style type="text/css">
@@ -89,7 +87,7 @@
             </div>
             
             <div id="body_wrap">
-            <div id='body'>
+            <div id='body' class="scroll-pane">
                 {% block helpdesk_body %}{% endblock %}
             </div>
         </div>
