@@ -1,84 +1,51 @@
 {% load i18n %}
-{% load saved_queries %}
 {% load load_helpdesk_settings %}
 {% load wysiwyg %}
 {% with request|load_helpdesk_settings as helpdesk_settings %}
-{% with request|saved_queries as user_saved_queries_ %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>{% block helpdesk_title %}Helpdesk{% endblock %} :: {% trans "Powered by django-helpdesk" %}</title>
+        <title>{% block helpdesk_title %}Helpdesk{% endblock %}</title>
 
+        {% comment %}
         {## django-taggit-autosuggest uses django.jQuery ##}
         <script src='{{ STATIC_URL }}admin/js/jquery.min.js' type='text/javascript' language='javascript'></script>
         <script src='{{ STATIC_URL }}admin/js/jquery.init.js' type='text/javascript' language='javascript'></script>
-
-        {% comment %}
         {## TODO: cant seem to upgrade jquery ##}
-        <script src='{{ STATIC_URL }}helpdesk/jquery-1.7.2.min.js' type='text/javascript' language='javascript'></script>
         <script src='{{ STATIC_URL }}helpdesk/jquery-ui-1.8.20.custom.min.js' type='text/javascript' language='javascript'></script>
+        <script src='{{ STATIC_URL }}helpdesk/jquery-1.7.2.min.js' type='text/javascript' language='javascript'></script>
         {% endcomment %}
+        
         <script src='{{ STATIC_URL }}helpdesk/jquery-1.5.min.js' type='text/javascript' language='javascript'></script>
         <script src='{{ STATIC_URL }}helpdesk/jquery.mousewheel.min.js' type='text/javascript' language='javascript'></script>
         <script src='{{ STATIC_URL }}helpdesk/jScrollPane.js' type='text/javascript' language='javascript'></script>
-        
         {% wysiwyg_setup %}
 
-
-        {% comment %}
-        <script src='{{ STATIC_URL }}helpdesk/jquery.translate-debug-all.js' type='text/javascript' language='javascript'></script>
-        {% endcomment %}
         <link rel='stylesheet' href='{{ STATIC_URL }}helpdesk/helpdesk.css' type='text/css'  media="screen" />
         <link rel='stylesheet' href='{{ STATIC_URL }}helpdesk/helpdesk-print.css' type='text/css' media="print" />
         <link rel='stylesheet' href='{{ STATIC_URL }}helpdesk/jquery-smoothness-theme/jquery-ui-1.8.9.custom.css' type='text/css' />
         <link rel='stylesheet' href='{{ STATIC_URL }}helpdesk/jScrollPane.css' type='text/css' />
-        {% comment %}
-        <link rel='alternate' href='{% url helpdesk_rss "user" %}{{ user.username }}/' type='application/rss+xml' title='{% trans "My Open Tickets" %}' />
-        <link rel='alternate' href='{% url helpdesk_rss "recent_activity" %}' type='application/rss+xml' title='{% trans "All Recent Activity" %}' />
-        <link rel='alternate' href='{% url helpdesk_rss "unassigned" %}' type='application/rss+xml' title='{% trans "Unassigned Tickets" %}' />
-        {% endcomment %}
-
         {{ form.media }}
 
         <script type="text/javascript">
 
         $(function() {
+
+              $('#saved_search_dropdown_button').click(function() {
+                $('#saved_searches').toggle();
+            });
+
+
             $('.scroll-pane').jScrollPane();
-
-
-        $('#saved_search_dropdown_button').click(function() {
-            $('#saved_searches').toggle();
-        });
 
         });
 
         </script>
         
-        <style type="text/css">
-        /* hide google translate top bar */
-        .goog-te-banner-frame {display: none !important;}
-        .goog-te-balloon-frame {display: none !important;}
-        /* hide google translate tooltips (generated for every translated item) */
-        .goog-tooltip {display: none !important; } 
-        </style>
+    {% block helpdesk_head %}{% endblock %}
 
-        <style type="text/css">
-        /* header */
-        #dropdown li.headerlink { width: auto; float: left; text-align: center; }
-
-        /* query list */
-        #dropdown li.headerlink ul {    display: none;
-                                        text-align: left;
-                                        position: absolute;
-                                        padding: 5px;
-                                        z-index: 2; }
-        /* query entries */
-        #dropdown li.headerlink:hover ul { display: block; width: auto; }
-        #dropdown li.headerlink:hover ul li { padding: 5px; margin: 1px; float: none; display: block; }
-        </style>
-
-        {% block helpdesk_head %}{% endblock %}
     </head>
+
     <body>
         <div id='container'>
             <div id='header'>
@@ -118,5 +85,4 @@
         {% include "helpdesk/debug.html" %}
     </body>
 </html>
-{% endwith %}
 {% endwith %}
