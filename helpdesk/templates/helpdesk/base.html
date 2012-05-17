@@ -187,14 +187,18 @@
                         <img id="logo" src="{{ helpdesk_settings.PM_LOGO_URL }}"/> 
                     </div>
                 {% endif %}
+                <div id="inner_header">
                 <h1>{% trans "Helpdesk" %}</h1>
                 <div id="navigation">
                     {% include "helpdesk/navigation.html" %}
                 </div>
             </div>
+            </div>
             
             <div id='body' class="scroll-pane">
+                <div id="inner_body">
                 {% block helpdesk_body %}{% endblock %}
+                </div>
             </div>
 
             <div id='footer'>

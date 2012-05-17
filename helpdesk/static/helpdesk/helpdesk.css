@@ -1,9 +1,11 @@
 html {
-    padding: 0;
     margin: 0;
+    padding: 0;
 }
 
 body {
+    margin: 0;
+    padding: 0;
     font: 10pt "Trebuchet MS", Arial, sans-serif;
     background-color: #fff;
     text-align: center;
@@ -17,7 +19,7 @@ body {
 }
 
 #header {
-    height: 125px;
+    height: 100px;
     border-bottom: 1px solid #E5E5E5;
     background-color: #fff;
 }
@@ -38,9 +40,14 @@ body {
 
 #body {
     margin: auto;
-    width: 80%; 
+    width: 100%; 
     overflow-y: hidden;
-    height: 750px;
+    height: 800px;
+}
+
+#inner_body {
+    width: 80%;
+    margin: auto;
 }
 
 .scroll-pane {
@@ -50,7 +57,13 @@ body {
     margin: auto;
 }
 
+#inner_header {
+    padding: 10px;
+}
+
 #header h1 {
+    padding: 0;
+    margin: 0;
     display: block;
     clear: right;
 }
@@ -93,6 +106,7 @@ body {
 
 #navigation {
     float: left;
+    padding-top: 10px;
 }
 
 #header ul {
@@ -146,6 +160,7 @@ body {
     text-align: center;
     padding: 5px 0;
     background-color: gray;
+    height: 100%;
 }
 
 label {
