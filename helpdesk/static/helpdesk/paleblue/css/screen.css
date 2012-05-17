@@ -97,8 +97,12 @@ table.paleblue + ul.pagination > li:first-child {
 }
 
 div.table-container {
+    /*
     display: inline-block;
+    */
+    display: block;
     width: 90%;
+    margin: auto;
 }
 
 #active_sticky, #disabled_sticky {
@@ -106,6 +110,8 @@ div.table-container {
     float: right;
     right: -35px;
 }
+
+
 
 div#results {
     width: 100%;

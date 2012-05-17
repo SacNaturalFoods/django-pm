@@ -998,7 +998,7 @@ class SavedSearch(models.Model):
         )
 
     def _html(self):
-        return u'<span><a href="?%s">%s</a> <span id="delete_saved_search__%s" class="link">x</span></span>' % (self.query, self.title, self.pk)
+        return u'<li><a href="?%s">%s</a> <span id="delete_saved_search__%s" class="link">x</span></li>' % (self.query, self.title, self.pk)
     html = property(_html)
 
     def reorder(self):

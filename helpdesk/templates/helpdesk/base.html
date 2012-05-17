@@ -12,11 +12,11 @@
         <script src='{{ STATIC_URL }}admin/js/jquery.min.js' type='text/javascript' language='javascript'></script>
         <script src='{{ STATIC_URL }}admin/js/jquery.init.js' type='text/javascript' language='javascript'></script>
         {## TODO: cant seem to upgrade jquery ##}
-        <script src='{{ STATIC_URL }}helpdesk/jquery-ui-1.8.20.custom.min.js' type='text/javascript' language='javascript'></script>
         <script src='{{ STATIC_URL }}helpdesk/jquery-1.7.2.min.js' type='text/javascript' language='javascript'></script>
         {% endcomment %}
         
         <script src='{{ STATIC_URL }}helpdesk/jquery-1.5.min.js' type='text/javascript' language='javascript'></script>
+        <script src='{{ STATIC_URL }}helpdesk/jquery-ui-1.8.20.custom.min.js' type='text/javascript' language='javascript'></script>
         <script src='{{ STATIC_URL }}helpdesk/jquery.mousewheel.min.js' type='text/javascript' language='javascript'></script>
         <script src='{{ STATIC_URL }}helpdesk/jScrollPane.js' type='text/javascript' language='javascript'></script>
         {% wysiwyg_setup %}
@@ -24,65 +24,191 @@
         <link rel='stylesheet' href='{{ STATIC_URL }}helpdesk/helpdesk.css' type='text/css'  media="screen" />
         <link rel='stylesheet' href='{{ STATIC_URL }}helpdesk/helpdesk-print.css' type='text/css' media="print" />
         <link rel='stylesheet' href='{{ STATIC_URL }}helpdesk/jquery-smoothness-theme/jquery-ui-1.8.9.custom.css' type='text/css' />
+
         <link rel='stylesheet' href='{{ STATIC_URL }}helpdesk/jScrollPane.css' type='text/css' />
         {{ form.media }}
 
         <script type="text/javascript">
 
-        $(function() {
+            $(function() {
 
-              $('#saved_search_dropdown_button').click(function() {
-                $('#saved_searches').toggle();
+                $('#saved_search_dropdown_button').click(function() {
+                    $('#saved_searches').toggle();
+                });
+
+                $('.scroll-pane').jScrollPane({autoReinitialise: true, });
+
+                $('#[id*=delete_saved_search]').live('click', function() {
+                    $('#saved_searches').load(
+                        '{% url delete_search %}', 
+                        {'saved_search__pk': $(this).attr('id').split('__')[1], 'csrfmiddlewaretoken': '{{ csrf_token }}'}
+                    );
+                });
+
+                function split( val ) {
+                    return val.split( /,\s*/ );
+                }
+                function extractLast( term ) {
+                    return split( term ).pop();
+                }
+
+                $('#id_q')
+                    .bind('keydown', function(event) {
+                        if (event.keyCode === $.ui.keyCode.TAB && $(this).data('autocomplete').menu.active) {
+                            event.preventDefault();
+                        }
+                    })
+                    .autocomplete({
+                        source: function( request, response ) {
+                            $.getJSON("{% url autocomplete_search %}", {
+                                term: extractLast( request.term )
+                            }, response );
+                        },
+                        search: function() {
+                            // custom minLength
+                            var term = extractLast( this.value );
+                            if ( term.length < 2 ) {
+                                return false;
+                            }
+                        },
+                        focus: function() {
+                            // prevent value inserted on focus
+                            return false;
+                        },
+                        select: function( event, ui ) {
+                            var terms = split( this.value );
+                            // remove the current input
+                            terms.pop();
+                            // add the selected item
+                            terms.push( ui.item.label + ':' + ui.item.value );
+                            //terms.push( ui.item.value );
+                            // add placeholder to get the comma-and-space at the end
+                            terms.push( "" );
+                            this.value = terms.join( "," );
+                            return false;
+                        }
+                    })
+                    .data( "autocomplete" )._renderItem = function( ul, item ) {
+                        return $( "<li></li>" )
+                            .data( "item.autocomplete", item )
+                            .append( "<a><b>" + item.label + ":</b> " + item.value + "</a>" )
+                            .appendTo( ul );
+                    };
+
+                    function format_search(search_str) {
+                        // return ticket if begin with #
+                        var ticket_id_search = search_str.match(/^#(\d+)/);
+                        if (ticket_id_search) {
+                            console.log(ticket_id_search);
+                            location.href = '{% url helpdesk_list %}' + ticket_id_search[1];
+                        } else {
+                            searches = search_str.split(',');
+                            var search_q = '';
+                            var facets = '';
+                            for (i in searches) {
+                               var search = searches[i];
+                               if (search.match(':')) {
+                                  facets += '&selected_facets=' + search; 
+                               } else if (search) {
+                                  search_q += encodeURIComponent(search) + ',';
+                               }
+                            }
+                            search_q = 'q=' + search_q + facets;
+                            location.href = '{% url haystack_search %}?'+search_q;
+                        }
+                    }
+
+                    $('#search_button').click(function(e) {
+                        e.preventDefault();
+                        format_search($('#id_q').val());
+                    });
+    
+                    $('#id_q').keypress(function(e) {
+                        if (e.keyCode == 13) {
+                            e.preventDefault();
+                            format_search($('#id_q').val());
+                        }
+                    });
+
             });
 
 
-            $('.scroll-pane').jScrollPane();
+            // resize iframes after load
+            $(window).load(function() {
 
-        });
+                $('iframe').each(function(i, iframe) {
+                    var header_footer = 75;
+                    var height = $(iframe).contents().find('table').height();
+                    $(iframe).attr('height', header_footer + height  + 'px');
+                });
+
+                // size and locate hidden saved search div according to search bar
+                var pos = $('#id_q').position();
+                //var height = $('#id_q').attr('offsetheight');
+                //var width = $('#id_q').attr('offsetwidth');
+                var height = $('#id_q').height();
+                var width = $('#id_q').width();
+                var padding = 5;
+                var margin = 2;
+                $('#saved_searches').css({
+                    position: 'absolute', 
+                    top: pos.top + height + padding, 
+                    left: pos.left, 
+                    width: width + margin
+                });
+
+                $('.scroll-pane').scroll(function() {
+                    var pane = $('.scroll-pane').data('jsp');
+                    if (pane.getContentPositionY() > 0) {
+                        $('#header').addClass('roll-under');
+                    } else {
+                        $('#header').removeClass('roll-under');
+                    }
+                });
+
+
+            });
+         
+
 
         </script>
         
-    {% block helpdesk_head %}{% endblock %}
+        {% block helpdesk_head %}{% endblock %}
 
     </head>
 
+
     <body>
         <div id='container'>
+
             <div id='header'>
                 {% if helpdesk_settings.PM_LOGO_URL %}
                     <div id="logo_div">
                         <img id="logo" src="{{ helpdesk_settings.PM_LOGO_URL }}"/> 
                     </div>
                 {% endif %}
-                    <h1>{% trans "Helpdesk" %}</h1>
-                <div id="header_buttons">
-                    {% block helpdesk_header %}{% endblock %}
-                    <div id="navigation">
+                <h1>{% trans "Helpdesk" %}</h1>
+                <div id="navigation">
                     {% include "helpdesk/navigation.html" %}
-                    </div>
                 </div>
             </div>
             
-            <div id="body_wrap">
             <div id='body' class="scroll-pane">
                 {% block helpdesk_body %}{% endblock %}
             </div>
-        </div>
 
             <div id='footer'>
-                <p>{% include "helpdesk/attribution.html" %}
-                {% comment %}
-                <a href='{% url helpdesk_rss_index %}'><img src='{{ STATIC_URL }}helpdesk/rss_icon.png' width='14' height='14' alt='{% trans "RSS Icon" %}' title='{% trans "RSS Feeds" %}' border='0' />{% trans "RSS Feeds" %}</a>
-                {% endcomment %}
-                {% if helpdesk_settings.HELPDESK_FOOTER_SHOW_API_LINK %}<a href='{% url helpdesk_api_help %}'>{% trans "API" %}</a>{% endif %}
-                <a href='{% url helpdesk_user_settings %}'>{% trans "User Settings" %}</a>
-                {% if helpdesk_settings.HELPDESK_FOOTER_SHOW_CHANGE_LANGUAGE_LINK %}
-                <a href='{% url helpdesk_public_change_language %}?return_to={{ request.path }}'>{% trans "Change Language" %}</a>
+                {% if helpdesk_settings.HELPDESK_FOOTER_SHOW_API_LINK %}
+                    <a href='{% url helpdesk_api_help %}'>{% trans "API" %}</a>
                 {% endif %}
-                {% if user.is_superuser %}<a href='{% url helpdesk_system_settings %}'>{% trans "System Settings" %}</a>{% endif %}</p>
+                <a href='{% url helpdesk_user_settings %}'>{% trans "User Settings" %}</a>
+                {% if user.is_superuser %}
+                    <a href='{% url helpdesk_system_settings %}'>{% trans "System Settings" %}</a>
+                {% endif %}
             </div>
+
         </div>
-        {% include "helpdesk/debug.html" %}
     </body>
+
 </html>
 {% endwith %}

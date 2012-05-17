@@ -1,16 +1,14 @@
+html {
+    padding: 0;
+    margin: 0;
+}
+
 body {
     font: 10pt "Trebuchet MS", Arial, sans-serif;
     background-color: #fff;
     text-align: center;
+    background-image: url("/static/helpdesk/background-body.png");
 }
-
-/*
-table {
-    border-collapse: collapse;
-    margin-top: 8px;
-    padding: 80px;
-}
-    */
 
 #container {
     width: 100%;
@@ -21,6 +19,11 @@ table {
 #header {
     height: 125px;
     border-bottom: 1px solid #E5E5E5;
+    background-color: #fff;
+}
+
+#header #main_menu {
+    float: right;
 }
 
 .roll-under {
@@ -29,24 +32,18 @@ table {
     -mox-box-shadow: 0 2px 2px -1px rgba(0,0,0,.1);
 }
 
-
-#logo {
+#header #logo {
     float: left;
 }
 
 #body {
-    width: 1000px;
-    overflow-y: scroll;
-    height: 700px;
     margin: auto;
+    width: 80%; 
+    overflow-y: hidden;
+    height: 750px;
 }
 
-#body_wrap {
-    /*
-    width: 975px;
-    overflow: hidden;
-    margin: auto;
-    */
+.scroll-pane {
 }
 
 .jScrollPaneContainer {
@@ -147,6 +144,8 @@ table {
 
 #footer {
     text-align: center;
+    padding: 5px 0;
+    background-color: gray;
 }
 
 label {
@@ -408,14 +407,71 @@ span#save {
     padding: 5px;
 }
 
-/*
-span#saved_searches span {
-    padding: 5px;
+#header div#saved_searches {
+    z-index: 100;
+    background: white;
 }
-*/
+
+#header #saved_searches ul {
+    padding: 0;
+    margin: 0;
+}
+
+#header #saved_searches li {
+    display: block;
+    float: none;
+    border-bottom: 1px solid gray;
+}
+
+#header #saved_searches a {
+    padding: 10px;
+    margin: 0;
+    border: 0;
+    background: 0;
+    line-height: 1.5em;
+    text-decoration: underline;
+    color: blue;
+}
+
+#header #saved_searches li span {
+    float: right;
+    padding-right: 5px;
+}
+
+div.folder_tab {
+    width: 90%;
+    margin: auto;
+    position: relative;
+    bottom: -31.5px;
+}
+
+div.folder_tab div * {
+    float: left;
+}
 
 span.search_title {
+    display: inline-block;
     font-weight: bold;
+    text-align: center;
+    /*
     position: relative;
-    bottom: -20px;
+    bottom: -30px;
+    */
+    background: #b0b0ae;
+    padding-top: 6px;
+    min-width: 170px;
 }
+
+.folder_tab_left {
+    /*
+    position: relative;
+    bottom: -35px;
+    */
+}
+
+iframe {
+}
+
+
+
+

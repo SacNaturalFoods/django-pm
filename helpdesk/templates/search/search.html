@@ -2,57 +2,11 @@
 {% load helpdesk_filters %} 
 {% load render_table from django_tables2 %} 
 
-    <h2>Search</h2>
-
-    {% block helpdesk_header %}
-<form id="search_form" method="get" action=".">
-    <table>
-        <tbody>
-            <tr>
-                <td>
-                    <div id="search_field_container">
-                        <input size="50" type="text" name="q" id="id_q"/>
-                        <div id="saved_search_dropdown_button">&nbsp;</div>
-                    </div>
-                </td>
-                <td><input id="search_button" type="submit" value="Search"></td>
-                <td><span class="link" id="save">Save</span></td>
-            </tr>
-        </tbody>
-    </table>
-    <div id="saved_searches" class="saved_searches">{{ saved_searches|safe}}</div>
-</form>
-
-{% comment %}
-<p><b>Saved searches:</b><span id="saved_searches"> {{ saved_searches|safe }} </span></p>
-{% endcomment %}
-
-    {% endblock %}
-
+{% block helpdesk_head %}
 <script type="text/javascript">
 
-
-    // resize iframes after load
-    $(window).load(function() {
-        $('iframe').each(function(i, iframe) {
-            var header_footer = 120;
-            var height = $(iframe).contents().find('table').height();
-            $(iframe).attr('height', header_footer + height  + 'px');
-        });
-        // size and locate hidden saved search div according to search bar
-        var pos = $('#id_q').position();
-        var height = $('#id_q').attr('offsetHeight');
-        var width = $('#id_q').attr('offsetWidth');
-        $('#saved_searches').css({position: 'absolute', top: pos.top + height, left: pos.left, width: width - 2});
-
-        
-
-    });
-
-    
-    
+   
 $(function() {
-
 
         $('#save, #disabled_sticky').click(function() {
         var title = prompt('Please enter a name for your search.');
@@ -68,101 +22,10 @@ $(function() {
             $('#disabled_sticky').attr('hidden', false);
         }
     });
-
-    $('#[id*=delete_saved_search]').live('click', function() {
-        $('#saved_searches').load('{% url delete_search %}', {'saved_search__pk': $(this).attr('id').split('__')[1], 'csrfmiddlewaretoken': '{{ csrf_token }}'});
-    });
-
-    function split( val ) {
-        return val.split( /,\s*/ );
-    }
-    function extractLast( term ) {
-        return split( term ).pop();
-    }
-
-    $('#id_q')
-        .bind('keydown', function(event) {
-            if (event.keyCode === $.ui.keyCode.TAB && $(this).data('autocomplete').menu.active) {
-                event.preventDefault();
-            }
-        })
-        .autocomplete({
-            source: function( request, response ) {
-                $.getJSON("{% url autocomplete_search %}", {
-                    term: extractLast( request.term )
-                }, response );
-            },
-            search: function() {
-                // custom minLength
-                var term = extractLast( this.value );
-                if ( term.length < 2 ) {
-                    return false;
-                }
-            },
-            focus: function() {
-                // prevent value inserted on focus
-                return false;
-            },
-            select: function( event, ui ) {
-                var terms = split( this.value );
-                // remove the current input
-                terms.pop();
-                // add the selected item
-                terms.push( ui.item.label + ':' + ui.item.value );
-                //terms.push( ui.item.value );
-                // add placeholder to get the comma-and-space at the end
-                terms.push( "" );
-                this.value = terms.join( "," );
-                return false;
-            }
-        })
-        .data( "autocomplete" )._renderItem = function( ul, item ) {
-            return $( "<li></li>" )
-                .data( "item.autocomplete", item )
-                .append( "<a><b>" + item.label + ":</b> " + item.value + "</a>" )
-                .appendTo( ul );
-        };
-
-        function format_search(search_str) {
-            // return ticket if begin with #
-            var ticket_id_search = search_str.match(/^#(\d+)/);
-            if (ticket_id_search) {
-                console.log(ticket_id_search);
-                location.href = '{% url helpdesk_list %}' + ticket_id_search[1];
-            } else {
-                searches = search_str.split(',');
-                var search_q = '';
-                var facets = '';
-                for (i in searches) {
-                   var search = searches[i];
-                   if (search.match(':')) {
-                      facets += '&selected_facets=' + search; 
-                   } else if (search) {
-                      search_q += encodeURIComponent(search) + ',';
-                   }
-                }
-                search_q = 'q=' + search_q + facets;
-                location.href = '{% url haystack_search %}?'+search_q;
-            }
-        }
-
-        $('#search_button').click(function(e) {
-            e.preventDefault();
-            format_search($('#id_q').val());
-        });
-
-        $('#id_q').keypress(function(e) {
-            if (e.keyCode == 13) {
-                e.preventDefault();
-                format_search($('#id_q').val());
-            }
-        });
-
-
-
 });
 
 </script>
+{% endblock %}
 
 
 {% block helpdesk_body %}
@@ -170,7 +33,13 @@ $(function() {
     {% if forloop.first and query %}
         <iframe frameborder="0" scrolling="no" width="100%" height="350px" src="?{{ query }}&sticky=false"></iframe>
     {% else %}
-        <span class="search_title">{{ sticky_search.title }}</span>
+            <div class="folder_tab">
+                <div>
+                <img class="folder_tab_left" src="{{ STATIC_URL }}helpdesk/buttons/folder-tab-dark-gray-left.png"/> 
+                <span class="search_title">{{ sticky_search.title }}</span>
+                <img class="folder_tab_left" src="{{ STATIC_URL }}helpdesk/buttons/folder-tab-dark-gray-right.png"/> 
+                </div>
+            </div>
         <iframe frameborder="0" scrolling="no" width="100%" height="350px" src="?{{ sticky_search.query }}&sticky=true"></iframe>
     {% endif %}
 {% endfor %}

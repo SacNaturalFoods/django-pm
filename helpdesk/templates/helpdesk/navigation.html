@@ -1,6 +1,25 @@
 {% load i18n %}
 {% if helpdesk_settings.HELPDESK_NAVIGATION_ENABLED and user.is_authenticated or user.is_staff %}
-<ul id="dropdown">
+
+<form id="search_form" method="get" action=".">
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <div id="search_field_container">
+                        <input size="50" type="text" name="q" id="id_q"/>
+                        <div id="saved_search_dropdown_button">&nbsp;</div>
+                    </div>
+                </td>
+                <td><input id="search_button" type="submit" value="Search"></td>
+                <td><span class="link" id="save">Save</span></td>
+            </tr>
+        </tbody>
+    </table>
+    <div id="saved_searches" class="saved_searches"><ul>{{ saved_searches|safe}}</ul></div>
+</form>
+
+<ul id="main_menu">
     <li><a href='{% url haystack_search %}'>{% trans "Home" %}</a></li>
     <li><a href='{% url helpdesk_submit %}'>{% trans "New Ticket" %}</a></li>
     {% if helpdesk_settings.HELPDESK_NAVIGATION_STATS_ENABLED %}
@@ -19,4 +38,6 @@
 			<a href='{% url login %}?next={% if next %}{{ next|escape }}{% else %}{% url helpdesk_dashboard %}{% endif %}'>{% trans "Log In" %}</a>
 		  </li></ul>
 	{% endif %}
+
+
 {% endif %}
