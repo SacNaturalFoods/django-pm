@@ -78,6 +78,10 @@ body {
     float: left;
 }
 
+h2 {
+    padding: 10px;
+}
+
 #logo_div {
     float: left;
     padding: 5px 20px 10px 10px;

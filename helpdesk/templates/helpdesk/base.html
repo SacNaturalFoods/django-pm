@@ -7,10 +7,11 @@
     <head>
         <title>{% block helpdesk_title %}Helpdesk{% endblock %}</title>
 
-        {% comment %}
         {## django-taggit-autosuggest uses django.jQuery ##}
         <script src='{{ STATIC_URL }}admin/js/jquery.min.js' type='text/javascript' language='javascript'></script>
         <script src='{{ STATIC_URL }}admin/js/jquery.init.js' type='text/javascript' language='javascript'></script>
+
+        {% comment %}
         {## TODO: cant seem to upgrade jquery ##}
         <script src='{{ STATIC_URL }}helpdesk/jquery-1.7.2.min.js' type='text/javascript' language='javascript'></script>
         {% endcomment %}
