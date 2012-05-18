@@ -444,6 +444,7 @@ span#save {
 #header #saved_searches ul {
     padding: 0;
     margin: 0;
+    float: none;
 }
 
 #header #saved_searches li {
