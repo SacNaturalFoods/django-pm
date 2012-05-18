@@ -4,11 +4,13 @@ table.paleblue {
     border: 1px solid #DDD;
     width: 100%;
     white-space: nowrap;
+    float: left;
 }
 
 table.paleblue,
 table.paleblue +  ul.pagination {
     font: normal 11px/14px 'Lucida Grande', Helvetica, Verdana, Arial, sans-serif;
+    clear: both;
 }
 
 table.paleblue a:link,
@@ -105,10 +107,21 @@ div.table-container {
     margin: auto;
 }
 
-#active_sticky, #disabled_sticky {
-    position: relative;
+.search_table {
+    float: left;
+    width: 96%;
+}
+
+.sticky {
     float: right;
+}
+
+#active_sticky, #disabled_sticky {
+    float: right;
+    /*
+    position: relative;
     right: -35px;
+    */
 }
 
 

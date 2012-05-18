@@ -8,6 +8,7 @@
 {% load trans blocktrans from i18n %}
 {% if table.page %}
 <div class="table-container">
+    <div class="sitcky">
     {% if sticky %}
         <img id="active_sticky" class="sticky" src="{{ STATIC_URL }}helpdesk/buttons/active_tack.png"/> 
         <img id="disabled_sticky" class="sticky" src="{{ STATIC_URL }}helpdesk/buttons/disabled_tack.png" hidden/> 
@@ -15,9 +16,11 @@
         <img id="active_sticky" class="sticky" src="{{ STATIC_URL }}helpdesk/buttons/active_tack.png" hidden/> 
         <img id="disabled_sticky" class="sticky" src="{{ STATIC_URL }}helpdesk/buttons/disabled_tack.png"/> 
     {% endif %}
+    </div>
 {% endif %}
 
 {% block table %}
+<div class="search_table">
 <table{% if table.attrs %} {{ table.attrs.as_html }}{% endif %}>
     {% block table.thead %}
     {% if table.page %}
@@ -80,6 +83,7 @@
 {% endblock pagination %}
 </div>
 {% endif %}
+</div>
 {% endspaceless %}
 
 <script type="text/javascript">
