@@ -90,14 +90,7 @@ def send_templated_mail(template_name, email_context, recipients, sender=None, b
 
     email_html_base_file = os.path.join('helpdesk', locale, 'email_html_base.html')
 
-
-    ''' keep new lines in html emails '''
-    from django.utils.safestring import mark_safe
-
-    if context.has_key('comment'):
-        html_txt = context['comment']
-        html_txt = html_txt.replace('\r\n', '<br>') if html_txt else None
-        context['comment'] = mark_safe(html_txt)
+   ['comment'] = mark_safe(html_txt)
 
     html_part = loader.get_template_from_string(
         "{%% extends '%s' %%}{%% block title %%}%s{%% endblock %%}{%% block content %%}%s{%% endblock %%}" % (email_html_base_file, t.heading, t.html)

@@ -36,7 +36,7 @@
                     $('#saved_searches').toggle();
                 });
 
-                $('.scroll-pane').jScrollPane({autoReinitialise: true, });
+                $('.scroll-pane').jScrollPane({autoReinitialise: true, mouseWheelSpeed: 300 });
 
                 $('#[id*=delete_saved_search]').live('click', function() {
                     $('#saved_searches').load(
