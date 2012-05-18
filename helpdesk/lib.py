@@ -90,7 +90,7 @@ def send_templated_mail(template_name, email_context, recipients, sender=None, b
 
     email_html_base_file = os.path.join('helpdesk', locale, 'email_html_base.html')
 
-    ['comment'] = mark_safe(html_txt)
+    context['comment'] = mark_safe(html_txt)
 
     html_part = loader.get_template_from_string(
         "{%% extends '%s' %%}{%% block title %%}%s{%% endblock %%}{%% block content %%}%s{%% endblock %%}" % (email_html_base_file, t.heading, t.html)
