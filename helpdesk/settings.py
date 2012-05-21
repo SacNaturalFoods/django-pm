@@ -27,15 +27,6 @@ settings.AUTHENTICATION_BACKENDS = (
 settings.DJANGO_WYSIWYG_FLAVOR = 'ckeditor'
 settings.DJANGO_WYSIWYG_MEDIA_URL = "%s/ckeditor/" % settings.STATIC_URL
 
-# for search
-import os
-settings.HAYSTACK_CONNECTIONS = {
-    'default': {
-        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
-    },
-}
-
 
 # TODO: remove references to these settings elsewhere 
 HAS_TAGGIT_SUPPORT = True 
