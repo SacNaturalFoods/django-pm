@@ -6,17 +6,6 @@ Default settings for django-helpdesk.
 
 from django.conf import settings
 
-# add dependencies to installed apps
-# prepend to make sure apps installed before south
-settings.INSTALLED_APPS += (
-    'django.contrib.markup',
-    'django_tables2',
-    'taggit_autosuggest',
-    'social_auth',
-    'django_wysiwyg',
-    'haystack',
-    )
-
 # required for social-auth
 settings.AUTHENTICATION_BACKENDS = (
     'social_auth.backends.google.GoogleOAuth2Backend',

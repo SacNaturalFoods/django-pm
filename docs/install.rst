@@ -39,6 +39,12 @@ Adding To Your Django Project
         'django.contrib.sites',
         'django.contrib.admin', # Required for helpdesk admin/maintenance
         'taggit', # required for tagging
+        'django.contrib.markup',
+        'django_tables2',
+        'taggit_autosuggest',
+        'social_auth',
+        'django_wysiwyg',
+        'haystack',
         'helpdesk',
     )
 
