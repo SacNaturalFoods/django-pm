@@ -19,7 +19,7 @@ settings.INSTALLED_APPS += (
 
 # required for social-auth
 settings.AUTHENTICATION_BACKENDS = (
-    'social_auth.backends.google.GoogleOAuthBackend',
+    'social_auth.backends.google.GoogleOAuth2Backend',
     'django.contrib.auth.backends.ModelBackend',
     )
 
