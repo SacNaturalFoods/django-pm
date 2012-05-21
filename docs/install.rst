@@ -30,7 +30,7 @@ Download, extract, and drop ``helpdesk`` into your ``PYTHONPATH``
 Adding To Your Django Project
 -----------------------------
 
-1. Edit your ``settings.py`` file and add ``helpdesk`` to the ``INSTALLED_APPS`` setting. You also need ``django.contrib.admin`` and ``taggit``.  The rest of the dependencies are managed in django-pm's ``settings.py``::
+#. Edit your ``settings.py`` file and add ``helpdesk`` to the ``INSTALLED_APPS`` setting. You also need ``django.contrib.admin`` and ``taggit``.  The rest of the dependencies are managed in django-pm's ``settings.py``::
     
     INSTALLED_APPS = (
         'django.contrib.auth',
@@ -60,7 +60,7 @@ Adding To Your Django Project
     GOOGLE_WHITE_LISTED_DOMAINS = ['yourdomain.com']
     GOOGLE_WHITE_LISTED_EMAILS = ['someoutsideemail@gmail.com']
 
-2. Make sure django-pm is accessible via ``urls.py``. Add the following line to ``urls.py``::
+#. Make sure django-pm is accessible via ``urls.py``. Add the following line to ``urls.py``::
 
      (r'helpdesk/', include('helpdesk.urls')),
 
@@ -74,7 +74,7 @@ Adding To Your Django Project
 
      (r'login/$', 'social_auth.views.auth', {'backend': 'google-oauth'}),
 
-3. Create the required database tables. I'd suggest using *South*, however the following will work::
+#. Create the required database tables. I'd suggest using *South*, however the following will work::
 
      ./manage.py syncdb
 
@@ -82,11 +82,11 @@ Adding To Your Django Project
 
      ./manage.py migrate helpdesk
 
-4. [If you're not using django.contrib.staticfiles] Inside your ``STATIC_ROOT`` folder, create a new folder called ``helpdesk`` and copy the contents of ``helpdesk/static`` into it. Alternatively, create a symlink::
+#. [If you're not using django.contrib.staticfiles] Inside your ``STATIC_ROOT`` folder, create a new folder called ``helpdesk`` and copy the contents of ``helpdesk/static`` into it. Alternatively, create a symlink::
 
       ln -s /path/to/helpdesk/static/helpdesk /path/to/static/helpdesk
 
-5. Inside your ``MEDIA_ROOT`` folder, inside the ``helpdesk`` folder, is a folder called ``attachments``. Ensure your web server software can write to this folder - something like this should do the trick::
+#. Inside your ``MEDIA_ROOT`` folder, inside the ``helpdesk`` folder, is a folder called ``attachments``. Ensure your web server software can write to this folder - something like this should do the trick::
 
       chown www-data:www-data attachments/
       chmod 700 attachments
@@ -99,7 +99,7 @@ Adding To Your Django Project
 
    This is NOT recommended, especially if you're on a shared server.
 
-6. Ensure that your ``attachments`` folder has directory listings turned off, to ensure users don't download files that they are not specifically linked to from their tickets.
+#. Ensure that your ``attachments`` folder has directory listings turned off, to ensure users don't download files that they are not specifically linked to from their tickets.
 
    If you are using Apache, put a ``.htaccess`` file in the ``attachments`` folder with the following content::
 
@@ -109,11 +109,11 @@ Adding To Your Django Project
 
    Ideally, accessing http://MEDIA_URL/helpdesk/attachments/ will give you a 403 access denied error.
 
-7. If it's not already installed, install ``python-markdown``::
+#. If it's not already installed, install ``python-markdown``::
 
       pip install Markdown
 
-8. If you already have a view handling your logins, then great! If not, add the following to ``settings.py`` to get your Django installation to use the login view included in ``django-helpdesk``::
+#. If you already have a view handling your logins, then great! If not, add the following to ``settings.py`` to get your Django installation to use the login view included in ``django-helpdesk``::
 
       LOGIN_URL = '/helpdesk/login/'
 
