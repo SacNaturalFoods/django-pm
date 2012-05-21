@@ -30,7 +30,7 @@ Download, extract, and drop ``helpdesk`` into your ``PYTHONPATH``
 Adding To Your Django Project
 -----------------------------
 
-1. Edit your ``settings.py`` file and add ``helpdesk`` to the ``INSTALLED_APPS`` setting. You also need ``django.contrib.admin`` in ``INSTALLED_APPS`` if you haven't already added it. eg::
+1. Edit your ``settings.py`` file and add ``helpdesk`` to the ``INSTALLED_APPS`` setting. You also need ``django.contrib.admin`` and ``taggit``.  The rest of the dependencies are managed in django-pm's ``settings.py``::
     
     INSTALLED_APPS = (
         'django.contrib.auth',
@@ -38,61 +38,13 @@ Adding To Your Django Project
         'django.contrib.sessions',
         'django.contrib.sites',
         'django.contrib.admin', # Required for helpdesk admin/maintenance
-        'django.contrib.markup', # Required for text display
-        'south', 
-        'taggit',
-        'taggit_autosuggest',
-        'django_tables2',
-        'social_auth',
-        'django_wysiwyg',
-        'haystack', # for search
-        'helpdesk', # This is new!
+        'taggit', # required for tagging
+        'helpdesk',
     )
-
-    # django-tables2
-    TEMPLATE_CONTEXT_PROCESSORS = (
-        "django.contrib.auth.context_processors.auth",
-        "django.core.context_processors.debug",
-        "django.core.context_processors.i18n",
-        "django.core.context_processors.media",
-        "django.core.context_processors.static",
-        "django.contrib.messages.context_processors.messages",
-        "django.core.context_processors.request",
-    )
-
-    # required for social-auth
-    AUTHENTICATION_BACKENDS = (
-        'social_auth.backends.google.GoogleOAuthBackend',
-        'django.contrib.auth.backends.ModelBackend',
-        )
-
-    # django-wysiwyg
-    DJANGO_WYSIWYG_FLAVOR = 'ckeditor'
-    DJANGO_WYSIWYG_MEDIA_URL = "%s/ckeditor/" % STATIC_URL
-
-
-
-    # for search
-    HAYSTACK_CONNECTIONS = {
-        'default': {
-            'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
-            'URL': 'http://127.0.0.1:8983/solr'
-        },
-    }
 
     # your django-pm settings (example)
-    HELPDESK_ALLOW_NON_STAFF_TICKET_UPDATE = True 
-    HELPDESK_NAVIGATION_ENABLED = True 
-    HELPDESK_CUSTOM_WELCOME = True 
-    HELPDESK_VIEW_A_TICKET_PUBLIC = False 
-    HELPDESK_SUBMIT_A_TICKET_PUBLIC = False 
-    HELPDESK_KB_ENABLED_STAFF = True
-    HELPDESK_STAFF_ONLY_TICKET_OWNERS = True
-    HELPDESK_STAFF_ONLY_TICKET_CC = True
     HELPDESK_CALENDAR = 'google'
     HELPDESK_UPDATE_CALENDAR = False 
-    HELPDESK_FOLLOWUP_MOD = True
-    HELPDESK_INCLUDE_DESCRIPTION_IN_FOLLOWUP = False
 
     QUEUE_EMAIL_BOX_TYPE = 'imap'
     QUEUE_EMAIL_BOX_SSL = True 
@@ -126,7 +78,7 @@ Adding To Your Django Project
 
      ./manage.py syncdb
 
-   Then migrate using South
+   Then migrate using South::
 
      ./manage.py migrate helpdesk
 
@@ -167,11 +119,6 @@ Adding To Your Django Project
 
    Alter the URL to suit your installation path.
 
-
-Configuring Solr
-----------------
-
-django-pm uses django-haystack + Apache Solr for faster searching.
 
 Configuring Apache with mod_wsgi
 --------------------------------

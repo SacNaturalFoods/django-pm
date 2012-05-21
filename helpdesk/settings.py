@@ -6,21 +6,40 @@ Default settings for django-helpdesk.
 
 from django.conf import settings
 
-# check for django-tagging support
-HAS_TAGGING_SUPPORT = 'tagging' in settings.INSTALLED_APPS
-try:
-        import tagging
-except ImportError:
-        HAS_TAGGING_SUPPORT = False
+# add dependencies to installed apps
+# prepend to make sure apps installed before south
+settings.INSTALLED_APPS += (
+    'django.contrib.markup',
+    'django_tables2',
+    'taggit_autosuggest',
+    'social_auth',
+    'django_wysiwyg',
+    'haystack',
+    )
 
-# check for django-taggit support
-HAS_TAGGIT_SUPPORT = 'taggit' in settings.INSTALLED_APPS
-try:
-        import taggit
-except ImportError:
-        HAS_TAGGIT_SUPPORT = False
+# required for social-auth
+settings.AUTHENTICATION_BACKENDS = (
+    'social_auth.backends.google.GoogleOAuthBackend',
+    'django.contrib.auth.backends.ModelBackend',
+    )
 
-# dependency settings
+# django-wysiwyg
+settings.DJANGO_WYSIWYG_FLAVOR = 'ckeditor'
+settings.DJANGO_WYSIWYG_MEDIA_URL = "%s/ckeditor/" % settings.STATIC_URL
+
+# for search
+import os
+settings.HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+    },
+}
+
+
+# TODO: remove references to these settings elsewhere 
+HAS_TAGGIT_SUPPORT = True 
+HAS_TAGGING_SUPPORT = False
 
 
 try:
@@ -51,10 +70,10 @@ HELPDESK_PREPEND_ORG_NAME = getattr(settings, 'HELPDESK_PREPEND_ORG_NAME', False
 HELPDESK_KB_ENABLED = getattr(settings, 'HELPDESK_KB_ENABLED', True)
 
 # show knowledgebase links on staff view?
-HELPDESK_KB_ENABLED_STAFF = getattr(settings, 'HELPDESK_KB_ENABLED_STAFF', False)
+HELPDESK_KB_ENABLED_STAFF = getattr(settings, 'HELPDESK_KB_ENABLED_STAFF', True)
 
 # show extended navigation by default, to all users, irrespective of staff status?
-HELPDESK_NAVIGATION_ENABLED = getattr(settings, 'HELPDESK_NAVIGATION_ENABLED', False)
+HELPDESK_NAVIGATION_ENABLED = getattr(settings, 'HELPDESK_NAVIGATION_ENABLED', True)
 
 # show 'stats' link in navigation bar?
 HELPDESK_NAVIGATION_STATS_ENABLED = getattr(settings, 'HELPDESK_NAVIGATION_STATS_ENABLED', True)
@@ -74,29 +93,29 @@ HELPDESK_TRANSLATE_TICKET_COMMENTS_LANG = getattr(settings, 'HELPDESK_TRANSLATE_
 HELPDESK_SHOW_CHANGE_PASSWORD = getattr(settings, 'HELPDESK_SHOW_CHANGE_PASSWORD', False)
 
 # allow user to override default layout for 'followups' - work in progress.
-HELPDESK_FOLLOWUP_MOD = getattr(settings, 'HELPDESK_FOLLOWUP_MOD', False)
+HELPDESK_FOLLOWUP_MOD = getattr(settings, 'HELPDESK_FOLLOWUP_MOD', True)
 
 # include or exclude the ticket description from it's initial follow-up on creation
-HELPDESK_INCLUDE_DESCRIPTION_IN_FOLLOWUP = getattr(settings, 'HELPDESK_INCLUDE_DESCRIPTION_IN_FOLLOWUP', True)
+HELPDESK_INCLUDE_DESCRIPTION_IN_FOLLOWUP = getattr(settings, 'HELPDESK_INCLUDE_DESCRIPTION_IN_FOLLOWUP', False)
 
 # show custom welcome message in dashboard?
-HELPDESK_CUSTOM_WELCOME = getattr(settings, 'HELPDESK_CUSTOM_WELCOME', False)
+HELPDESK_CUSTOM_WELCOME = getattr(settings, 'HELPDESK_CUSTOM_WELCOME', True)
 
 
 
 ''' options for public pages '''
 # show 'view a ticket' section on public page?
-HELPDESK_VIEW_A_TICKET_PUBLIC = getattr(settings, 'HELPDESK_VIEW_A_TICKET_PUBLIC', True)
+HELPDESK_VIEW_A_TICKET_PUBLIC = getattr(settings, 'HELPDESK_VIEW_A_TICKET_PUBLIC', False)
 
 # show 'submit a ticket' section on public page?
-HELPDESK_SUBMIT_A_TICKET_PUBLIC = getattr(settings, 'HELPDESK_SUBMIT_A_TICKET_PUBLIC', True)
+HELPDESK_SUBMIT_A_TICKET_PUBLIC = getattr(settings, 'HELPDESK_SUBMIT_A_TICKET_PUBLIC', False)
 
 
 
 ''' options for update_ticket views '''
 # allow non-staff users to interact with tickets? this will also change how 'staff_member_required' 
 # in staff.py will be defined.
-HELPDESK_ALLOW_NON_STAFF_TICKET_UPDATE = getattr(settings, 'HELPDESK_ALLOW_NON_STAFF_TICKET_UPDATE', False)
+HELPDESK_ALLOW_NON_STAFF_TICKET_UPDATE = getattr(settings, 'HELPDESK_ALLOW_NON_STAFF_TICKET_UPDATE', True)
 
 # show edit buttons in ticket follow ups.
 HELPDESK_SHOW_EDIT_BUTTON_FOLLOW_UP = getattr(settings, 'HELPDESK_SHOW_EDIT_BUTTON_FOLLOW_UP', True)
@@ -114,10 +133,10 @@ HELPDESK_SHOW_HOLD_BUTTON_TICKET_TOP = getattr(settings, 'HELPDESK_SHOW_HOLD_BUT
 HELPDESK_UPDATE_PUBLIC_DEFAULT = getattr(settings, 'HELPDESK_UPDATE_PUBLIC_DEFAULT', True)
 
 # only show staff users in ticket owner drop-downs 
-HELPDESK_STAFF_ONLY_TICKET_OWNERS = getattr(settings, 'HELPDESK_STAFF_ONLY_TICKET_OWNERS', False)
+HELPDESK_STAFF_ONLY_TICKET_OWNERS = getattr(settings, 'HELPDESK_STAFF_ONLY_TICKET_OWNERS', True)
 
 # only show staff users in ticket cc drop-down 
-HELPDESK_STAFF_ONLY_TICKET_CC = getattr(settings, 'HELPDESK_STAFF_ONLY_TICKET_CC', False)
+HELPDESK_STAFF_ONLY_TICKET_CC = getattr(settings, 'HELPDESK_STAFF_ONLY_TICKET_CC', True)
 
 
 
