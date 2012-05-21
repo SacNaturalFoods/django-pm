@@ -93,11 +93,11 @@ Adding To Your Django Project
 
 #. Create the required database tables. I'd suggest using *South*, however the following will work::
 
-     ./manage.py syncdb
+     python manage.py syncdb
 
    Then migrate using South::
 
-     ./manage.py migrate helpdesk
+     python manage.py migrate helpdesk
 
 #. Make sure your webserver can write to your upload directory, e.g::
 
@@ -113,6 +113,10 @@ Adding To Your Django Project
       Options -Indexes
 
    You will also have to make sure that ``.htaccess`` files aren't being ignored.
+
+#. Collect your static files::
+   
+   python manage.py collectstatic
 
 
 Configuring Apache with mod_wsgi
