@@ -60,6 +60,14 @@ Adding To Your Django Project
     GOOGLE_WHITE_LISTED_DOMAINS = ['yourdomain.com']
     GOOGLE_WHITE_LISTED_EMAILS = ['someoutsideemail@gmail.com']
 
+#. If you haven't installed django-pm with ``pip``, then you will need to explicitly install the dependencies::
+
+     pip install -r requirements.txt 
+
+    As well as put django-pm on your python path::
+     
+     python setup.py develop
+
 #. Make sure django-pm is accessible via ``urls.py``. Add the following line to ``urls.py``::
 
      (r'helpdesk/', include('helpdesk.urls')),
@@ -70,9 +78,9 @@ Adding To Your Django Project
 
    This line will have to come *after* any other lines in your urls.py such as those used by the Django admin.
    
-   You will also need to add the django_socialauth urls for oauth login::
+   You will also need to add the django_socialauth urls for oauth2 login::
 
-     (r'login/$', 'social_auth.views.auth', {'backend': 'google-oauth'}),
+     (r'login/$', 'social_auth.views.auth', {'backend': 'google-oauth2'}),
 
 #. Create the required database tables. I'd suggest using *South*, however the following will work::
 
@@ -82,43 +90,48 @@ Adding To Your Django Project
 
      ./manage.py migrate helpdesk
 
-#. [If you're not using django.contrib.staticfiles] Inside your ``STATIC_ROOT`` folder, create a new folder called ``helpdesk`` and copy the contents of ``helpdesk/static`` into it. Alternatively, create a symlink::
+#. Make sure your webserver can write to your upload directory, e.g::
 
-      ln -s /path/to/helpdesk/static/helpdesk /path/to/static/helpdesk
-
-#. Inside your ``MEDIA_ROOT`` folder, inside the ``helpdesk`` folder, is a folder called ``attachments``. Ensure your web server software can write to this folder - something like this should do the trick::
-
-      chown www-data:www-data attachments/
-      chmod 700 attachments
+      chown www-data:www-data [your MEDIA_ROOT] 
+      chmod 700 [your MEDIA_ROOT] 
 
    (substitute www-data for the user / group that your web server runs as, eg 'apache' or 'httpd')
 
-   If all else fails ensure all users can write to it::
+#. Ensure that your ``MEDIA_ROOT`` folder has directory listings turned off, to ensure users don't download files that they are not specifically linked to from their tickets.
 
-      chmod 777 attachments/
-
-   This is NOT recommended, especially if you're on a shared server.
-
-#. Ensure that your ``attachments`` folder has directory listings turned off, to ensure users don't download files that they are not specifically linked to from their tickets.
-
-   If you are using Apache, put a ``.htaccess`` file in the ``attachments`` folder with the following content::
+   If you are using Apache, put a ``.htaccess`` file in the ``MEDIA_ROOT`` folder with the following content::
 
       Options -Indexes
 
    You will also have to make sure that ``.htaccess`` files aren't being ignored.
 
-   Ideally, accessing http://MEDIA_URL/helpdesk/attachments/ will give you a 403 access denied error.
-
-#. If it's not already installed, install ``python-markdown``::
-
-      pip install Markdown
-
-#. If you already have a view handling your logins, then great! If not, add the following to ``settings.py`` to get your Django installation to use the login view included in ``django-helpdesk``::
-
-      LOGIN_URL = '/helpdesk/login/'
-
-   Alter the URL to suit your installation path.
-
 
 Configuring Apache with mod_wsgi
 --------------------------------
+
+#. Add your python environment site-packages, project configuration (or project parent directory) and project root paths to ``myproject/wsgi.py``, e.g.::
+
+    import site
+    site.addsitedir('/opt/myproject/lib/python2.6/site-packages')
+    import os
+    import sys
+    sys.path.append('/opt/myproject/conf')
+    sys.path.append('/opt/myproject/conf/myproject')
+
+#. Configure the Apache virtual host for your site::
+
+    <VirtualHost *:80>
+            ServerName mysite.com
+
+            WSGIScriptAlias / /opt/myproject/conf/myproject/wsgi.py
+
+            # serve static files
+            Alias /media/ /opt/myproject/data/sitestatic/media/
+            Alias /js/ /opt/myproject/data/sitestatic/js/
+            Alias /static/ /opt/myproject/data/sitestatic/
+
+            <Directory /opt/myproject/data/sitestatic>
+                    Order deny,allow
+                    Allow from all
+            </Directory>
+    </VirtualHost>
