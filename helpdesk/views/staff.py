@@ -828,7 +828,7 @@ def create_ticket(request):
             send_templated_mail(
                 'assigned_owner',
                 context,
-                recipients=[ticket.assigned_to.email, ticket.queue.new_ticket_cc],
+                recipients=ticket.assigned_to.email,
                 sender=ticket.queue.from_address,
                 fail_silently=True,
                 files=None,
