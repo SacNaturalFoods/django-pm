@@ -824,6 +824,15 @@ def create_ticket(request):
         form.fields['assigned_to'].choices = [('', '--------')] + [[u.id, u.username] for u in User.objects.filter(is_active=True).order_by('username')]
         if form.is_valid():
             ticket = form.save(user=request.user)
+            context = safe_template_context(ticket)
+            send_templated_mail(
+                'assigned_owner',
+                context,
+                recipients=[ticket.assigned_to.email, ticket.queue.new_ticket_cc],
+                sender=ticket.queue.from_address,
+                fail_silently=True,
+                files=None,
+                )
             return HttpResponseRedirect(ticket.get_absolute_url())
     else:
         initial_data = {}
