@@ -359,14 +359,12 @@ def update_ticket(request, ticket_id, public=False):
         c.save()
         ticket.priority = priority
 
-    #if due_date:
-    #    due_date = timezone.make_aware(due_date, timezone.utc)
     if due_date != ticket.due_date:
         c = TicketChange(
             followup=f,
             field=_('Due on'),
-            old_value=ticket.due_date,
-            new_value=due_date,
+            old_value=ticket.due_date.strftime('%B %d, %Y'),
+            new_value=due_date.strftime('%B %d, %Y'),
             )
         if helpdesk_settings.HELPDESK_UPDATE_CALENDAR:
             from helpdesk import calendars
