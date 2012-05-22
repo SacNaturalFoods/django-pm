@@ -528,7 +528,7 @@ class Ticket(models.Model):
             self.priority = 3 
 
         if self.order is None:
-            self.order = self.queue.ticket_set.aggregate(Max('order'))['order__max'] + 1
+            self.order = (self.queue.ticket_set.aggregate(Max('order'))['order__max'] or 0) + 1
 
         self.modified = datetime.now()
 
