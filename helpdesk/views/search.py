@@ -1,7 +1,7 @@
 """
 django-pm - A ticketing and project management tool.
 
-Copyright (C) 2012 Sacramento Natural Foods Co-op, Inc.
+Copyright (C) 2012 Sacramento Natural Foods Co-op, Inc. and Tony Schmidt
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as

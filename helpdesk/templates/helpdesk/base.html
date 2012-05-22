@@ -33,6 +33,12 @@
 
             $(function() {
 
+                $('body').click(function(e) {
+                    if (e.target.id != "saved_search_dropdown_button") {
+                        $('#saved_searches').toggle(false);
+                    }
+                });
+
                 $('#saved_search_dropdown_button').click(function() {
                     $('#saved_searches').toggle();
                 });
@@ -130,6 +136,8 @@
                             format_search($('#id_q').val());
                         }
                     });
+
+
 
             });
 

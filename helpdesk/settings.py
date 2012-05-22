@@ -16,6 +16,10 @@ settings.AUTHENTICATION_BACKENDS = (
 settings.DJANGO_WYSIWYG_FLAVOR = 'ckeditor'
 settings.DJANGO_WYSIWYG_MEDIA_URL = "%s/ckeditor/" % settings.STATIC_URL
 
+settings.TEMPLATE_CONTEXT_PROCESSORS += (
+        'helpdesk.context_processors.saved_searches',
+        )
+
 
 # TODO: remove references to these settings elsewhere 
 HAS_TAGGIT_SUPPORT = True 

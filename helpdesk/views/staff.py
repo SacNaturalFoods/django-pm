@@ -33,11 +33,7 @@ from helpdesk.models import Ticket, Queue, FollowUp, TicketChange, PreSetReply, 
 from helpdesk.settings import HAS_TAGGING_SUPPORT, HAS_TAGGIT_SUPPORT
 from helpdesk import settings as helpdesk_settings
   
-if HAS_TAGGING_SUPPORT:
-    from tagging.models import Tag, TaggedItem
-
-if HAS_TAGGIT_SUPPORT:
-    from taggit.models import Tag
+from taggit.models import Tag
 
 
 if helpdesk_settings.HELPDESK_ALLOW_NON_STAFF_TICKET_UPDATE:
