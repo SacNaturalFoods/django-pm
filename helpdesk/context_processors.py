@@ -20,5 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from helpdesk.models import SavedSearch
 
 def saved_searches(request):
-    return {'saved_searches': ' '.join([search.html for search in SavedSearch.objects.filter(user=request.user).all()])}
+    if request.user.is_authenticated():
+        return {'saved_searches': ' '.join([search.html for search in SavedSearch.objects.filter(user=request.user).all()])}
+    return {}
+
 

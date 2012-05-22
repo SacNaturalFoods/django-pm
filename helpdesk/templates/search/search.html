@@ -9,20 +9,20 @@
 $(function() {
 
         $('#save, #disabled_sticky').click(function() {
-        var title = prompt('Please enter a name for your search.');
-        if (title) {
-            $('#saved_searches').load('{% url save_search %}', {
-                'title': title, 
-                'href': $('iframe')[0].contentWindow.location.href, 
-                'sticky': true ? $(this).id == 'disabled_sticky' : false, 
-                'csrfmiddlewaretoken': '{{ csrf_token }}'
-            });
-        } else {
-            $('#active_sticky').attr('hidden', true);
-            $('#disabled_sticky').attr('hidden', false);
-        }
-    });
-);
+            var title = prompt('Please enter a name for your search.');
+            if (title) {
+                $('#saved_searches').load('{% url save_search %}', {
+                    'title': title, 
+                    'href': $('iframe')[0].contentWindow.location.href, 
+                    'sticky': true ? $(this).id == 'disabled_sticky' : false, 
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                });
+            } else {
+                $('#active_sticky').attr('hidden', true);
+                $('#disabled_sticky').attr('hidden', false);
+            }
+        });
+});
 
 </script>
 {% endblock %}

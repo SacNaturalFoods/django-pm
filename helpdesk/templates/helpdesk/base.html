@@ -149,6 +149,9 @@
                     var header_footer = 75;
                     var height = $(iframe).contents().find('table').height();
                     $(iframe).attr('height', header_footer + height  + 'px');
+                    $(iframe).contents().click(function() {
+                        $(parent.document).find('#saved_searches').toggle(false);
+                    });
                 });
 
                 // size and locate hidden saved search div according to search bar
