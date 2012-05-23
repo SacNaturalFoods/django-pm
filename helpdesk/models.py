@@ -1003,7 +1003,7 @@ class SavedSearch(models.Model):
             (25, 20),
             (50, 50),
             (100, 100),
-            (0, _('All'),
+            (0, _('All')),
             )
 
     per_page = models.IntegerField(
