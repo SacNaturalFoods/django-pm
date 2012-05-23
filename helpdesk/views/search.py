@@ -34,6 +34,7 @@ from taggit.models import Tag
 
 from helpdesk.models import Ticket, Queue, SavedSearch
 from helpdesk.tables import TicketTable
+from helpdesk.forms import PerPageForm
 
 
 class TabularSearchView(SearchView):
@@ -65,8 +66,15 @@ class TabularSearchView(SearchView):
             'status':result.object.status_str,
             'created':result.object.created.strftime('%Y-%m-%d'),
             } for result in self.results])
-        RequestConfig(request, paginate={"per_page": 10}).configure(table)
+        if request.GET.get('per_page') != '0':
+            RequestConfig(request, paginate={"per_page": request.GET.get('per_page') or 10}).configure(table)
+        else:
+            RequestConfig(request, paginate={"per_page": 10000}).configure(table)
+            table.paginator.per_page = 10000
+            #import ipdb; ipdb.set_trace()   
+
         sticky = request.GET.get('sticky', None)
+        per_page_form = PerPageForm({'per_page': request.GET.get('per_page') or 10}) 
         # iframes
         if sticky is not None:
             sticky = True if sticky == 'true' else False
@@ -75,7 +83,7 @@ class TabularSearchView(SearchView):
             del q['sticky']
             existing_saved_search = SavedSearch.objects.filter(
                     query=q.urlencode(), user=self.request.user).exists()
-            context = {'table': table, 'sticky':sticky, 'existing_saved_search': existing_saved_search}
+            context = {'table': table, 'sticky':sticky, 'existing_saved_search': existing_saved_search, 'per_page_form': per_page_form}
             return render_to_response(template, context, context_instance=RequestContext(request))
         # main page
         else:
@@ -93,6 +101,7 @@ class TabularSearchView(SearchView):
                 'saved_searches': ' '.join([
                     search.html for search in SavedSearch.objects.filter(user=self.request.user).all()]),
                 'sticky_searches': sticky_searches,
+                'per_page_form': per_page_form
             }
             return render_to_response(template, context, context_instance=RequestContext(self.request))
 

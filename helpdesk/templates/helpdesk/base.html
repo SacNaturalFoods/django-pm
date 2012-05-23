@@ -142,9 +142,8 @@
             });
 
 
-            // resize iframes after load
-            $(window).load(function() {
-
+            function resizeIframes(timeout) {
+                setTimeout(function() {
                 $('iframe').each(function(i, iframe) {
                     var header_footer = 75;
                     var height = $(iframe).contents().find('table').height();
@@ -153,6 +152,13 @@
                         $(parent.document).find('#saved_searches').toggle(false);
                     });
                 });
+                }, timeout);
+            }
+
+            // resize iframes after load
+            $(window).load(function() {
+ 
+                resizeIframes(0);
 
                 // size and locate hidden saved search div according to search bar
                 var pos = $('#id_q').position();

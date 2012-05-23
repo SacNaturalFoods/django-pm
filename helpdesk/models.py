@@ -997,23 +997,6 @@ class SavedSearch(models.Model):
         default=1,
         )
 
-    PER_PAGE_CHOICES = (
-            (5, 5),
-            (10, 10),
-            (25, 20),
-            (50, 50),
-            (100, 100),
-            (0, _('All')),
-            )
-
-    per_page = models.IntegerField(
-        _('Per Page'),
-        null=True,
-        blank=True,
-        default=10,
-        choices=PER_PAGE_CHOICES,
-        )
-
     def _html(self):
         return u'<li><a href="/search/?%s">%s</a> <span id="delete_saved_search__%s" class="link">x</span></li>' % (self.query, self.title, self.pk)
     html = property(_html)

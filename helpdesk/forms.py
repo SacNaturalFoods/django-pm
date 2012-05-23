@@ -672,3 +672,25 @@ class AllResultsSearchForm(FacetedSearchForm):
        
         return sqs
 
+
+class PerPageForm(forms.Form):
+
+    PER_PAGE_CHOICES = (
+            (5, 5),
+            (10, 10),
+            (25, 20),
+            (50, 50),
+            (100, 100),
+            (0, _('All')),
+            )
+
+    per_page = forms.ChoiceField(
+        label=_('Show:'),
+        required=False,
+        choices=PER_PAGE_CHOICES,
+        )
+
+
+
+
+

@@ -79,7 +79,7 @@
     <li class="next"><a href="{% querystring table.prefixed_page_field=table.page.next_page_number %}" target="_self">{% trans "Next" %}</a></li>
     {% endblock pagination.next %}
     {% endif %}
-    <li class="pages">Show: <input type="text
+    <li class="pages">{{ per_page_form }}</li> 
 </ul>
 {% endblock pagination %}
 </div>
@@ -91,6 +91,18 @@
 
 
 $(function() {
+
+    $('#id_per_page').change(function() {
+        var href = location.href
+        if (location.href.match(/per_page/)) {
+            href = location.href.replace(/&per_page=\d+/, '&per_page=' + this.value);
+        } else {
+            href = location.href + '&per_page=' + this.value;
+        }
+        href = href.replace(/&page=\d+/, '');
+        location.href = href
+        parent.resizeIframes(300);
+    });
 
     $('#disabled_sticky').click(function() {
         var existing_saved_search = false;
