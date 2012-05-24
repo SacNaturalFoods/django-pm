@@ -106,7 +106,6 @@
                         // return ticket if begin with #
                         var ticket_id_search = search_str.match(/^#(\d+)/);
                         if (ticket_id_search) {
-                            console.log(ticket_id_search);
                             location.href = '{% url helpdesk_list %}' + ticket_id_search[1];
                         } else {
                             searches = search_str.split(',');
@@ -147,7 +146,6 @@
                 setTimeout(function() {
                     $('iframe').each(function(i, iframe) {
                         $(iframe).load(function() {
-                            console.log('dddddddddddd');
                             var header_footer = 75;
                             var height = $(iframe).contents().find('table').height();
                             $(iframe).attr('height', header_footer + height  + 'px');
