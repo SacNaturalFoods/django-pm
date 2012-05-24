@@ -135,7 +135,6 @@ def autocomplete_search(request):
         + [{'label': 'tags', 'value': tag.name} for tag in tags]
         + [{'label': 'not tags', 'value': tag.name} for tag in tags]
         + [{'label': 'title', 'value': ticket.title} for ticket in tickets]
-        + [{'label': 'not title', 'value': ticket.title} for ticket in tickets]
         ))
 
 def save_search(request):
