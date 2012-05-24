@@ -71,7 +71,6 @@ class TabularSearchView(SearchView):
         else:
             RequestConfig(request, paginate={"per_page": 10000}).configure(table)
             table.paginator.per_page = 10000
-            #import ipdb; ipdb.set_trace()   
 
         sticky = request.GET.get('sticky', None)
         per_page_form = PerPageForm({'per_page': request.GET.get('per_page') or 10}) 
