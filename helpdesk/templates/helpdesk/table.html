@@ -93,7 +93,6 @@
 $(function() {
 
     $('#id_per_page').change(function() {
-        console.log(this.value);
         var href = location.href
         if (location.href.match(/per_page/)) {
             href = location.href.replace(/per_page=\d+/, '&per_page=' + this.value);
@@ -101,7 +100,6 @@ $(function() {
             href = location.href + '&per_page=' + this.value;
         }
         href = href.replace(/&page=\d+/, '');
-        console.log(href);
         location.href = href
         parent.resizeIframes(500);
     });

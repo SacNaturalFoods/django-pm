@@ -137,6 +137,7 @@
                         }
                     });
 
+                    resizeIframes(0);
 
 
             });
@@ -145,11 +146,14 @@
             function resizeIframes(timeout) {
                 setTimeout(function() {
                     $('iframe').each(function(i, iframe) {
-                        var header_footer = 75;
-                        var height = $(iframe).contents().find('table').height();
-                        $(iframe).attr('height', header_footer + height  + 'px');
-                        $(iframe).contents().click(function() {
-                            $(parent.document).find('#saved_searches').toggle(false);
+                        $(iframe).load(function() {
+                            console.log('dddddddddddd');
+                            var header_footer = 75;
+                            var height = $(iframe).contents().find('table').height();
+                            $(iframe).attr('height', header_footer + height  + 'px');
+                            $(iframe).contents().click(function() {
+                                $(parent.document).find('#saved_searches').toggle(false);
+                            });
                         });
                     });
                 }, timeout);
@@ -157,12 +161,9 @@
 
 
 
-            // resize iframes after load
             $(window).load(function() {
- 
-                //TODO: this is lame - anticipate size of iframes ahead of time?  or get rid of them?
-                resizeIframes(800);
 
+ 
                 // size and locate hidden saved search div according to search bar
                 var pos = $('#id_q').position();
                 //var height = $('#id_q').attr('offsetheight');
@@ -178,14 +179,18 @@
                     width: width + margin
                 });
 
+                /*
                 $('.scroll-pane').scroll(function() {
                     var pane = $('.scroll-pane').data('jsp');
                     if (pane.getContentPositionY() > 0) {
-                        $('#header').addClass('roll-under');
-                    } else {
-                        $('#header').removeClass('roll-under');
+                            $('#header').addClass('roll-under');
+                        } else {
+                            $('#header').removeClass('roll-under');
                     }
                 });
+                */
+
+
 
                
             });
