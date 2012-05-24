@@ -117,9 +117,6 @@ $(function() {
             title = prompt('Please enter a name for your search.');
         {% endif %}
         if (title || existing_saved_search) {
-            if (!existing_saved_search) {
-                toggle_sticky();
-            }
             $.post('{% url save_search %}', {
                 'title': title, 
                 'href': location.href, 
