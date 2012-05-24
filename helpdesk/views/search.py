@@ -123,12 +123,19 @@ def autocomplete_search(request):
     queues = Queue.objects.filter(title__icontains=term).order_by('title')
     return HttpResponse(json.dumps(
         [{'label': 'list', 'value': queue.title} for queue in queues]
+        + [{'label': 'not list', 'value': queue.title} for queue in queues]
         + [{'label': 'assigned_to', 'value': user.username} for user in users]
+        + [{'label': 'not assigned_to', 'value': user.username} for user in users]
         + [{'label': 'submitted_by', 'value': user.username} for user in users]
+        + [{'label': 'not submitted_by', 'value': user.username} for user in users]
         + [{'label': 'priority_str', 'value': priority} for priority in priorities]
+        + [{'label': 'not priority_str', 'value': priority} for priority in priorities]
         + [{'label': 'status_str', 'value': status} for status in statuses]
+        + [{'label': 'not status_str', 'value': status} for status in statuses]
         + [{'label': 'tags', 'value': tag.name} for tag in tags]
+        + [{'label': 'not tags', 'value': tag.name} for tag in tags]
         + [{'label': 'title', 'value': ticket.title} for ticket in tickets]
+        + [{'label': 'not title', 'value': ticket.title} for ticket in tickets]
         ))
 
 def save_search(request):

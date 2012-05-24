@@ -9,6 +9,7 @@ forms.py - Definitions of newforms-based forms for creating and maintaining
 
 from datetime import datetime
 from StringIO import StringIO
+import re
 
 from django import forms
 from django.forms import extras
@@ -656,19 +657,12 @@ class AllResultsSearchForm(FacetedSearchForm):
         for operator in operators:
             # TODO: internationalize this better
             operator_name = operator.replace('list', 'queue')
-            sqs = sqs.filter(**{'%s__in' % operator_name: operators[operator]})
-
-        # We need to process each facet to ensure that the field name and the
-        # value are quoted correctly and separately:
-        #for facet in self.selected_facets:
-        #    if ":" not in facet:
-        #        continue
-
-        #    field, value = facet.split(":", 1)
-        #    
-        #    if value:
-        #        sqs = sqs.narrow(u'%s:"%s"' % (field, sqs.query.clean(value)))
-
+            search_value = operators[operator]
+            exclusion_operator = re.match('not (\w+)',  operator_name)
+            if exclusion_operator:
+                sqs = sqs.exclude(**{'%s__in' % exclusion_operator.group(1): search_value})
+            else:
+                sqs = sqs.filter(**{'%s__in' % operator_name: search_value})
        
         return sqs
 
