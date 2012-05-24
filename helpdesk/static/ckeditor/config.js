@@ -7,5 +7,5 @@ CKEDITOR.editorConfig = function( config )
 {
 	// Define changes to default configuration here. For example:
 	config.language = 'en';
-    config.scayt_autoStartup = true;
+    config.disableNativeSpellChecker = false;
 };
