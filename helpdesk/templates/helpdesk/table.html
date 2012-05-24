@@ -144,12 +144,6 @@ $(function() {
         toggle_sticky();
     });
 
-    $('#disabled_sticky').click(function() {
-        $('#disabled_sticky').attr('hidden', true);
-        $('#active_sticky').attr('hidden', false);
-        toggle_sticky();
-    });
-
     function change_ticket_order(el) {
         $.post(
             '{% url change_ticket_order %}', 
