@@ -22,6 +22,10 @@ blockquote {
     background: #E5E5E5;
 }
 
+p {
+    margin: 5px;
+}
+
 #container {
     min-height: 100%;
     position: relative;
