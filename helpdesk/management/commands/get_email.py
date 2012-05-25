@@ -236,12 +236,20 @@ def ticket_from_message(message, queue, quiet):
         priority = 2
 
     if ticket == None:
+        from BeautifulSoup import UnicodeDammit
+        converted = UnicodeDammit(body_html)
+        if not converted.unicode: 
+            raise UnicodeDecodeError( 
+           "Failed to detect encoding, tried [%s]", 
+            ', '.join(converted.triedEncodings))  
+        body_html = converted.unicode
+
         t = Ticket(
             title=subject,
             queue=queue,
             submitter_email=sender_email,
             created=now,
-            description=body,
+            description=body_html,
             priority=priority,
         )
         t.save()
@@ -307,24 +315,37 @@ def ticket_from_message(message, queue, quiet):
                 fail_silently=True,
                 )
 
-    f = FollowUp(
-        ticket = t,
-        title = _('E-Mail Received from %(sender_email)s' % {'sender_email': sender_email}),
-        date = timezone.now(),
-        public = True,
-        comment = body,
-    )
-
-    if t.status == Ticket.REOPENED_STATUS:
-        f.new_status = Ticket.REOPENED_STATUS
-        f.title = _('Ticket Re-Opened by E-Mail Received from %(sender_email)s' % {'sender_email': sender_email})
+    f = None
+    if not new:
+        f = FollowUp(
+            ticket = t,
+            title = _('E-Mail Received from %(sender_email)s' % {'sender_email': sender_email}),
+            date = timezone.now(),
+            public = True,
+            comment = body_html,
+        )
+        if t.status == Ticket.REOPENED_STATUS:
+            f.new_status = Ticket.REOPENED_STATUS
+            f.title = _('Ticket Re-Opened by E-Mail Received from %(sender_email)s' % {'sender_email': sender_email})
+        f.save()
     
-    f.save()
 
     if not quiet:
         print (" [%s-%s] %s%s" % (t.queue.slug, t.id, t.title, update)).encode('ascii', 'replace')
 
+    if new and len(files) > 1:
+        f = FollowUp(
+            ticket = t,
+            title = _('E-Mail Attachments Received from %(sender_email)s' % {'sender_email': sender_email}),
+            date = timezone.now(),
+            public = True,
+        )
+        f.save()
+
     for file in files:
+        # remove redundant email body attachment
+        if file['type'] == 'text/html':
+            continue
         if file['content']:
             filename = file['filename'].encode('ascii', 'replace').replace(' ', '_')
             filename = re.sub('[^a-zA-Z0-9._-]+', '', filename)

@@ -196,6 +196,14 @@ label {
     font-weight: bold;
 }
 
+#id_title {
+    width: 400px;
+}
+
+#id_submitter_email {
+    width: 200px;
+}
+
 span.form_optional {
     color: #666;
     font-size: 95%;
