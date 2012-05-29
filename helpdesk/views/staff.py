@@ -175,6 +175,10 @@ def followup_edit(request, ticket_id, followup_id, ):
             if followup.user:
                 new_followup.user = followup.user
             new_followup.save()
+            # keep old ticket changes
+            for change in followup.ticketchange_set.all():
+                change.followup = new_followup
+                change.save()
             # get list of old attachments & link them to new_followup
             attachments = Attachment.objects.filter(followup = followup)            
             for attachment in attachments:
