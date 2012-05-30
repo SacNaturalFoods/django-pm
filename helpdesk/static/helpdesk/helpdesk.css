@@ -80,6 +80,15 @@ p {
     margin: auto;
 }
 
+.jspCap { 
+    display: block;
+}
+
+.jspCapBottom {
+    height: 150px;
+}
+
+
 #inner_header {
     padding: 10px;
 }

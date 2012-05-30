@@ -22,11 +22,12 @@
         <script src='{{ STATIC_URL }}helpdesk/jScrollPane.js' type='text/javascript' language='javascript'></script>
         {% wysiwyg_setup %}
 
+        <link rel='stylesheet' href='{{ STATIC_URL }}helpdesk/jScrollPane.css' type='text/css' />
+
         <link rel='stylesheet' href='{{ STATIC_URL }}helpdesk/helpdesk.css' type='text/css'  media="screen" />
         <link rel='stylesheet' href='{{ STATIC_URL }}helpdesk/helpdesk-print.css' type='text/css' media="print" />
         <link rel='stylesheet' href='{{ STATIC_URL }}helpdesk/jquery-smoothness-theme/jquery-ui-1.8.9.custom.css' type='text/css' />
 
-        <link rel='stylesheet' href='{{ STATIC_URL }}helpdesk/jScrollPane.css' type='text/css' />
         {{ form.media }}
 
         <script type="text/javascript">
@@ -43,7 +44,7 @@
                     $('#saved_searches').toggle();
                 });
 
-                $('.scroll-pane').jScrollPane({autoReinitialise: true, mouseWheelSpeed: 100 });
+                $('.scroll-pane').jScrollPane({autoReinitialise: true, mouseWheelSpeed: 100, verticalGutter: 30 });
 
                 $('#[id*=delete_saved_search]').live('click', function() {
                     $('#saved_searches').load(
