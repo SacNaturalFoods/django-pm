@@ -114,7 +114,8 @@ def autocomplete_search(request):
         if term.lower() in priority:
             priorities.append(priority.capitalize())
     statuses = []
-    for status in ['open', 'resolved', 'closed', 'reopened', 'duplicate']:
+    #TODO: don't make this stuff hard coded - bad
+    for status in ['open', 'resolved', 'closed', 'reopened', 'duplicate', 'deferred']:
         if term.lower() in status:
             statuses.append(status.capitalize())
     tags = Tag.objects.filter(name__icontains=term)
