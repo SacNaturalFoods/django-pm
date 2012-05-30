@@ -64,7 +64,7 @@ class TabularSearchView(SearchView):
             'assigned_to':result.object.assigned_to.username if result.object.assigned_to else None,
             'queue':result.object.queue,
             'status':result.object.status_str,
-            'created':result.object.created.strftime('%Y-%m-%d'),
+            'modified':result.object.modified.strftime('%Y-%m-%d'),
             } for result in self.results])
         if request.GET.get('per_page') != '0':
             RequestConfig(request, paginate={"per_page": request.GET.get('per_page') or 10}).configure(table)

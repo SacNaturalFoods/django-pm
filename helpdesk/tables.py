@@ -20,7 +20,7 @@ class TicketTable(tables.Table):
     assigned_to = tables.Column(verbose_name='owner', sortable=True)
     queue = tables.Column(sortable=True, verbose_name='list')
     status = tables.Column(sortable=True)
-    created = tables.Column(sortable=True)
+    modified = tables.Column(sortable=True)
 
     def render_priority(self, value):
         return dict(Ticket.PRIORITY_CHOICES)[int(value)].split(' ')[-1]
