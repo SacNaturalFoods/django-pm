@@ -673,7 +673,8 @@ def attachment_path(instance, filename):
     att_path = os.path.join(settings.MEDIA_ROOT, path)
     if not os.path.exists(att_path):
         os.makedirs(att_path, 0755)
-    os.umask(0022)
+    # TODO: not sure what this umask was for, but this seems wrong (created directories that cannot be read, no x)
+    #os.umask(0133)
     return os.path.join(path, filename)
 
 

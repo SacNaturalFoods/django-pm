@@ -1261,3 +1261,19 @@ def attachment_del(request, ticket_id, attachment_id):
     return HttpResponseRedirect(reverse('helpdesk_view', args=[ticket_id]))
 attachment_del = staff_member_required(attachment_del)
 
+def attachment_download(request, ticket_id, attachment_id):
+    ticket = get_object_or_404(Ticket, id=ticket_id)
+    attachment = get_object_or_404(Attachment, id=attachment_id)
+    #return HttpResponseRedirect(reverse('helpdesk_view', args=[ticket_id]))
+    response = HttpResponse(attachment.file, content_type=attachment.mime_type)
+    response['Content-Disposition'] = 'attachment; filename=%s' % attachment.filename
+    return response
+
+
+
+
+
+
+
+
+
