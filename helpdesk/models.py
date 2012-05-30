@@ -673,7 +673,7 @@ def attachment_path(instance, filename):
     att_path = os.path.join(settings.MEDIA_ROOT, path)
     if not os.path.exists(att_path):
         os.makedirs(att_path, 0755)
-    os.umask(0133)
+    os.umask(0022)
     return os.path.join(path, filename)
 
 
