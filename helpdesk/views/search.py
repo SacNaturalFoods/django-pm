@@ -62,7 +62,7 @@ class TabularSearchView(SearchView):
             'priority':result.object.priority,
             'title':result.object.title if len(result.object.title) < 51 else result.object.title[:50]+'...',
             'assigned_to':result.object.assigned_to.username if result.object.assigned_to else None,
-            'queue':result.object.queue,
+            'list':result.object.queue.title,
             'status':result.object.status_str,
             'modified':result.object.modified.strftime('%Y-%m-%d'),
             } for result in self.results])
