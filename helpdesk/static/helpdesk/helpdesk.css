@@ -525,16 +525,8 @@ span.search_title {
     min-width: 170px;
 }
 
-.folder_tab_left {
-    /*
-    position: relative;
-    bottom: -35px;
-    */
+.ui-autocomplete {
+    text-align: left;
 }
-
-iframe {
-}
-
-
 
 
