@@ -79,6 +79,14 @@ table.paleblue tr.even {
     background-color: white;
 }
 
+
+table.paleblue tr.no_results * {
+    text-align: center;
+    font-weight: bold;
+    background-color: white;
+    padding: 10px;
+}
+
 table.paleblue + ul.pagination {
     background: white url(../img/pagination-bg.gif) left 180% repeat-x;
     overflow: auto;

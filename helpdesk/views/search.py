@@ -65,7 +65,8 @@ class TabularSearchView(SearchView):
             'list':result.object.queue.title,
             'status':result.object.status_str,
             'modified':result.object.modified.strftime('%Y-%m-%d'),
-            } for result in self.results])
+            } for result in self.results],
+            empty_text="No Results Found")
         if request.GET.get('per_page') != '0':
             RequestConfig(request, paginate={"per_page": request.GET.get('per_page') or 10}).configure(table)
         else:

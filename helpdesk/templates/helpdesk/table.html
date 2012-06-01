@@ -6,7 +6,6 @@
 {% spaceless %}
 {% load querystring from django_tables2 %}
 {% load trans blocktrans from i18n %}
-{% if table.page %}
 <div class="table-container">
     <div class="sitcky">
     {% if sticky %}
@@ -17,7 +16,6 @@
         <img id="disabled_sticky" class="sticky" src="{{ STATIC_URL }}helpdesk/buttons/disabled_tack.png"/> 
     {% endif %}
     </div>
-{% endif %}
 
 {% block table %}
 <div class="search_table">
@@ -51,7 +49,7 @@
         {% empty %}
         {% if table.empty_text %}
         {% block table.tbody.empty_text %}
-        <tr><td colspan="{{ table.columns|length }}">{{ table.empty_text }}</td></tr>
+        <tr class="no_results"><td colspan="{{ table.columns|length }}">{{ table.empty_text }}</td></tr>
         {% endblock table.tbody.empty_text %}
         {% endif %}
         {% endfor %}
