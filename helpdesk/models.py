@@ -20,6 +20,7 @@ from helpdesk.settings import HAS_TAGGING_SUPPORT, HAS_TAGGIT_SUPPORT, HELPDESK_
 
 #from taggit_autocomplete.managers import TaggableManager
 from tagging_autocomplete_tagit.models import TagAutocompleteTagItField
+from tagging.fields import TagField
 
 class Queue(models.Model):
     """
@@ -503,7 +504,6 @@ class Ticket(models.Model):
         return TicketDependency.objects.filter(ticket=self).filter(depends_on__status__in=OPEN_STATUSES).count() == 0
     can_be_resolved = property(_can_be_resolved)
 
-    #tags = TaggableManager(blank=True)
     tags = TagAutocompleteTagItField(max_tags=False)
 
     class Meta:
