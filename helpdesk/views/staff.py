@@ -33,7 +33,8 @@ from helpdesk.models import Ticket, Queue, FollowUp, TicketChange, PreSetReply, 
 from helpdesk.settings import HAS_TAGGING_SUPPORT, HAS_TAGGIT_SUPPORT
 from helpdesk import settings as helpdesk_settings
   
-from taggit.models import Tag
+#from taggit.models import Tag
+from tagging.models import Tag
 
 
 if helpdesk_settings.HELPDESK_ALLOW_NON_STAFF_TICKET_UPDATE:
@@ -372,35 +373,33 @@ def update_ticket(request, ticket_id, public=False):
         c.save()
         ticket.due_date = due_date
 
-    if HAS_TAGGING_SUPPORT:
-        if tags != ticket.tags:
-            c = TicketChange(
-                followup=f,
-                field=_('Tags'),
-                old_value=ticket.tags,
-                new_value=tags,
-                )
-            c.save()
-            ticket.tags = tags
+    if tags != ticket.tags:
+        c = TicketChange(
+            followup=f,
+            field=_('Tags'),
+            old_value=ticket.tags,
+            new_value=tags,
+            )
+        c.save()
+    ticket.tags = tags
 
-    if HAS_TAGGIT_SUPPORT:
-        old_tags = [tag.name for tag in ticket.tags.all()]
-        old_tags.sort()
-        new_tags = []
-        for tag in tags.split(','):
-            tag = tag.replace(' ', '')
-            if tag:
-                new_tags.append(tag)
-        new_tags.sort()
-        if new_tags != old_tags:
-            c = TicketChange(
-                followup=f,
-                field=_('Tags'),
-                old_value=', '.join(old_tags),
-                new_value=', '.join(new_tags),
-                )
-            c.save()
-            ticket.tags.set(*new_tags)
+        #old_tags = [tag.name for tag in ticket.tags.all()]
+        #old_tags.sort()
+        #new_tags = []
+        #for tag in tags.split(','):
+        #    tag = tag.replace(' ', '')
+        #    if tag:
+        #        new_tags.append(tag)
+        #new_tags.sort()
+        #if new_tags != old_tags:
+        #    c = TicketChange(
+        #        followup=f,
+        #        field=_('Tags'),
+        #        old_value=', '.join(old_tags),
+        #        new_value=', '.join(new_tags),
+        #        )
+        #    c.save()
+        #    ticket.tags.set(*new_tags)
 
 
     if new_status in [ Ticket.RESOLVED_STATUS, Ticket.CLOSED_STATUS ]:

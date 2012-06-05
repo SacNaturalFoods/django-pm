@@ -128,9 +128,7 @@ class TicketForm(forms.ModelForm):
 
     class Meta:
         model = Ticket 
-        fields = ('queue', 'title', 'submitter_email', 'description', 'assigned_to', 'priority', 'due_date')
-        if HAS_TAGGING_SUPPORT or HAS_TAGGIT_SUPPORT:
-            fields += ('tags',)
+        fields = ('queue', 'title', 'submitter_email', 'description', 'assigned_to', 'priority', 'due_date', 'tags')
  
     queue = forms.ChoiceField(
         label=_('Queue'),
@@ -271,8 +269,7 @@ class TicketForm(forms.ModelForm):
                     due_date = self.cleaned_data['due_date'],
                   )
 
-        if HAS_TAGGING_SUPPORT:
-            t.tags = self.cleaned_data['tags']
+        t.tags = self.cleaned_data['tags']
 
         if self.cleaned_data['assigned_to']:
             try:
@@ -282,8 +279,9 @@ class TicketForm(forms.ModelForm):
                 t.assigned_to = None
                 
         t.save()
-        if HAS_TAGGIT_SUPPORT:
-            t.tags.set(*self.cleaned_data['tags'])
+        #if HAS_TAGGIT_SUPPORT:
+        #    t.tags.set(*self.cleaned_data['tags'])
+
         for field, value in self.cleaned_data.items():
             if field.startswith('custom_'):
                 field_name = field.replace('custom_', '')

@@ -168,7 +168,9 @@ urlpatterns += patterns('',
 
     url(r'helpdesk/', include('social_auth.urls')),
 
-    url(r'^taggit_autosuggest/', include('taggit_autosuggest.urls')),
+    #url(r'^taggit_autosuggest/', include('taggit_autosuggest.urls')),
+    #url(r'^taggit_autocomplete/', include('taggit_autocomplete.urls')),
+    url(r'^tagging_autocomplete_tagit/', include('tagging_autocomplete_tagit.urls')),
     
 )
 

@@ -12,13 +12,13 @@ class TicketIndex(indexes.RealTimeSearchIndex, indexes.Indexable):
     priority_str = indexes.CharField(model_attr='priority_str')
     status_str = indexes.CharField(model_attr='status_str')
     queue = indexes.CharField(model_attr='queue')
-    #tags = indexes.MultiValueField(null=True)
     tags = indexes.MultiValueField(null=True)
+    #tags = indexes.CharField(null=True)
     tags_str = indexes.CharField(model_attr='tags_str', null=True)
 
-    def prepare_tags(self, obj):
-        return [tag.name for tag in obj.tags.all()]
-
+    #def prepare_tags(self, obj):
+    #    return [tag.name for tag in obj.tags.all()]
+        
     def get_model(self):
         return Ticket
 

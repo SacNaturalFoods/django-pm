@@ -30,7 +30,8 @@ from django.template import RequestContext
 from haystack.views import SearchView
 from haystack.query import SearchQuerySet
 from django_tables2 import RequestConfig
-from taggit.models import Tag
+#from taggit.models import Tag
+from tagging.models import Tag
 
 from helpdesk.models import Ticket, Queue, SavedSearch
 from helpdesk.tables import TicketTable
@@ -119,6 +120,7 @@ def autocomplete_search(request):
     for status in ['open', 'resolved', 'closed', 'reopened', 'duplicate', 'deferred']:
         if term.lower() in status:
             statuses.append(status.capitalize())
+
     tags = Tag.objects.filter(name__icontains=term)
     tickets = Ticket.objects.filter(title__icontains=term).order_by('title')
     queues = Queue.objects.filter(title__icontains=term).order_by('title')
@@ -133,8 +135,8 @@ def autocomplete_search(request):
         + [{'label': 'not priority_str', 'value': priority} for priority in priorities]
         + [{'label': 'status_str', 'value': status} for status in statuses]
         + [{'label': 'not status_str', 'value': status} for status in statuses]
-        + [{'label': 'tags', 'value': tag.name} for tag in tags]
-        + [{'label': 'not tags', 'value': tag.name} for tag in tags]
+        + [{'label': 'tags_str', 'value': tag.name} for tag in tags]
+        + [{'label': 'not tags_str', 'value': tag.name} for tag in tags]
         + [{'label': 'title', 'value': ticket.title} for ticket in tickets]
         ))
 

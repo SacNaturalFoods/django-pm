@@ -18,14 +18,8 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _, ugettext
 from helpdesk.settings import HAS_TAGGING_SUPPORT, HAS_TAGGIT_SUPPORT, HELPDESK_STAFF_ONLY_TICKET_OWNERS
 
-
-if HAS_TAGGING_SUPPORT:
-    from tagging.fields import TagField
-elif HAS_TAGGIT_SUPPORT:
-    try:
-        from taggit_autosuggest.managers import TaggableManager
-    except ImportError:
-        from taggit.managers import TaggableManager
+#from taggit_autocomplete.managers import TaggableManager
+from tagging_autocomplete_tagit.models import TagAutocompleteTagItField
 
 class Queue(models.Model):
     """
@@ -439,7 +433,10 @@ class Ticket(models.Model):
         """
         String representation of all tags (for search).
         """
-        return ' '.join([tag.name for tag in self.tags.all()]) 
+        #return ' '.join([tag.name for tag in self.tags.all()]) 
+        return self.tags
+
+
 
     def submitted_by(self):
         """
@@ -506,10 +503,8 @@ class Ticket(models.Model):
         return TicketDependency.objects.filter(ticket=self).filter(depends_on__status__in=OPEN_STATUSES).count() == 0
     can_be_resolved = property(_can_be_resolved)
 
-    if HAS_TAGGING_SUPPORT:
-        tags = TagField(blank=True)
-    elif HAS_TAGGIT_SUPPORT:
-        tags = TaggableManager(blank=True)
+    #tags = TaggableManager(blank=True)
+    tags = TagAutocompleteTagItField(max_tags=False)
 
     class Meta:
         get_latest_by = "created"
