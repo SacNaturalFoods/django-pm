@@ -139,12 +139,15 @@ function googleTranslateElementInit() {
         <dd><input type='radio' name='new_status' value='2' id='st_reopened' checked='checked'><label for='st_reopened' class='active'>{% trans "Reopened" %}</label> &raquo; 
         <input type='radio' name='new_status' value='3' id='st_resolved'{% if not ticket.can_be_resolved %} disabled='disabled'{% endif %}><label for='st_resolved'>{% trans "Resolved" %}</label> &raquo; 
         <input type='radio' name='new_status' value='4' id='st_closed'{% if not ticket.can_be_resolved %} disabled='disabled'{% endif %}><label for='st_closed'>{% trans "Closed" %}</label> &raquo; 
-        <input type='radio' name='new_status' value='5' id='st_duplicate'><label for='st_duplicate'>{% trans "Duplicate" %}</label></dd>
+        <input type='radio' name='new_status' value='5' id='st_duplicate'><label for='st_duplicate'>{% trans "Duplicate" %}</label> &raquo;
+        <input type='radio' name='new_status' value='6' id='st_deferred'><label for='st_deferred'>{% trans "Deferred" %}</label></dd>
         {% endifequal %}
         {% ifequal ticket.status 3 %}
         <dd><input type='radio' name='new_status' value='2' id='st_reopened'><label for='st_reopened'>{% trans "Reopened" %}</label> &laquo; 
         <input type='radio' name='new_status' value='3' id='st_resolved' checked='checked'><label for='st_resolved' class='active'>{% trans "Resolved" %}</label> &raquo; 
-        <input type='radio' name='new_status' value='4' id='st_closed'><label for='st_closed'>{% trans "Closed" %}</label></dd>
+        <input type='radio' name='new_status' value='4' id='st_closed'><label for='st_closed'>{% trans "Closed" %}</label> &raquo;
+        <input type='radio' name='new_status' value='5' id='st_duplicate'><label for='st_duplicate'>{% trans "Duplicate" %}</label> &raquo;
+        <input type='radio' name='new_status' value='6' id='st_deferred'><label for='st_deferred'>{% trans "Deferred" %}</label></dd>
         {% endifequal %}
         {% ifequal ticket.status 4 %}
         <dd><input type='radio' name='new_status' value='2' id='st_reopened'><label for='st_reopened'>{% trans "Reopened" %}</label> &laquo; 
