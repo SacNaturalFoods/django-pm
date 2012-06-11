@@ -237,12 +237,13 @@ def ticket_from_message(message, queue, quiet):
 
     if ticket == None:
         from BeautifulSoup import UnicodeDammit
-        converted = UnicodeDammit(body_html)
-        if not converted.unicode: 
-            raise UnicodeDecodeError( 
-           "Failed to detect encoding, tried [%s]", 
-            ', '.join(converted.triedEncodings))  
-        body_html = converted.unicode
+        if body_html:
+            converted = UnicodeDammit(body_html)
+            if not converted.unicode: 
+                raise UnicodeDecodeError( 
+               "Failed to detect encoding, tried [%s]", 
+                ', '.join(converted.triedEncodings))  
+            body_html = converted.unicode
 
         t = Ticket(
             title=subject,
