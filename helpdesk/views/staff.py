@@ -364,7 +364,7 @@ def update_ticket(request, ticket_id, public=False):
         c = TicketChange(
             followup=f,
             field=_('Due on'),
-            old_value=ticket.due_date.strftime('%B %d, %Y'),
+            old_value=ticket.due_date.strftime('%B %d, %Y') if ticket.due_date else "'No due date'",
             new_value=due_date.strftime('%B %d, %Y'),
             )
         if helpdesk_settings.HELPDESK_UPDATE_CALENDAR:

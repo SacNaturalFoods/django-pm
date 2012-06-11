@@ -27,64 +27,8 @@ from helpdesk import settings as helpdesk_settings
 class EditTicketForm(forms.ModelForm):
     class Meta:
         model = Ticket
-        exclude = ('created', 'modified', 'status', 'on_hold', 'resolution', 'last_escalation', 'assigned_to')
+        fields = ('title', 'description',)
     
-    def __init__(self, *args, **kwargs):
-        """
-        Add any custom fields that are defined to the form
-        """
-        super(EditTicketForm, self).__init__(*args, **kwargs)
-
-        for field in CustomField.objects.all():
-            try:
-                current_value = TicketCustomFieldValue.objects.get(ticket=self.instance, field=field)
-                initial_value = current_value.value
-            except TicketCustomFieldValue.DoesNotExist:
-                initial_value = None
-            instanceargs = {
-                    'label': field.label,
-                    'help_text': field.help_text,
-                    'required': field.required,
-                    'initial': initial_value,
-                    }
-            if field.data_type == 'varchar':
-                fieldclass = forms.CharField
-                instanceargs['max_length'] = field.max_length
-            elif field.data_type == 'text':
-                fieldclass = forms.CharField
-                instanceargs['widget'] = forms.Textarea
-                instanceargs['max_length'] = field.max_length
-            elif field.data_type == 'integer':
-                fieldclass = forms.IntegerField
-            elif field.data_type == 'decimal':
-                fieldclass = forms.DecimalField
-                instanceargs['decimal_places'] = field.decimal_places
-                instanceargs['max_digits'] = field.max_length
-            elif field.data_type == 'list':
-                fieldclass = forms.ChoiceField
-                choices = field.choices_as_array
-                if field.empty_selection_list:
-                    choices.insert(0, ('','---------' ) )
-                instanceargs['choices'] = choices
-            elif field.data_type == 'boolean':
-                fieldclass = forms.BooleanField
-            elif field.data_type == 'date':
-                fieldclass = forms.DateField
-            elif field.data_type == 'time':
-                fieldclass = forms.TimeField
-            elif field.data_type == 'datetime':
-                fieldclass = forms.DateTimeField
-            elif field.data_type == 'email':
-                fieldclass = forms.EmailField
-            elif field.data_type == 'url':
-                fieldclass = forms.URLField
-            elif field.data_type == 'ipaddress':
-                fieldclass = forms.IPAddressField
-            elif field.data_type == 'slug':
-                fieldclass = forms.SlugField
-            
-            self.fields['custom_%s' % field.name] = fieldclass(**instanceargs)
-
 
     def save(self, *args, **kwargs):
         
