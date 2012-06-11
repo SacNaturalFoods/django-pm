@@ -18,6 +18,12 @@
 </tr>
 
 <tr class='{% cycle rowcolors %}'>
+    <th>{% trans "Date Modified" %}</th>
+    <td>{{ ticket.modified|date:"r" }} ({{ ticket.modified|timesince }} ago)</td>
+</tr>
+
+
+<tr class='{% cycle rowcolors %}'>
     <th>{% trans "Assigned To" %}</th>
     <td>{{ ticket.get_assigned_to }}{% ifequal ticket.get_assigned_to _('Unassigned') %} <strong><a href='?take'><span class='button button_take'>{% trans "Take" %}</span></a></strong>{% endifequal %}</td>
 </tr>
