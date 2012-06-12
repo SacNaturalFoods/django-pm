@@ -27,7 +27,7 @@ from django.utils.html import escape
 from django.utils import timezone
 from django import forms
 
-from helpdesk.forms import TicketForm, UserSettingsForm, EmailIgnoreForm, EditTicketForm, TicketCCForm, EditFollowUpForm, TicketDependencyForm
+from helpdesk.forms import TicketForm, ViewTicketForm, UserSettingsForm, EmailIgnoreForm, EditTicketForm, TicketCCForm, EditFollowUpForm, TicketDependencyForm
 from helpdesk.lib import send_templated_mail, query_to_dict, apply_query, safe_template_context
 from helpdesk.models import Ticket, Queue, FollowUp, TicketChange, PreSetReply, Attachment, SavedSearch, IgnoreEmail, TicketCC, TicketDependency
 from helpdesk.settings import HAS_TAGGING_SUPPORT, HAS_TAGGIT_SUPPORT
@@ -230,7 +230,8 @@ def view_ticket(request, ticket_id):
 
 
     # TODO: shouldn't this template get a form to begin with?
-    form = TicketForm(instance=ticket)
+    #form = TicketForm(instance=ticket)
+    form = ViewTicketForm(instance=ticket)
 
 
     return render_to_response('helpdesk/ticket.html',

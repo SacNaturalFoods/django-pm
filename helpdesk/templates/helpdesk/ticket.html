@@ -170,9 +170,37 @@ function googleTranslateElementInit() {
         {% endif %}
     </dl>
 
+{% comment %}
+<form method='post' action='./'>
+<fieldset>
+    <dl>
+        {% for field in form %}
+            {% if field.is_hidden %}
+                {{ field }}
+            {% else %}
+                <dt><label for='id_{{ field.name }}'>{{ field.label }}</label>{% if not field.field.required %} <span class='form_optional'>{% trans "(Optional)" %}</span>{% endif %}</dt>
+                <dd>{{ field }}</dd>
+                {% if field.errors %}<dd class='error'>{{ field.errors }}</dd>{% endif %}
+                {% if field.help_text %}<dd class='form_help_text'>{{ field.help_text }}</dd>{% endif %}</label>
+            {% endif %}
+        {% endfor %}
+    </dl>
+    
+{% wysiwyg_editor "id_description" %}
+    <div class='buttons'>
+        <input type='submit' value='{% trans "Save Changes" %}' />
+    </div>
+</fieldset>
+
+{% csrf_token %}</form>
+
+{% endcomment %}
+
 <div id='FurtherEditOptions'>
 
     <dl>
+        <dt><label for='id_title'>{% trans "Title" %}</label></dt>
+        <dd><input type='text' name='title' value='{{ ticket.title|escape }}' /></dd>
 
         <dt><label for='id_owner'>{% trans "Owner" %}</label></dt>
         <dd><select id='id_owner' name='owner'><option value='0'>{% trans "Unassign" %}</option>{% for u in active_users %}<option value='{{ u.id }}' {% ifequal u.id ticket.assigned_to.id %}selected{% endifequal %}>{{ u }}</option>{% endfor %}</select></dd>
@@ -187,7 +215,6 @@ function googleTranslateElementInit() {
 
 
     </dl>
-
 </div>
 
 <p id='ShowFileUploadPara'><a href='#' id='ShowFileUpload'>{% trans "Attach File(s) &raquo;" %}</a></p>

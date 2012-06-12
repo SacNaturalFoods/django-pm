@@ -319,6 +319,12 @@ class TicketForm(forms.ModelForm):
         return t
 
 
+class ViewTicketForm(TicketForm):
+    class Meta:
+        model = Ticket 
+        fields = ('title', 'submitter_email','assigned_to', 'priority', 'due_date', 'tags')
+ 
+
 class PublicTicketForm(forms.Form):
     queue = forms.ChoiceField(
         label=_('Queue'),
