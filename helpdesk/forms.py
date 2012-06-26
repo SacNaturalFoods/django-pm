@@ -57,18 +57,24 @@ class EditFollowUpForm(forms.ModelForm):
 
 class TicketForm(forms.ModelForm):
 
-    def clean_queue(self):
-        data = self.cleaned_data['queue']
-        data = Queue.objects.get(pk=data)
-        return data
+    due_date = forms.DateTimeField(
+        widget=extras.SelectDateWidget,
+        required=False,
+        label=_('Due on'),
+        )
 
-    def clean_assigned_to(self):
-        data = self.cleaned_data['assigned_to']
-        if data:
-	    data = User.objects.get(pk=data)
-	    return data
-	else:
-	    return None
+    #def clean_queue(self):
+    #    data = self.cleaned_data['queue']
+    #    data = Queue.objects.get(pk=data)
+    #    return data
+
+    #def clean_assigned_to(self):
+    #    data = self.cleaned_data['assigned_to']
+    #    if data:
+	#    data = User.objects.get(pk=data)
+	#    return data
+	#else:
+	#    return None
 
     class Meta:
         model = Ticket 
@@ -179,8 +185,6 @@ class TicketForm(forms.ModelForm):
                 t.assigned_to = None
                 
         t.save()
-        #if HAS_TAGGIT_SUPPORT:
-        #    t.tags.set(*self.cleaned_data['tags'])
 
         for field, value in self.cleaned_data.items():
             if field.startswith('custom_'):
@@ -276,6 +280,7 @@ class TicketForm(forms.ModelForm):
 
 
 class ViewTicketForm(TicketForm):
+
     class Meta(TicketForm.Meta):
         model = Ticket
         fields = ('assigned_to', 'priority', 'due_date', 'tags')

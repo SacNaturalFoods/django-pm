@@ -172,7 +172,6 @@ function googleTranslateElementInit() {
 
     <br/>
 
-<form method='post' action='./'>
 <fieldset>
     <dl>
         {% for field in form %}
@@ -187,13 +186,8 @@ function googleTranslateElementInit() {
         {% endfor %}
     </dl>
     
-{% wysiwyg_editor "id_description" %}
-    <div class='buttons'>
-        <input type='submit' value='{% trans "Save Changes" %}' />
-    </div>
 </fieldset>
 
-{% csrf_token %}</form>
 
 
 {% comment %}

@@ -20,6 +20,7 @@ class TicketTable(tables.Table):
     assigned_to = tables.Column(verbose_name='owner', sortable=True)
     list = tables.Column(sortable=True, verbose_name='list')
     status = tables.Column(sortable=True)
+    due_date = tables.Column(sortable=True)
     modified = tables.Column(sortable=True)
 
     def render_priority(self, value):

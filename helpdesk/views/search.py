@@ -66,6 +66,7 @@ class TabularSearchView(SearchView):
             'list':result.object.queue.title,
             'status':result.object.status_str,
             'modified':result.object.modified.strftime('%Y-%m-%d'),
+            'due_date':result.object.due_date.strftime('%Y-%m-%d') if result.object.due_date else None,
             } for result in self.results],
             empty_text="No Results Found")
         if request.GET.get('per_page') != '0':

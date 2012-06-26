@@ -9,6 +9,7 @@ views/staff.py - The bulk of the application - provides most business logic and
 
 from datetime import datetime
 import sys
+import re
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -29,11 +30,10 @@ from django import forms
 
 from helpdesk.forms import TicketForm, ViewTicketForm, UserSettingsForm, EmailIgnoreForm, EditTicketForm, TicketCCForm, EditFollowUpForm, TicketDependencyForm
 from helpdesk.lib import send_templated_mail, query_to_dict, apply_query, safe_template_context
-from helpdesk.models import Ticket, Queue, FollowUp, TicketChange, PreSetReply, Attachment, SavedSearch, IgnoreEmail, TicketCC, TicketDependency
+from helpdesk.models import Ticket, Queue, FollowUp, TicketChange, PreSetReply, Attachment, SavedSearch, IgnoreEmail, TicketCC, TicketDependency, CustomField, TicketCustomFieldValue
 from helpdesk.settings import HAS_TAGGING_SUPPORT, HAS_TAGGIT_SUPPORT
 from helpdesk import settings as helpdesk_settings
   
-#from taggit.models import Tag
 from tagging.models import Tag
 
 
@@ -231,7 +231,11 @@ def view_ticket(request, ticket_id):
 
     # TODO: shouldn't this template get a form to begin with?
     #form = TicketForm(instance=ticket)
-    form = ViewTicketForm(instance=ticket)
+    # populate custom fields with initial
+    initial = {}
+    for cfv in ticket.ticketcustomfieldvalue_set.all():
+        initial['custom_'+cfv.field.name] = cfv.value
+    form = ViewTicketForm(instance=ticket, initial=initial)
 
 
     return render_to_response('helpdesk/ticket.html',
@@ -256,15 +260,21 @@ def update_ticket(request, ticket_id, public=False):
 
     comment = request.POST.get('comment', '')
     new_status = int(request.POST.get('new_status', ticket.status))
-    title = request.POST.get('title', '')
     public = request.POST.get('public', False)
-    owner = int(request.POST.get('owner', None))
+    owner = int(request.POST.get('assigned_to', None))
     priority = int(request.POST.get('priority', ticket.priority))
     due_year = request.POST.get('due_date_year')
     due_month = request.POST.get('due_date_month')
     due_day = request.POST.get('due_date_day')
+    custom_fields = {}
+    for field,value in request.POST.iteritems():
+        if field.startswith('custom_'):
+            custom_fields[field] = value
+
+
     try:
-        due_date = datetime(int(due_year), int(due_month), int(due_day), tzinfo=timezone.utc)
+        #TODO: why do I need to specify the timezone?
+        due_date = datetime(int(due_year), int(due_month), int(due_day), tzinfo=timezone.get_default_timezone())
     except:
         due_date = ticket.due_date
     tags = request.POST.get('tags', '')
@@ -341,16 +351,6 @@ def update_ticket(request, ticket_id, public=False):
                 files.append(a.file.path)
 
 
-    if title != ticket.title:
-        c = TicketChange(
-            followup=f,
-            field=_('Title'),
-            old_value=ticket.title,
-            new_value=title,
-            )
-        c.save()
-        ticket.title = title
-
     if priority != ticket.priority:
         c = TicketChange(
             followup=f,
@@ -383,6 +383,27 @@ def update_ticket(request, ticket_id, public=False):
             )
         c.save()
     ticket.tags = tags
+
+    for field, value in custom_fields.items():
+        if field.startswith('custom_'):
+            field_name = field.replace('custom_', '')
+            customfield = CustomField.objects.get(name=field_name)
+            cfv, created = TicketCustomFieldValue.objects.get_or_create(
+                        ticket=ticket,
+                        field=customfield,
+                        )
+            if value != cfv.value:
+                c = TicketChange(
+                    followup=f,
+                    field=_(field_name),
+                    old_value=cfv.value,
+                    new_value=value,
+                    )
+                c.save()
+        cfv.value = value
+        cfv.save()
+
+
 
         #old_tags = [tag.name for tag in ticket.tags.all()]
         #old_tags.sort()
