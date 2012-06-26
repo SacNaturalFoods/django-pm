@@ -170,7 +170,8 @@ function googleTranslateElementInit() {
         {% endif %}
     </dl>
 
-{% comment %}
+    <br/>
+
 <form method='post' action='./'>
 <fieldset>
     <dl>
@@ -194,8 +195,8 @@ function googleTranslateElementInit() {
 
 {% csrf_token %}</form>
 
-{% endcomment %}
 
+{% comment %}
 <div id='FurtherEditOptions'>
 
     <dl>
@@ -216,6 +217,8 @@ function googleTranslateElementInit() {
 
     </dl>
 </div>
+
+{% endcomment %}
 
 <p id='ShowFileUploadPara'><a href='#' id='ShowFileUpload'>{% trans "Attach File(s) &raquo;" %}</a></p>
 

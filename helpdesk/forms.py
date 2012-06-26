@@ -74,50 +74,6 @@ class TicketForm(forms.ModelForm):
         model = Ticket 
         fields = ('queue', 'title', 'submitter_email', 'description', 'assigned_to', 'priority', 'due_date', 'tags')
  
-    queue = forms.ChoiceField(
-        label=_('Queue'),
-        required=True,
-        choices=()
-        )
-
-    title = forms.CharField(
-        max_length=100,
-        required=True,
-        widget=forms.TextInput(attrs={'size':'60'}),
-        label=_('Summary of the problem'),
-        )
-
-    submitter_email = forms.EmailField(
-        required=False,
-        label=_('Submitter E-Mail Address'),
-        widget=forms.TextInput(attrs={'size':'60'}),
-        help_text=_('This e-mail address will receive copies of all public '
-            'updates to this ticket.'),
-        )
-
-    assigned_to = forms.ChoiceField(
-        choices=(),
-        required=False,
-        label=_('Case owner'),
-        help_text=_('If you select an owner other than yourself, they\'ll be '
-            'e-mailed details of this ticket immediately.'),
-        )
-
-    priority = forms.ChoiceField(
-        choices=Ticket.PRIORITY_CHOICES,
-        required=False,
-        initial='3',
-        label=_('Priority'),
-        help_text=_('Please select a priority carefully. If unsure, leave it '
-            'as \'3\'.'),
-        )
-
-    due_date = forms.DateField(
-        widget=extras.SelectDateWidget,
-        required=False,
-        label=_('Due on'),
-        )
-
     def clean_due_date(self):
         data = self.cleaned_data['due_date']
         #TODO: add Google calendar update hook, store event id with ticket
@@ -320,10 +276,10 @@ class TicketForm(forms.ModelForm):
 
 
 class ViewTicketForm(TicketForm):
-    class Meta:
-        model = Ticket 
-        fields = ('title', 'submitter_email','assigned_to', 'priority', 'due_date', 'tags')
- 
+    class Meta(TicketForm.Meta):
+        model = Ticket
+        fields = ('assigned_to', 'priority', 'due_date', 'tags')
+
 
 class PublicTicketForm(forms.Form):
     queue = forms.ChoiceField(
