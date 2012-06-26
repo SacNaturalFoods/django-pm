@@ -22,6 +22,27 @@ from helpdesk.settings import HAS_TAGGING_SUPPORT, HAS_TAGGIT_SUPPORT, HELPDESK_
 from tagging_autocomplete_tagit.models import TagAutocompleteTagItField
 from tagging.fields import TagField
 
+# explicit south 7.0 garbage for custom fields
+from south.modelsinspector import add_introspection_rules
+if "tagging_autocomplete_tagit" in settings.INSTALLED_APPS:
+    try:
+        from tagging_autocomplete_tagit.models import TagAutocompleteTagItField
+    except ImportError:
+        pass
+    else:
+        rules = [
+            (
+                (TagAutocompleteTagItField, ),
+                [],
+                {
+                    "blank": ["blank", {"default": True}],
+                    "max_length": ["max_length", {"default": 255}],
+                    "max_tags": ["max_tags", {"default": False}],
+                },
+            ),
+        ]
+        add_introspection_rules(rules, ["^tagging_autocomplete_tagit\.models",])
+
 class Queue(models.Model):
     """
     A queue is a collection of tickets into what would generally be business
@@ -217,6 +238,22 @@ class Queue(models.Model):
         super(Queue, self).save(*args, **kwargs)
 
 
+class Milestone(models.Model):
+    name = models.CharField(
+        _('Name'),
+        max_length=100,
+        )
+    queue = models.ForeignKey(
+        Queue,
+        verbose_name=_('Queue'),
+        )
+    due_date = models.DateTimeField(
+        _('Due on'),
+        blank=True,
+        null=True,
+        )
+
+
 class Ticket(models.Model):
     """
     To allow a ticket to be entered as quickly as possible, only the
@@ -266,6 +303,13 @@ class Ticket(models.Model):
     queue = models.ForeignKey(
         Queue,
         verbose_name=_('Queue'),
+        )
+
+    milestone = models.ForeignKey(
+        Milestone,
+        verbose_name=_('Milestone'),
+        blank=True,
+        null=True,
         )
 
     created = models.DateTimeField(
@@ -503,6 +547,7 @@ class Ticket(models.Model):
         OPEN_STATUSES = (Ticket.OPEN_STATUS, Ticket.REOPENED_STATUS)
         return TicketDependency.objects.filter(ticket=self).filter(depends_on__status__in=OPEN_STATUSES).count() == 0
     can_be_resolved = property(_can_be_resolved)
+
 
     tags = TagAutocompleteTagItField(max_tags=False)
 
@@ -1374,3 +1419,6 @@ class TicketDependency(models.Model):
 
     class Meta:
         unique_together = ('ticket', 'depends_on')
+
+
+
