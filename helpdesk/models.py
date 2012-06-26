@@ -22,6 +22,8 @@ from helpdesk.settings import HAS_TAGGING_SUPPORT, HAS_TAGGIT_SUPPORT, HELPDESK_
 from tagging_autocomplete_tagit.models import TagAutocompleteTagItField
 from tagging.fields import TagField
 
+from smart_selects.db_fields import ChainedForeignKey, GroupedForeignKey
+
 # explicit south 7.0 garbage for custom fields
 from south.modelsinspector import add_introspection_rules
 if "tagging_autocomplete_tagit" in settings.INSTALLED_APPS:
@@ -252,6 +254,9 @@ class Milestone(models.Model):
         blank=True,
         null=True,
         )
+    
+    def __unicode__(self):
+        return self.name
 
 
 class Ticket(models.Model):
@@ -305,8 +310,13 @@ class Ticket(models.Model):
         verbose_name=_('Queue'),
         )
 
-    milestone = models.ForeignKey(
+
+    milestone = ChainedForeignKey(
         Milestone,
+        chained_field='queue',
+        chained_model_field='queue',
+        show_all=False,
+        auto_choose=True,
         verbose_name=_('Milestone'),
         blank=True,
         null=True,

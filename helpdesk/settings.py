@@ -6,6 +6,7 @@ Default settings for django-helpdesk.
 
 from django.conf import settings
 
+settings.ADMIN_MEDIA_PREFIX = '/admin/'
 # required for social-auth
 settings.AUTHENTICATION_BACKENDS = (
     'social_auth.backends.google.GoogleOAuth2Backend',

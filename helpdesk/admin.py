@@ -1,11 +1,15 @@
 from django.contrib import admin
-from helpdesk.models import Queue, Ticket, FollowUp, PreSetReply, KBCategory
+from helpdesk.models import Queue, Ticket, FollowUp, PreSetReply, KBCategory, Milestone
 from helpdesk.models import EscalationExclusion, EmailTemplate, KBItem
 from helpdesk.models import TicketChange, Attachment, IgnoreEmail, SavedSearch
 from helpdesk.models import CustomField
 
+class MilestoneInline(admin.TabularInline):
+    model = Milestone 
+
 class QueueAdmin(admin.ModelAdmin):
     list_display = ('title', 'slug', 'email_address', 'locale')
+    inlines = [MilestoneInline,]
 
 class TicketAdmin(admin.ModelAdmin):
     list_display = ('title', 'status', 'assigned_to', 'submitter_email',)
@@ -34,6 +38,7 @@ class EmailTemplateAdmin(admin.ModelAdmin):
 
 admin.site.register(Ticket, TicketAdmin)
 admin.site.register(Queue, QueueAdmin)
+admin.site.register(Milestone)
 admin.site.register(FollowUp, FollowUpAdmin)
 admin.site.register(PreSetReply)
 admin.site.register(EscalationExclusion)

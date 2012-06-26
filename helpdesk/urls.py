@@ -227,3 +227,8 @@ urlpatterns += patterns('helpdesk.views.search',
     url(r'^search/change_ticket_order$','change_ticket_order', name='change_ticket_order'),
     )
 
+urlpatterns += patterns('',
+        url(r'^chaining/', include('smart_selects.urls')),
+        )
+
+

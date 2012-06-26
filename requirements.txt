@@ -13,3 +13,4 @@ django-wysiwyg==0.4.1
 Whoosh==2.4.0
 pytz==2012c
 BeautifulSoup==3.2.1
+django-smart-selects==1.0.4
