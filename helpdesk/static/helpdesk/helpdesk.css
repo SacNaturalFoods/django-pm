@@ -529,4 +529,8 @@ span.search_title {
     text-align: left;
 }
 
+ul.projects {
+    list-style-type: none;
+}
+
 

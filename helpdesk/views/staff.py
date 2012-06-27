@@ -27,10 +27,11 @@ from django.utils.translation import ugettext as _
 from django.utils.html import escape
 from django.utils import timezone
 from django import forms
+from django.forms.models import inlineformset_factory
 
-from helpdesk.forms import TicketForm, ViewTicketForm, UserSettingsForm, EmailIgnoreForm, EditTicketForm, TicketCCForm, EditFollowUpForm, TicketDependencyForm
+from helpdesk.forms import TicketForm, ViewTicketForm, UserSettingsForm, EmailIgnoreForm, EditTicketForm, TicketCCForm, EditFollowUpForm, TicketDependencyForm, QueueForm
 from helpdesk.lib import send_templated_mail, query_to_dict, apply_query, safe_template_context
-from helpdesk.models import Ticket, Queue, FollowUp, TicketChange, PreSetReply, Attachment, SavedSearch, IgnoreEmail, TicketCC, TicketDependency, CustomField, TicketCustomFieldValue
+from helpdesk.models import Ticket, Queue, Milestone, FollowUp, TicketChange, PreSetReply, Attachment, SavedSearch, IgnoreEmail, TicketCC, TicketDependency, CustomField, TicketCustomFieldValue
 from helpdesk.settings import HAS_TAGGING_SUPPORT, HAS_TAGGIT_SUPPORT
 from helpdesk import settings as helpdesk_settings
   
@@ -127,6 +128,38 @@ def dashboard(request):
             'dash_tickets': dash_tickets,
         }))
 dashboard = staff_member_required(dashboard)
+
+
+def view_projects(request):
+    #ProjectFormSet = modelformset_factory(Queue, form=QueueForm, can_delete=True,) 
+    #if request.method == 'POST':
+    #    fs = ProjectFormSet(request.POST)
+    #    #import ipdb; ipdb.set_trace()   
+    #    if fs.is_valid():
+    #        fs.save()
+    #fs = ProjectFormSet()
+    #return render_to_response('helpdesk/projects.html', {'projects': fs}, context_instance=RequestContext(request))
+    projects = Queue.objects.all()
+    return render_to_response('helpdesk/projects.html', {'projects': projects}, context_instance=RequestContext(request))
+
+
+def view_project(request, project_id):
+    if request.method == 'POST':
+        if 'update_project' in request.POST:
+            project_form = QueueForm(request.POST)
+            if project_form.is_valid():
+                project_form.save()
+    project = Queue.objects.get(pk=project_id)
+    project_form = QueueForm(instance=project) 
+    MilestoneFormSet = inlineformset_factory(Queue, Milestone, extra=1) 
+    milestone_formset = MilestoneFormSet(instance=project)
+
+    return render_to_response('helpdesk/project.html', {
+        'project': project_form, 
+        'milestones': milestone_formset, 
+        }, context_instance=RequestContext(request))
+
+   
 
 
 def delete_ticket(request, ticket_id):

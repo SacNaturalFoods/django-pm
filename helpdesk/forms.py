@@ -24,6 +24,12 @@ from helpdesk.models import Ticket, Queue, FollowUp, Attachment, IgnoreEmail, Ti
 from helpdesk.settings import HAS_TAGGING_SUPPORT, HAS_TAGGIT_SUPPORT
 from helpdesk import settings as helpdesk_settings
 
+
+class QueueForm(forms.ModelForm):
+    class Meta:
+        model = Queue
+        fields = ('title', 'slug', 'new_ticket_cc', 'updated_ticket_cc',)
+
 class EditTicketForm(forms.ModelForm):
     class Meta:
         model = Ticket

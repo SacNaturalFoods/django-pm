@@ -22,6 +22,7 @@
 <ul id="main_menu">
     <li><a href='{% url haystack_search %}'>{% trans "Home" %}</a></li>
     <li><a href='{% url helpdesk_submit %}'>{% trans "New Ticket" %}</a></li>
+    <li><a href='{% url helpdesk_view_projects %}'>{% trans "Projects" %}</a></li>
     {% if helpdesk_settings.HELPDESK_NAVIGATION_STATS_ENABLED %}
     <li><a href='{% url helpdesk_report_index %}'>{% trans "Stats" %}</a></li>
     {% endif %}
