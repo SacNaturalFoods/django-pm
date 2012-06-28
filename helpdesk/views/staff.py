@@ -144,15 +144,16 @@ def view_projects(request):
 
 
 def view_project(request, project_id):
-    if request.method == 'POST':
-        if 'update_project' in request.POST:
-            project_form = QueueForm(request.POST)
-            if project_form.is_valid():
-                project_form.save()
     project = Queue.objects.get(pk=project_id)
-    project_form = QueueForm(instance=project) 
     MilestoneFormSet = inlineformset_factory(Queue, Milestone, extra=1) 
-    milestone_formset = MilestoneFormSet(instance=project)
+    if request.method == 'POST':
+        project_form = QueueForm(request.POST, instance=project, prefix='project')
+        milestone_formset = MilestoneFormSet(request.POST, instance=project, prefix='milestones')
+        if project_form.is_valid() and milestone_formset.is_valid():
+            project_form.save()
+            milestone_formset.save()
+    project_form = QueueForm(instance=project, prefix='project') 
+    milestone_formset = MilestoneFormSet(instance=project, prefix='milestones')
 
     return render_to_response('helpdesk/project.html', {
         'project': project_form, 

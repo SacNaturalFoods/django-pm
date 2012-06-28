@@ -172,6 +172,7 @@ function googleTranslateElementInit() {
 
     <br/>
 
+{% comment %}
 <fieldset>
     <dl>
         {% for field in form %}
@@ -187,6 +188,11 @@ function googleTranslateElementInit() {
     </dl>
     
 </fieldset>
+{% endcomment %}
+
+<table>
+    {{ form.as_table }}
+</table>
 
 
 

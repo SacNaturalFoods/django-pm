@@ -316,7 +316,7 @@ class Ticket(models.Model):
         chained_field='queue',
         chained_model_field='queue',
         show_all=False,
-        auto_choose=True,
+        #auto_choose=True,
         verbose_name=_('Milestone'),
         blank=True,
         null=True,

@@ -84,7 +84,7 @@ class TicketForm(forms.ModelForm):
 
     class Meta:
         model = Ticket 
-        fields = ('queue', 'title', 'submitter_email', 'description', 'assigned_to', 'priority', 'due_date', 'tags')
+        fields = ('queue', 'milestone', 'title', 'submitter_email', 'description', 'assigned_to', 'priority', 'due_date', 'tags')
  
     def clean_due_date(self):
         data = self.cleaned_data['due_date']
@@ -289,7 +289,10 @@ class ViewTicketForm(TicketForm):
 
     class Meta(TicketForm.Meta):
         model = Ticket
-        fields = ('assigned_to', 'priority', 'due_date', 'tags')
+        fields = ('queue', 'assigned_to', 'milestone', 'priority', 'due_date', 'tags')
+        widgets = {
+                'queue':    forms.HiddenInput,
+                }
 
 
 class PublicTicketForm(forms.Form):
