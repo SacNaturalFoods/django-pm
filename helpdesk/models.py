@@ -254,6 +254,14 @@ class Milestone(models.Model):
         blank=True,
         null=True,
         )
+    #def _get_ticket(self):
+    #    """ A user-friendly ticket ID, which is a combination of ticket ID
+    #    and queue slug. This is generally used in e-mail subjects. """
+
+    #    return u"[%s]" % (self.ticket_for_url)
+    #ticket = property(_get_ticket)
+
+
     
     def __unicode__(self):
         return self.name
@@ -403,9 +411,17 @@ class Ticket(models.Model):
 
     # TODO: order field with default order (max) and reorder routine
     order = models.IntegerField(
-            _('Order'),
-            null=True,
-            )
+        _('Order'),
+        null=True,
+        )
+
+    estimate = models.DecimalField(
+        _('Estimate'),
+        blank=True,
+        null=True,
+        decimal_places=2,
+        )
+
 
     def reorder(self, new_order):
         old_order = self.order
@@ -490,8 +506,6 @@ class Ticket(models.Model):
         """
         #return ' '.join([tag.name for tag in self.tags.all()]) 
         return self.tags
-
-
 
     def submitted_by(self):
         """
@@ -585,6 +599,29 @@ class Ticket(models.Model):
         self.modified = datetime.now()
 
         super(Ticket, self).save(*args, **kwargs)
+
+
+class TimeEntry(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    date_start = models.DateTimeField(
+        _('Start'),
+        )
+    date_end = models.DateTimeField(
+        _('End'),
+        )
+    ticket = models.ForeignKey(
+        Ticket,
+        verbose_name=_('Ticket'),
+        )
+    description = models.TextField(
+        _('Description'),
+        blank=True,
+        null=True,
+        )
+    def _time(self):
+        """ return total time as 2 decimal hour """
+        return Decimal('%.2f' % float(date_end - date_start))
+    time = property(_time)
 
 
 class FollowUpManager(models.Manager):

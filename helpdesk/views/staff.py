@@ -295,7 +295,10 @@ def update_ticket(request, ticket_id, public=False):
     comment = request.POST.get('comment', '')
     new_status = int(request.POST.get('new_status', ticket.status))
     public = request.POST.get('public', False)
-    owner = int(request.POST.get('assigned_to', None))
+    owner = request.POST.get('assigned_to', None)
+    owner = int(owner) if owner else None
+    milestone = request.POST.get('milestone', None)
+    milestone = Milestone.objects.get(pk=milestone) if milestone else None
     priority = int(request.POST.get('priority', ticket.priority))
     due_year = request.POST.get('due_date_year')
     due_month = request.POST.get('due_date_month')
@@ -384,6 +387,15 @@ def update_ticket(request, ticket_id, public=False):
                 # settings.MAX_EMAIL_ATTACHMENT_SIZE) are sent via email.
                 files.append(a.file.path)
 
+    if milestone != ticket.milestone:
+        c = TicketChange(
+            followup=f,
+            field=_('milestone'),
+            old_value=ticket.milestone,
+            new_value=milestone,
+            )
+        c.save()
+        ticket.milestone = milestone
 
     if priority != ticket.priority:
         c = TicketChange(
@@ -884,14 +896,15 @@ def create_ticket(request):
         if form.is_valid():
             ticket = form.save(user=request.user)
             context = safe_template_context(ticket)
-            send_templated_mail(
-                'assigned_owner',
-                context,
-                recipients=ticket.assigned_to.email,
-                sender=ticket.queue.from_address,
-                fail_silently=True,
-                files=None,
-                )
+            if ticket.assigned_to:
+                send_templated_mail(
+                    'assigned_owner',
+                    context,
+                    recipients=ticket.assigned_to.email,
+                    sender=ticket.queue.from_address,
+                    fail_silently=True,
+                    files=None,
+                    )
             return HttpResponseRedirect(ticket.get_absolute_url())
     else:
         initial_data = {}

@@ -179,6 +179,7 @@ class TicketForm(forms.ModelForm):
                     description = self.cleaned_data['description'],
                     priority = self.cleaned_data['priority'],
                     due_date = self.cleaned_data['due_date'],
+                    milestone = self.cleaned_data['milestone'],
                   )
 
         t.tags = self.cleaned_data['tags']
