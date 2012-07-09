@@ -8,7 +8,11 @@
 .jspContainer
 {
 	overflow: hidden;
+    /*
 	position: relative;
+    */
+	position: absolute;
+    top: 120px;
 }
 
 .jspPane
@@ -23,7 +27,6 @@
 	right: 0;
 	width: 16px;
 	height: 100%;
-	background: red;
 }
 
 .jspHorizontalBar

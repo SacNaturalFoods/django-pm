@@ -16,11 +16,12 @@ from django.forms import extras
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
+from django.contrib.admin import widgets
 
 from haystack.forms import SearchForm
 
 from helpdesk.lib import send_templated_mail, safe_template_context
-from helpdesk.models import Ticket, Queue, FollowUp, Attachment, IgnoreEmail, TicketCC, CustomField, TicketCustomFieldValue, TicketDependency
+from helpdesk.models import Ticket, TimeEntry, Queue, FollowUp, Attachment, IgnoreEmail, TicketCC, CustomField, TicketCustomFieldValue, TicketDependency
 from helpdesk.settings import HAS_TAGGING_SUPPORT, HAS_TAGGIT_SUPPORT
 from helpdesk import settings as helpdesk_settings
 
@@ -84,7 +85,7 @@ class TicketForm(forms.ModelForm):
 
     class Meta:
         model = Ticket 
-        fields = ('queue', 'milestone', 'title', 'submitter_email', 'description', 'assigned_to', 'priority', 'due_date', 'tags')
+        fields = ('queue', 'milestone', 'title', 'submitter_email', 'description', 'assigned_to', 'priority', 'estimate', 'due_date', 'tags')
  
     def clean_due_date(self):
         data = self.cleaned_data['due_date']
@@ -178,6 +179,7 @@ class TicketForm(forms.ModelForm):
                     queue = q,
                     description = self.cleaned_data['description'],
                     priority = self.cleaned_data['priority'],
+                    estimate = self.cleaned_data['estimate'],
                     due_date = self.cleaned_data['due_date'],
                     milestone = self.cleaned_data['milestone'],
                   )
@@ -290,10 +292,29 @@ class ViewTicketForm(TicketForm):
 
     class Meta(TicketForm.Meta):
         model = Ticket
-        fields = ('queue', 'assigned_to', 'milestone', 'priority', 'due_date', 'tags')
+        fields = ('queue', 'assigned_to', 'milestone', 'priority', 'estimate', 'due_date', 'tags')
         widgets = {
                 'queue':    forms.HiddenInput,
                 }
+
+class DateTimeWidget(forms.DateTimeInput):
+    #class Media:
+    #    js = ('jquery-ui-timepicker-addon.js',)
+    def __init__(self, attrs=None):
+        if attrs is not None:
+          self.attrs = attrs.copy()
+        else:
+          self.attrs = {'class': 'datetimepicker'}
+        if not 'format' in self.attrs:
+            self.attrs['format'] = '%Y-%m-%d %H:%M'
+
+class TimeEntryForm(forms.ModelForm):
+    class Meta:
+        model = TimeEntry
+        widgets = {
+                'date_start': DateTimeWidget(),
+                'date_end': DateTimeWidget(),
+        }
 
 
 class PublicTicketForm(forms.Form):

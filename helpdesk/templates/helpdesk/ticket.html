@@ -1,10 +1,16 @@
 {% extends "helpdesk/base.html" %}{% load i18n %}
 {% load wysiwyg %}
 {% block helpdesk_title %}{% trans "View Ticket Details" %}{% endblock %}
+
 {% block helpdesk_head %}
+
 <script type="text/javascript">
+
     $(document).ready(function() {
-       
+
+      
+        $('.datetimepicker').AnyTime_picker();
+
         processAddFileClick();
         $("#ShowFileUpload").click(function() {
             $("#FileUpload").fadeIn();
@@ -35,6 +41,7 @@
     }
 </script>
 {% endblock %}
+
 
 {% block helpdesk_body %}
 {% if helpdesk_settings.HELPDESK_TRANSLATE_TICKET_COMMENTS %}
@@ -232,11 +239,25 @@ function googleTranslateElementInit() {
 
 </div>
 
+<h2>Time Entries</h2>
+<table>
+    {{ time_entries }}
+</table>
+
 </fieldset>
 
 <input type='submit' value='{% trans "Update This Ticket" %}' />
 
 {% csrf_token %}</form>
+
+<script type="text/javascript">
+    /*
+    $('.datetimepicker').datetimepicker({
+        dateFormat: 'yy-mm-dd'
+    });
+    */
+</script>
+
 
 </div>
 

@@ -29,9 +29,9 @@ from django.utils import timezone
 from django import forms
 from django.forms.models import inlineformset_factory
 
-from helpdesk.forms import TicketForm, ViewTicketForm, UserSettingsForm, EmailIgnoreForm, EditTicketForm, TicketCCForm, EditFollowUpForm, TicketDependencyForm, QueueForm
+from helpdesk.forms import TicketForm, TimeEntryForm, ViewTicketForm, UserSettingsForm, EmailIgnoreForm, EditTicketForm, TicketCCForm, EditFollowUpForm, TicketDependencyForm, QueueForm
 from helpdesk.lib import send_templated_mail, query_to_dict, apply_query, safe_template_context
-from helpdesk.models import Ticket, Queue, Milestone, FollowUp, TicketChange, PreSetReply, Attachment, SavedSearch, IgnoreEmail, TicketCC, TicketDependency, CustomField, TicketCustomFieldValue
+from helpdesk.models import Ticket, Queue, Milestone, TimeEntry, FollowUp, TicketChange, PreSetReply, Attachment, SavedSearch, IgnoreEmail, TicketCC, TicketDependency, CustomField, TicketCustomFieldValue
 from helpdesk.settings import HAS_TAGGING_SUPPORT, HAS_TAGGIT_SUPPORT
 from helpdesk import settings as helpdesk_settings
   
@@ -225,6 +225,14 @@ def followup_edit(request, ticket_id, followup_id, ):
             
 def view_ticket(request, ticket_id):
     ticket = get_object_or_404(Ticket, id=ticket_id)
+    
+    # TODO: refactor view and update into the same action
+    TimeEntryFormSet = inlineformset_factory(Ticket, TimeEntry, form=TimeEntryForm, extra=1) 
+    if request.method == 'POST':
+        time_entry_formset = TimeEntryFormSet(request.POST, instance=ticket, prefix='time_entries')
+        if time_entry_formset.is_valid():
+            time_entry_formset.save()
+    time_entry_formset = TimeEntryFormSet(instance=ticket, prefix='time_entries')
 
     if request.GET.has_key('take'):
         # Allow the user to assign the ticket to themselves whilst viewing it.
@@ -272,10 +280,12 @@ def view_ticket(request, ticket_id):
     form = ViewTicketForm(instance=ticket, initial=initial)
 
 
+
     return render_to_response('helpdesk/ticket.html',
         RequestContext(request, {
             'ticket': ticket,
             'form': form,
+            'time_entries': time_entry_formset,
             'request': request,
             'active_users': users,
             'priorities': Ticket.PRIORITY_CHOICES,
@@ -300,6 +310,8 @@ def update_ticket(request, ticket_id, public=False):
     milestone = request.POST.get('milestone', None)
     milestone = Milestone.objects.get(pk=milestone) if milestone else None
     priority = int(request.POST.get('priority', ticket.priority))
+    estimate = request.POST.get('estimate', ticket.estimate)
+    estimate = str(float(estimate)) if estimate else None
     due_year = request.POST.get('due_date_year')
     due_month = request.POST.get('due_date_month')
     due_day = request.POST.get('due_date_day')
@@ -406,6 +418,16 @@ def update_ticket(request, ticket_id, public=False):
             )
         c.save()
         ticket.priority = priority
+
+    if estimate != ticket.estimate:
+        c = TicketChange(
+            followup=f,
+            field=_('Estimate'),
+            old_value=ticket.estimate,
+            new_value=estimate,
+            )
+        c.save()
+        ticket.estimate = estimate
 
     if due_date != ticket.due_date:
         c = TicketChange(

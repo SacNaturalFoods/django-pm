@@ -420,6 +420,7 @@ class Ticket(models.Model):
         blank=True,
         null=True,
         decimal_places=2,
+        max_digits=5,
         )
 
 
@@ -613,8 +614,9 @@ class TimeEntry(models.Model):
         Ticket,
         verbose_name=_('Ticket'),
         )
-    description = models.TextField(
+    description = models.CharField(
         _('Description'),
+        max_length=200,
         blank=True,
         null=True,
         )

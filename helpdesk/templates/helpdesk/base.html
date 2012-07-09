@@ -8,21 +8,25 @@
         <title>{% block helpdesk_title %}Helpdesk{% endblock %}</title>
 
         
-        {% comment %}
 
                 {## django-taggit-autosuggest uses django.jQuery ##}
 
+        {% comment %}
                 <script src='{{ STATIC_URL }}admin/js/jquery.min.js' type='text/javascript' language='javascript'></script>
                 <script src='{{ STATIC_URL }}admin/js/jquery.init.js' type='text/javascript' language='javascript'></script>
 
         {## TODO: cant seem to upgrade jquery ##}
         <script src='{{ STATIC_URL }}helpdesk/jquery-1.7.2.min.js' type='text/javascript' language='javascript'></script>
+        <script src='{{ STATIC_URL }}helpdesk/DateTimePicker.js' type='text/javascript' language='javascript'></script>
+        <script src='{{ STATIC_URL }}helpdesk/jquery-ui-timepicker-addon.js' type='text/javascript' language='javascript'></script>
         {% endcomment %}
         
         <script src='{{ STATIC_URL }}helpdesk/jquery-1.5.min.js' type='text/javascript' language='javascript'></script>
-        <script src='{{ STATIC_URL }}helpdesk/jquery-ui-1.8.20.custom.min.js' type='text/javascript' language='javascript'></script>
+        <script src='{{ STATIC_URL }}helpdesk/jquery-ui-1.8.21.custom.min.js' type='text/javascript' language='javascript'></script>
         <script src='{{ STATIC_URL }}helpdesk/jquery.mousewheel.min.js' type='text/javascript' language='javascript'></script>
         <script src='{{ STATIC_URL }}helpdesk/jScrollPane.js' type='text/javascript' language='javascript'></script>
+        <script src='{{ STATIC_URL }}helpdesk/anytime.js' type='text/javascript' language='javascript'></script>
+
         {% wysiwyg_setup %}
 
         <link rel='stylesheet' href='{{ STATIC_URL }}helpdesk/jScrollPane.css' type='text/css' />
@@ -31,6 +35,7 @@
         <link rel='stylesheet' href='{{ STATIC_URL }}helpdesk/helpdesk-print.css' type='text/css' media="print" />
         <link rel='stylesheet' href='{{ STATIC_URL }}helpdesk/jquery-smoothness-theme/jquery-ui-1.8.9.custom.css' type='text/css' />
 
+        <link rel='stylesheet' href='{{ STATIC_URL }}helpdesk/anytime.css' type='text/css' />
         {{ form.media }}
 
         <script type="text/javascript">
@@ -48,7 +53,8 @@
                 });
 
                 $('.scroll-pane').jScrollPane({autoReinitialise: true, mouseWheelSpeed: 100, verticalGutter: 30 });
-
+                //$('.scroll-pane').jScrollPane({mouseWheelSpeed: 100, verticalGutter: 30 });
+            
                 $('#[id*=delete_saved_search]').live('click', function() {
                     $('#saved_searches').load(
                         '{% url delete_search %}', 
@@ -165,7 +171,23 @@
 
             $(window).load(function() {
 
- 
+    
+                 $('.AnyTime-win').click(function(e) {
+                    //$('#container').css('overflow-y', 'auto');
+                    /*
+                    $('.jspPane').css('padding-bottom', '60px');
+                    var api = $('.scroll-pane').data('jsp')
+                    api.reinitialise();
+                    return false;
+                    $('#header').css('height', '100px');
+                    $('#logo_div').css('height', '100px');
+                    $('#inner_header').css('height', '100px');
+                    $('#header').css('position', 'absolute');
+                    $('#header').css('position', 'relative');
+                    */
+                });
+
+
                 // size and locate hidden saved search div according to search bar
                 var pos = $('#id_q').position();
                 //var height = $('#id_q').attr('offsetheight');
@@ -218,6 +240,7 @@
                 </div>
             </div>
 
+        </div>
             <div id='footer'>
                 {% if helpdesk_settings.HELPDESK_FOOTER_SHOW_API_LINK %}
                     <a href='{% url helpdesk_api_help %}'>{% trans "API" %}</a>
@@ -228,7 +251,6 @@
                 {% endif %}
             </div>
 
-        </div>
     </body>
 
 </html>
