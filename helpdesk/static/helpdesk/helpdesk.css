@@ -540,4 +540,19 @@ ul.projects {
     list-style-type: none;
 }
 
+table#milestones {
+    border-collapse: collapse;
+    border-color: #CCC;
+    border: 1px solid #DDD;
+    width: 100%;
+    white-space: nowrap;
+    float: left;
+
+}
+
+table#milestones td, table#milestones tr {
+    border: solid 1px black; 
+    text-align: center;
+}
+
 

@@ -228,10 +228,6 @@ def view_ticket(request, ticket_id):
     
     # TODO: refactor view and update into the same action
     TimeEntryFormSet = inlineformset_factory(Ticket, TimeEntry, form=TimeEntryForm, extra=1) 
-    if request.method == 'POST':
-        time_entry_formset = TimeEntryFormSet(request.POST, instance=ticket, prefix='time_entries')
-        if time_entry_formset.is_valid():
-            time_entry_formset.save()
     time_entry_formset = TimeEntryFormSet(instance=ticket, prefix='time_entries')
 
     if request.GET.has_key('take'):
@@ -297,10 +293,17 @@ view_ticket = staff_member_required(view_ticket)
 
 
 def update_ticket(request, ticket_id, public=False):
+
     if not (public or (request.user.is_authenticated() and request.user.is_active and (request.user.is_staff or helpdesk_settings.HELPDESK_ALLOW_NON_STAFF_TICKET_UPDATE))):
         return HttpResponseForbidden(_('Sorry, you need to login to do that.'))
 
     ticket = get_object_or_404(Ticket, id=ticket_id)
+
+    # TODO: refactor view and update into the same action
+    TimeEntryFormSet = inlineformset_factory(Ticket, TimeEntry, form=TimeEntryForm, extra=1) 
+    time_entry_formset = TimeEntryFormSet(request.POST, instance=ticket, prefix='time_entries')
+    if time_entry_formset.is_valid():
+        time_entry_formset.save()
 
     comment = request.POST.get('comment', '')
     new_status = int(request.POST.get('new_status', ticket.status))

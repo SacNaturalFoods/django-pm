@@ -10,10 +10,11 @@ models.py - Model (and hence database) definitions. This is the core of the
 import os
 import os.path
 from datetime import datetime
+from decimal import Decimal
 
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models.aggregates import Max
+from django.db.models.aggregates import Max, Sum
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _, ugettext
 from helpdesk.settings import HAS_TAGGING_SUPPORT, HAS_TAGGIT_SUPPORT, HELPDESK_STAFF_ONLY_TICKET_OWNERS
@@ -239,6 +240,29 @@ class Queue(models.Model):
                 self.email_box_port = 110
         super(Queue, self).save(*args, **kwargs)
 
+class TimeEntry(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    date_start = models.DateTimeField(
+        _('Start'),
+        )
+    date_end = models.DateTimeField(
+        _('End'),
+        )
+    ticket = models.ForeignKey(
+        'Ticket',
+        verbose_name=_('Ticket'),
+        )
+    description = models.CharField(
+        _('Description'),
+        max_length=200,
+        blank=True,
+        null=True,
+        )
+    def _time(self):
+        """ return total time as 2 decimal hour """
+        return Decimal('%.2f' % (float((self.date_end - self.date_start).seconds)/60/60) )
+    time = property(_time)
+
 
 class Milestone(models.Model):
     name = models.CharField(
@@ -254,14 +278,31 @@ class Milestone(models.Model):
         blank=True,
         null=True,
         )
-    #def _get_ticket(self):
-    #    """ A user-friendly ticket ID, which is a combination of ticket ID
-    #    and queue slug. This is generally used in e-mail subjects. """
-
-    #    return u"[%s]" % (self.ticket_for_url)
-    #ticket = property(_get_ticket)
-
-
+    def _estimate(self):
+        if self.ticket_set:
+            return self.ticket_set.aggregate(Sum('estimate'))['estimate__sum']
+    estimate = property(_estimate)
+    def _actual(self):
+        actual = 0
+        if self.ticket_set:
+            time_entries = TimeEntry.objects.filter(ticket__in=[t.pk for t in self.ticket_set.all()])
+            for time in time_entries: 
+                actual += time.time
+            return Decimal('%.2f' % actual)
+    actual = property(_actual)
+    def _percent_complete(self):
+        if self.ticket_set:
+            return Decimal('%.0f' % (100 * (self.actual/self.estimate)))
+    percent_complete = property(_percent_complete)
+    def _total_tickets(self):
+        if self.ticket_set:
+            return self.ticket_set.count()
+    total_tickets = property(_total_tickets)
+    def _closed_tickets(self):
+        if self.ticket_set:
+            #TODO: extract status globals from Ticket?
+            return self.ticket_set.filter(status=4).count()
+    closed_tickets = property(_closed_tickets)
     
     def __unicode__(self):
         return self.name
@@ -601,29 +642,6 @@ class Ticket(models.Model):
 
         super(Ticket, self).save(*args, **kwargs)
 
-
-class TimeEntry(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-    date_start = models.DateTimeField(
-        _('Start'),
-        )
-    date_end = models.DateTimeField(
-        _('End'),
-        )
-    ticket = models.ForeignKey(
-        Ticket,
-        verbose_name=_('Ticket'),
-        )
-    description = models.CharField(
-        _('Description'),
-        max_length=200,
-        blank=True,
-        null=True,
-        )
-    def _time(self):
-        """ return total time as 2 decimal hour """
-        return Decimal('%.2f' % float(date_end - date_start))
-    time = property(_time)
 
 
 class FollowUpManager(models.Manager):

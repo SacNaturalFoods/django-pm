@@ -298,13 +298,14 @@ class ViewTicketForm(TicketForm):
                 }
 
 class DateTimeWidget(forms.DateTimeInput):
+    format = '%Y-%m-%d %H:%M'
     #class Media:
     #    js = ('jquery-ui-timepicker-addon.js',)
     def __init__(self, attrs=None):
         if attrs is not None:
           self.attrs = attrs.copy()
         else:
-          self.attrs = {'class': 'datetimepicker'}
+            self.attrs = {'class': 'datetimepicker', 'format': '%Y-%m-%d %H:%M'}
         if not 'format' in self.attrs:
             self.attrs['format'] = '%Y-%m-%d %H:%M'
 

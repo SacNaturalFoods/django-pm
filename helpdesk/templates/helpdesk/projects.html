@@ -1,0 +1,25 @@
+{% extends 'helpdesk/base.html' %}
+{% load helpdesk_filters %} 
+
+{% block helpdesk_head %}
+{% endblock %}
+
+{% block helpdesk_body %}
+
+{% comment %}
+<form method="post" action="">
+    {% csrf_token %}
+    <table>
+        {{ projects }}
+    </table>
+    <input type="submit"/>
+</form>
+{% endcomment %}
+
+<ul class="projects">
+{% for project in projects %}
+    <li><a href="{% url helpdesk_view_project project.pk %}">{{ project.title }}</a></li>
+{% endfor %}
+</ul>
+
+{% endblock %}
