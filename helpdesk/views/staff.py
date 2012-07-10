@@ -247,7 +247,7 @@ def view_ticket(request, ticket_id):
     ticket = get_object_or_404(Ticket, id=ticket_id)
     
     # TODO: refactor view and update into the same action
-    TimeEntryFormSet = inlineformset_factory(Ticket, TimeEntry, form=TimeEntryForm, extra=1) 
+    TimeEntryFormSet = inlineformset_factory(Ticket, TimeEntry, form=TimeEntryForm, extra=5) 
     time_entry_formset = TimeEntryFormSet(instance=ticket, prefix='time_entries')
 
     if request.GET.has_key('take'):
@@ -321,6 +321,7 @@ def update_ticket(request, ticket_id, public=False):
 
     # TODO: refactor view and update into the same action
     TimeEntryFormSet = inlineformset_factory(Ticket, TimeEntry, form=TimeEntryForm, extra=1) 
+    prev_actual = ticket.actual
     time_entry_formset = TimeEntryFormSet(request.POST, instance=ticket, prefix='time_entries')
     if time_entry_formset.is_valid():
         time_entry_formset.save()
@@ -425,12 +426,21 @@ def update_ticket(request, ticket_id, public=False):
     if milestone != ticket.milestone:
         c = TicketChange(
             followup=f,
-            field=_('milestone'),
+            field=_('Milestone'),
             old_value=ticket.milestone,
             new_value=milestone,
             )
         c.save()
         ticket.milestone = milestone
+
+    if prev_actual != ticket.actual:
+        c = TicketChange(
+            followup=f,
+            field=_('Time Entries'),
+            old_value=prev_actual,
+            new_value=ticket.actual,
+            )
+        c.save()
 
     if priority != ticket.priority:
         c = TicketChange(

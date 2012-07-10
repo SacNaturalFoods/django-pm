@@ -555,4 +555,9 @@ table#milestones td, table#milestones tr {
     text-align: center;
 }
 
+.add-row {
+    background: url(/static/admin/img/icon_addlink.gif) 0 50% no-repeat;
+    padding-left: 17px;
+    margin: 20px;
+}
 

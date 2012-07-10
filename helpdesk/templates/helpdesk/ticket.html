@@ -8,8 +8,20 @@
 
     $(document).ready(function() {
 
-      
         $('.datetimepicker').AnyTime_picker();
+
+        // hide last four rows of time entry unless just 
+        $('#time_entries tbody tr').slice(-20).hide();
+
+        // unhide add form
+        var hidden_time_entry_start = -20; 
+        var hidden_time_entry_end = -16; 
+        $('#add_time_entry').click(function() {
+            $('#time_entries tbody tr').slice(hidden_time_entry_start, hidden_time_entry_end).show();
+            hidden_time_entry_start += 4; 
+            hidden_time_entry_end += 4; 
+        });
+      
 
         processAddFileClick();
         $("#ShowFileUpload").click(function() {
@@ -240,9 +252,10 @@ function googleTranslateElementInit() {
 </div>
 
 <h2>Time Entries</h2>
-<table>
+<table id="time_entries">
     {{ time_entries }}
 </table>
+<div class="add-row" id="add_time_entry"><a href="javascript:void(0)">Add another Time Entry</a></div>
 
 </fieldset>
 

@@ -527,6 +527,14 @@ class Ticket(models.Model):
     def order_html(self):
         return '<input id="ticket__%s" class="ticket_order" type="text" size="1" value="%s"/>' % (self.pk, self.order)
 
+    def _actual(self):
+        actual = 0
+        if self.timeentry_set:
+            for time in self.timeentry_set.all(): 
+                actual += time.time
+            return Decimal('%.2f' % actual)
+    actual = property(_actual)
+
     def _get_assigned_to(self):
         """ Custom property to allow us to easily print 'Unassigned' if a
         ticket has no owner, or the users name if it's assigned. If the user

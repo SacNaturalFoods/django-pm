@@ -748,6 +748,14 @@ div.AnyTime-win
   font-weight:bold;
 }
 
+.ui-state-highlight {
+  border:1px solid #333334;
+  background: 0 !important;
+  background-color:yellow !important;
+  color: black !important;
+  font-weight:bold !important;
+}
+
 /*
  *  .AnyTime-out-btn is applied to every pseudo-button that represents
  *  a value that should not be selected because it would make the value.
