@@ -33,7 +33,7 @@ from django_tables2 import RequestConfig
 #from taggit.models import Tag
 from tagging.models import Tag
 
-from helpdesk.models import Ticket, Queue, SavedSearch
+from helpdesk.models import Ticket, Queue, SavedSearch, Milestone
 from helpdesk.tables import TicketTable
 from helpdesk.forms import PerPageForm
 
@@ -125,9 +125,12 @@ def autocomplete_search(request):
     tags = Tag.objects.filter(name__icontains=term)
     tickets = Ticket.objects.filter(title__icontains=term).order_by('title')
     queues = Queue.objects.filter(title__icontains=term).order_by('title')
+    milestones = Milestone.objects.filter(name__icontains=term).order_by('name')
     return HttpResponse(json.dumps(
         [{'label': 'list', 'value': queue.title} for queue in queues]
         + [{'label': 'not list', 'value': queue.title} for queue in queues]
+        + [{'label': 'milestone', 'value': milestone.name} for milestone in milestones]
+        + [{'label': 'not milestone', 'value': milestone.name} for milestone in milestones]
         + [{'label': 'assigned_to', 'value': user.username} for user in users]
         + [{'label': 'not assigned_to', 'value': user.username} for user in users]
         + [{'label': 'submitted_by', 'value': user.username} for user in users]

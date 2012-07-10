@@ -6,6 +6,7 @@
 {{ object.status_str }}
 {{ object.followup_str }}
 {{ object.queue }}
+{{ object.milestone }}
 {{ object.tags }}
 {{ object.tags_str }}
 {{ object.body }}

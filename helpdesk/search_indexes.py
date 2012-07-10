@@ -12,6 +12,7 @@ class TicketIndex(indexes.RealTimeSearchIndex, indexes.Indexable):
     priority_str = indexes.CharField(model_attr='priority_str')
     status_str = indexes.CharField(model_attr='status_str')
     queue = indexes.CharField(model_attr='queue')
+    milestone = indexes.CharField(model_attr='milestone', null=True)
     tags = indexes.MultiValueField(null=True)
     #tags = indexes.CharField(null=True)
     tags_str = indexes.CharField(model_attr='tags_str', null=True)
