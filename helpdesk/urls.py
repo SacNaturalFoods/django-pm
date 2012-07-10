@@ -22,7 +22,7 @@ urlpatterns = patterns('helpdesk.views.staff',
         'dashboard',
         name='helpdesk_dashboard'),
 
-    url(r'^projects/$',
+    url(r'^projects/(?P<project_id>[0-9]+)?',
         'view_projects',
         name='helpdesk_view_projects'),
 

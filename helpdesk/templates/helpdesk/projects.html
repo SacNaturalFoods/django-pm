@@ -2,24 +2,121 @@
 {% load helpdesk_filters %} 
 
 {% block helpdesk_head %}
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        $('input[id$=-due_date]').AnyTime_picker();
+
+        $('#select_project').change(function() {
+            $('#select_project_form').attr('action', $(this).val());
+            $('#select_project_form').submit()
+        });
+
+    });
+
+</script>
 {% endblock %}
 
 {% block helpdesk_body %}
 
-{% comment %}
-<form method="post" action="">
-    {% csrf_token %}
-    <table>
-        {{ projects }}
-    </table>
-    <input type="submit"/>
+<form id="select_project_form" method="get" action="">
+    <select name="project" id="select_project">
+        {% for p in projects %}
+            {% if project and project.instance.pk == p.pk%}
+                <option selected="selected" value="{{ p.pk }}">{{ p.title }}</option>
+            {% else %}
+                <option value="{{ p.pk }}">{{ p.title }}</option>
+            {% endif %}
+        {% endfor %}
+    </select>
 </form>
-{% endcomment %}
 
-<ul class="projects">
-{% for project in projects %}
-    <li><a href="{% url helpdesk_view_project project.pk %}">{{ project.title }}</a></li>
-{% endfor %}
-</ul>
+
+{% if project %}
+    <form method="post" action="">
+        {% csrf_token %}
+        <h2>Project</h2>
+        <table>
+            {{ project.as_table }}
+        </table>
+
+        <h2>Milestones</h2>
+        {{ milestones.management_form }}
+
+        {{ milestones.non_form_errors.as_ul }}
+        <table id="milestones" class="form">
+            {% for form in milestones.forms %}
+              {% if forloop.first %}
+              <thead><tr>
+                {% for field in form.visible_fields %}
+                <th>{{ field.label|capfirst }}</th>
+                {% endfor %}
+                        <th><label>Total Estimated Hours</label></th>
+                        <th><label>% Complete</label></th>
+                        <th><label>Total Tickets</label></th>
+                        <th><label>Closed Tickets</label></th>
+              </tr></thead>
+              {% endif %}
+              <tr class="{% cycle row1,row2 %}">
+              {% for field in form.visible_fields %}
+                <td>
+                {# Include the hidden fields in the form #}
+                {% if forloop.first %}
+                  {% for hidden in form.hidden_fields %}
+                  {{ hidden }}
+                  {% endfor %}
+                {% endif %}
+                  {{ field.errors.as_ul }}
+                  {{ field }}
+                </td>
+
+              {% endfor %}
+                {% if form.instance.pk %}
+                        <td> {{ form.instance.estimate }}</td>
+                        <td> {{ form.instance.percent_complete }}%</td>
+                        <td> {{ form.instance.total_tickets }}</td>
+                        <td> {{ form.instance.closed_tickets }}</td>
+                {% else %}
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                {% endif %}
+              </tr>
+
+            {% endfor %}
+        </table>
+
+        {% comment %}
+        <table>
+            {% for milestone in milestones.forms %}
+                {{ milestone }}
+                {% if milestone.instance.pk %}
+                    <tr>
+                        <th><label>Total Estimated Hours:</label></th>
+                        <td> {{ milestone.instance.estimate }}</td>
+                    </tr>
+                    <tr>
+                        <th><label>% Complete:</label></th>
+                        <td> {{ milestone.instance.percent_complete }}%</td>
+                    </tr>
+                    <tr>
+                        <th><label>Total Tickets:</label></th>
+                        <td> {{ milestone.instance.total_tickets }}</td>
+                    </tr>
+                    <tr>
+                        <th><label>Closed Tickets:</label></th>
+                        <td> {{ milestone.instance.closed_tickets }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+        {% endcomment %}
+        <input type="submit" value="Update"/>
+    </form>
+{% endif %}
+
 
 {% endblock %}
+

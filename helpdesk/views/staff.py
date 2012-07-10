@@ -130,7 +130,7 @@ def dashboard(request):
 dashboard = staff_member_required(dashboard)
 
 
-def view_projects(request):
+def view_projects(request, project_id=None):
     #ProjectFormSet = modelformset_factory(Queue, form=QueueForm, can_delete=True,) 
     #if request.method == 'POST':
     #    fs = ProjectFormSet(request.POST)
@@ -139,7 +139,27 @@ def view_projects(request):
     #        fs.save()
     #fs = ProjectFormSet()
     #return render_to_response('helpdesk/projects.html', {'projects': fs}, context_instance=RequestContext(request))
+    #project_selected = bool(project_id)
+    #project_id = request.POST.get('project', None)
     projects = Queue.objects.all()
+    if project_id:
+        project = Queue.objects.get(pk=project_id)
+        MilestoneFormSet = inlineformset_factory(Queue, Milestone, extra=1) 
+        if request.method == 'POST':
+            project_form = QueueForm(request.POST, instance=project, prefix='project')
+            milestone_formset = MilestoneFormSet(request.POST, instance=project, prefix='milestones')
+            if project_form.is_valid() and milestone_formset.is_valid():
+                project_form.save()
+                milestone_formset.save()
+        project_form = QueueForm(instance=project, prefix='project') 
+        milestone_formset = MilestoneFormSet(instance=project, prefix='milestones')
+
+        return render_to_response('helpdesk/projects.html', {
+            'project': project_form, 
+            'milestones': milestone_formset, 
+            'projects': projects,
+            }, context_instance=RequestContext(request))
+    
     return render_to_response('helpdesk/projects.html', {'projects': projects}, context_instance=RequestContext(request))
 
 
