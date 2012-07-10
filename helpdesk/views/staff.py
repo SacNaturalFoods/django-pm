@@ -29,11 +29,14 @@ from django.utils import timezone
 from django import forms
 from django.forms.models import inlineformset_factory
 
+from django_tables2 import RequestConfig
+
 from helpdesk.forms import TicketForm, TimeEntryForm, ViewTicketForm, UserSettingsForm, EmailIgnoreForm, EditTicketForm, TicketCCForm, EditFollowUpForm, TicketDependencyForm, QueueForm
 from helpdesk.lib import send_templated_mail, query_to_dict, apply_query, safe_template_context
 from helpdesk.models import Ticket, Queue, Milestone, TimeEntry, FollowUp, TicketChange, PreSetReply, Attachment, SavedSearch, IgnoreEmail, TicketCC, TicketDependency, CustomField, TicketCustomFieldValue
 from helpdesk.settings import HAS_TAGGING_SUPPORT, HAS_TAGGIT_SUPPORT
 from helpdesk import settings as helpdesk_settings
+from helpdesk.tables import MilestoneTable
   
 from tagging.models import Tag
 
@@ -143,25 +146,47 @@ def view_projects(request, project_id=None):
     #project_id = request.POST.get('project', None)
     projects = Queue.objects.all()
     if project_id:
+        #TODO: use MilestoneTable instead
         project = Queue.objects.get(pk=project_id)
-        MilestoneFormSet = inlineformset_factory(Queue, Milestone, extra=1) 
+        #MilestoneFormSet = inlineformset_factory(Queue, Milestone, extra=1) 
+        #if request.method == 'POST':
+        #    project_form = QueueForm(request.POST, instance=project, prefix='project')
+        #    milestone_formset = MilestoneFormSet(request.POST, instance=project, prefix='milestones')
+        #    if project_form.is_valid() and milestone_formset.is_valid():
+        #        project_form.save()
+        #        milestone_formset.save()
+        #project_form = QueueForm(instance=project, prefix='project') 
+        #milestone_formset = MilestoneFormSet(instance=project, prefix='milestones')
         if request.method == 'POST':
             project_form = QueueForm(request.POST, instance=project, prefix='project')
-            milestone_formset = MilestoneFormSet(request.POST, instance=project, prefix='milestones')
-            if project_form.is_valid() and milestone_formset.is_valid():
+            if project_form.is_valid():
                 project_form.save()
-                milestone_formset.save()
         project_form = QueueForm(instance=project, prefix='project') 
-        milestone_formset = MilestoneFormSet(instance=project, prefix='milestones')
+
+        # convert to dictionary in order to sort on model properties
+        milestone_table = MilestoneTable([{
+            'id': m.pk,
+            'name': m.name,
+            'due_on': m.due_date,
+            'estimate': m.estimate,
+            'percent_complete': m.percent_complete,
+            'total_tickets': m.total_tickets,
+            'closed_tickets': m.closed_tickets,
+            } for m in Milestone.objects.filter(queue=project)])
+        RequestConfig(request).configure(milestone_table)
 
         return render_to_response('helpdesk/projects.html', {
             'project': project_form, 
-            'milestones': milestone_formset, 
+            #'milestones': milestone_formset, 
+            'milestones': milestone_table, 
             'projects': projects,
             }, context_instance=RequestContext(request))
     
     return render_to_response('helpdesk/projects.html', {'projects': projects}, context_instance=RequestContext(request))
 
+
+def edit_milestone(request, project_id):
+    return
 
 def view_project(request, project_id):
     project = Queue.objects.get(pk=project_id)

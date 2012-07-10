@@ -30,6 +30,10 @@ urlpatterns = patterns('helpdesk.views.staff',
         'view_project',
         name='helpdesk_view_project'),
 
+    url(r'^milestone/(?P<milestone_id>[0-9]+)/$',
+        'edit_milestone',
+        name='helpdesk_edit_milestone'),
+
     url(r'^tickets/$',
         'ticket_list',
         name='helpdesk_list'),

@@ -1,5 +1,6 @@
 {% extends 'helpdesk/base.html' %}
 {% load helpdesk_filters %} 
+{% load render_table from django_tables2 %} 
 
 {% block helpdesk_head %}
 <script type="text/javascript">
@@ -35,6 +36,8 @@
 
 
 {% if project %}
+
+
     <form method="post" action="">
         {% csrf_token %}
         <h2>Project</h2>
@@ -43,6 +46,10 @@
         </table>
 
         <h2>Milestones</h2>
+
+        {% render_table milestones %}
+
+        {% comment %}
         {{ milestones.management_form }}
 
         {{ milestones.non_form_errors.as_ul }}
@@ -110,33 +117,11 @@
                 <td></td>
         </table>
 
-        {% comment %}
-        <table>
-            {% for milestone in milestones.forms %}
-                {{ milestone }}
-                {% if milestone.instance.pk %}
-                    <tr>
-                        <th><label>Total Estimated Hours:</label></th>
-                        <td> {{ milestone.instance.estimate }}</td>
-                    </tr>
-                    <tr>
-                        <th><label>% Complete:</label></th>
-                        <td> {{ milestone.instance.percent_complete }}%</td>
-                    </tr>
-                    <tr>
-                        <th><label>Total Tickets:</label></th>
-                        <td> {{ milestone.instance.total_tickets }}</td>
-                    </tr>
-                    <tr>
-                        <th><label>Closed Tickets:</label></th>
-                        <td> {{ milestone.instance.closed_tickets }}</td>
-                    </tr>
-                {% endif %}
-            {% endfor %}
-        </table>
-        {% endcomment %}
         <input type="submit" value="Update"/>
     </form>
+        {% endcomment %}
+
+
 {% endif %}
 
 

@@ -10,7 +10,7 @@ import django_tables2 as tables
 from django_tables2.utils import A
 from django_tables2 import Attrs
 
-from helpdesk.models import Ticket 
+from helpdesk.models import Ticket, Milestone
 
 class TicketTable(tables.Table):
     order_html = tables.Column(verbose_name='order', sortable=True, order_by=('order',))
@@ -32,4 +32,16 @@ class TicketTable(tables.Table):
     
     class Meta:
         attrs = {'class': 'paleblue'}
-    
+
+
+class MilestoneTable(tables.Table):
+    name = tables.LinkColumn('helpdesk_edit_milestone', args=[A('id')], sortable=True)
+    due_on = tables.Column(sortable=True)
+    estimate = tables.Column(sortable=True)
+    percent_complete = tables.Column(sortable=True)
+    total_tickets = tables.Column(sortable=True)
+    closed_tickets = tables.Column(sortable=True)
+
+    class Meta:
+        attrs = {'class': 'paleblue'}
+ 

@@ -326,7 +326,7 @@ class Milestone(models.Model):
             return Decimal('%.2f' % actual)
     actual = property(_actual)
     def _percent_complete(self):
-        if self.ticket_set:
+        if self.ticket_set and self.estimate:
             return Decimal('%.0f' % (100 * (self.actual/self.estimate)))
     percent_complete = property(_percent_complete)
     def _total_tickets(self):
