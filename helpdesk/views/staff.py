@@ -132,7 +132,7 @@ dashboard = staff_member_required(dashboard)
 
 def view_projects(request, project_id=None):
     #ProjectFormSet = modelformset_factory(Queue, form=QueueForm, can_delete=True,) 
-    #if request.method == 'POST':
+    #if request.method == 'POST'
     #    fs = ProjectFormSet(request.POST)
     #    #import ipdb; ipdb.set_trace()   
     #    if fs.is_valid():

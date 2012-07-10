@@ -738,8 +738,13 @@ div.AnyTime-win
 .AnyTime-pkr .AnyTime-cur-btn
 {
   border:1px solid #333334;
+  /*
   background-color:#C0C0C1;
   color:#FCFCFE;
+  */
+  background: 0;
+  background-color:yellow;
+  color: black;
   font-weight:bold;
 }
 

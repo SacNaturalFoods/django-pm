@@ -225,6 +225,40 @@ class Queue(models.Model):
             return u'%s <%s>' % (self.title, self.email_address)
     from_address = property(_from_address)
 
+    # Milestone/ Ticket totals
+    #TODO: can this code be factored out of Queue and Milestone models?
+    def _estimate(self):
+        if self.ticket_set:
+            return self.ticket_set.exclude(milestone=None).aggregate(Sum('estimate'))['estimate__sum']
+    milestone_estimate = property(_estimate)
+    def _actual(self):
+        actual = 0
+        if self.ticket_set:
+            time_entries = TimeEntry.objects.filter(ticket__in=[t.pk for t in self.ticket_set.exclude(milestone=None).all()])
+            for time in time_entries: 
+                actual += time.time
+            return Decimal('%.2f' % actual)
+    milestone_actual = property(_actual)
+    def _percent_complete(self):
+        if self.ticket_set:
+            return Decimal('%.0f' % (100 * (self.milestone_actual/self.milestone_estimate)))
+    milestone_percent_complete = property(_percent_complete)
+    def _total_tickets(self):
+        if self.ticket_set:
+            return self.ticket_set.exclude(milestone=None).count()
+    milestone_total_tickets = property(_total_tickets)
+    def _closed_tickets(self):
+        if self.ticket_set:
+            #TODO: extract status globals from Ticket?
+            return self.ticket_set.filter(status=4).count()
+    milestone_closed_tickets = property(_closed_tickets)
+    #TODO: should due on be latest milestone due on or latest ticket?
+    def _due_on(self):
+        if self.milestone_set:
+            return self.milestone_set.aggregate(Max('due_date'))['due_date__max']
+    due_on = property(_due_on)
+ 
+
     def save(self, *args, **kwargs):
         if self.email_box_type == 'imap' and not self.email_box_imap_folder:
             self.email_box_imap_folder = 'INBOX'
@@ -239,6 +273,7 @@ class Queue(models.Model):
             elif self.email_box_type == 'pop3' and not self.email_box_ssl:
                 self.email_box_port = 110
         super(Queue, self).save(*args, **kwargs)
+
 
 class TimeEntry(models.Model):
     created = models.DateTimeField(auto_now_add=True)
@@ -369,6 +404,7 @@ class Ticket(models.Model):
         verbose_name=_('Milestone'),
         blank=True,
         null=True,
+        on_delete=models.SET_NULL,
         )
 
     created = models.DateTimeField(
