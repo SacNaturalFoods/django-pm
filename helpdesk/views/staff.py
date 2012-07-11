@@ -27,11 +27,11 @@ from django.utils.translation import ugettext as _
 from django.utils.html import escape
 from django.utils import timezone
 from django import forms
-from django.forms.models import inlineformset_factory
+from django.forms.models import inlineformset_factory, modelformset_factory
 
 from django_tables2 import RequestConfig
 
-from helpdesk.forms import TicketForm, TimeEntryForm, ViewTicketForm, UserSettingsForm, EmailIgnoreForm, EditTicketForm, TicketCCForm, EditFollowUpForm, TicketDependencyForm, QueueForm
+from helpdesk.forms import TicketForm, TimeEntryForm, ViewTicketForm, UserSettingsForm, EmailIgnoreForm, EditTicketForm, TicketCCForm, EditFollowUpForm, TicketDependencyForm, QueueForm, MilestoneForm
 from helpdesk.lib import send_templated_mail, query_to_dict, apply_query, safe_template_context
 from helpdesk.models import Ticket, Queue, Milestone, TimeEntry, FollowUp, TicketChange, PreSetReply, Attachment, SavedSearch, IgnoreEmail, TicketCC, TicketDependency, CustomField, TicketCustomFieldValue
 from helpdesk.settings import HAS_TAGGING_SUPPORT, HAS_TAGGIT_SUPPORT
@@ -157,11 +157,20 @@ def view_projects(request, project_id=None):
         #        milestone_formset.save()
         #project_form = QueueForm(instance=project, prefix='project') 
         #milestone_formset = MilestoneFormSet(instance=project, prefix='milestones')
+
+        milestone_form = MilestoneForm(prefix='milestone') 
         if request.method == 'POST':
             project_form = QueueForm(request.POST, instance=project, prefix='project')
+            milestone_form = MilestoneForm(request.POST, prefix='milestone')
+            #import ipdb; ipdb.set_trace()
+            if milestone_form.is_valid():
+                milestone_form.save()
+                # redirect to return empty form
+                return HttpResponseRedirect('')
             if project_form.is_valid():
                 project_form.save()
         project_form = QueueForm(instance=project, prefix='project') 
+
 
         # convert to dictionary in order to sort on model properties
         milestone_table = MilestoneTable([{
@@ -177,8 +186,9 @@ def view_projects(request, project_id=None):
 
         return render_to_response('helpdesk/projects.html', {
             'project': project_form, 
-            #'milestones': milestone_formset, 
-            'milestones': milestone_table, 
+            'milestone': milestone_form, 
+            #'milestones': milestone_table, 
+            'table': milestone_table, 
             'projects': projects,
             }, context_instance=RequestContext(request))
     

@@ -7,6 +7,23 @@
 
     $(document).ready(function() {
 
+        $('#add_milestone_dialog').dialog({
+            autoOpen: false,
+            buttons: {
+                "OK": function() {
+                    $('#add_milestone_form').submit();
+                    //$('#project_form').submit();
+                },
+                "Cancel": function() {
+                    $(this).dialog('close');
+                }
+            }
+        });
+
+        $('#add_milestone').click(function() {
+            $('#add_milestone_dialog').dialog('open');
+        });
+
         $('input[id$=-due_date]').AnyTime_picker();
 
         $('#select_project').change(function() {
@@ -38,7 +55,7 @@
 {% if project %}
 
 
-    <form method="post" action="">
+    <form id="project_form" method="post" action="">
         {% csrf_token %}
         <h2>Project</h2>
         <table>
@@ -47,7 +64,9 @@
 
         <h2>Milestones</h2>
 
-        {% render_table milestones %}
+        {% include "helpdesk/milestone_table.html" %}
+
+        {## render_table milestones ##}
 
         {% comment %}
         {{ milestones.management_form }}
@@ -120,7 +139,23 @@
         <input type="submit" value="Update"/>
     </form>
         {% endcomment %}
+  
 
+        <div id="add_milestone"><a href="javascript:void(0)">Add a Milestone</a></div>
+
+    {## wont display because jquery puts dialog outside form? ##}
+    {% comment %}
+    <div id="add_milestone_dialog" display="none"> 
+            {{ milestone.as_p }}
+    </div>
+    {% endcomment %}
+    </form>
+    <div id="add_milestone_dialog" display="none"> 
+        <form id="add_milestone_form" action="" method="post">
+            {% csrf_token %}
+            {{ milestone.as_p }}
+        </form>
+    </div>
 
 {% endif %}
 

@@ -21,7 +21,7 @@ from django.contrib.admin import widgets
 from haystack.forms import SearchForm
 
 from helpdesk.lib import send_templated_mail, safe_template_context
-from helpdesk.models import Ticket, TimeEntry, Queue, FollowUp, Attachment, IgnoreEmail, TicketCC, CustomField, TicketCustomFieldValue, TicketDependency
+from helpdesk.models import Ticket, TimeEntry, Queue, FollowUp, Attachment, IgnoreEmail, TicketCC, CustomField, TicketCustomFieldValue, TicketDependency, Milestone
 from helpdesk.settings import HAS_TAGGING_SUPPORT, HAS_TAGGIT_SUPPORT
 from helpdesk import settings as helpdesk_settings
 
@@ -317,6 +317,9 @@ class TimeEntryForm(forms.ModelForm):
                 'date_end': DateTimeWidget(),
         }
 
+class MilestoneForm(forms.ModelForm):
+    class Meta:
+        model = Milestone 
 
 class PublicTicketForm(forms.Form):
     queue = forms.ChoiceField(

@@ -561,3 +561,20 @@ table#milestones td, table#milestones tr {
     margin: 20px;
 }
 
+div#add_milestone {
+    clear: both;
+    background: url(/static/admin/img/icon_addlink.gif) 0 50% no-repeat;
+    padding: 20px 17px;
+    margin-left: 70px;
+}
+
+div#milestone_table table tfoot {
+    font-weight: bold;
+    background-color: lightgray;
+}
+
+div#add_milestone_dialog {
+    /*
+    display: none;
+    */
+}
