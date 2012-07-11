@@ -535,6 +535,11 @@ class Ticket(models.Model):
             return Decimal('%.2f' % actual)
     actual = property(_actual)
 
+    def _percent_complete(self):
+        if self.estimate:
+            return Decimal('%.0f' % (100 * (self.actual/self.estimate)))
+    percent_complete = property(_percent_complete)
+
     def _get_assigned_to(self):
         """ Custom property to allow us to easily print 'Unassigned' if a
         ticket has no owner, or the users name if it's assigned. If the user

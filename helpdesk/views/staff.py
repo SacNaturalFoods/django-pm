@@ -26,6 +26,7 @@ from django.template import loader, Context, RequestContext
 from django.utils.translation import ugettext as _
 from django.utils.html import escape
 from django.utils import timezone
+from django.utils import simplejson as json
 from django import forms
 from django.forms.models import inlineformset_factory, modelformset_factory
 
@@ -36,7 +37,7 @@ from helpdesk.lib import send_templated_mail, query_to_dict, apply_query, safe_t
 from helpdesk.models import Ticket, Queue, Milestone, TimeEntry, FollowUp, TicketChange, PreSetReply, Attachment, SavedSearch, IgnoreEmail, TicketCC, TicketDependency, CustomField, TicketCustomFieldValue
 from helpdesk.settings import HAS_TAGGING_SUPPORT, HAS_TAGGIT_SUPPORT
 from helpdesk import settings as helpdesk_settings
-from helpdesk.tables import MilestoneTable
+from helpdesk.tables import MilestoneTable, MilestoneTicketTable, TimeEntryTable
   
 from tagging.models import Tag
 
@@ -195,8 +196,30 @@ def view_projects(request, project_id=None):
     return render_to_response('helpdesk/projects.html', {'projects': projects}, context_instance=RequestContext(request))
 
 
-def edit_milestone(request, project_id):
-    return
+def edit_milestone(request, milestone_id):
+    milestone = Milestone.objects.get(pk=milestone_id)
+    milestone_form = MilestoneForm(instance=milestone)
+
+    if request.method == 'POST':
+        milestone_form = MilestoneForm(request.POST, instance=milestone)
+        if milestone_form.is_valid():
+            milestone_form.save()
+
+    # convert to dictionary in order to sort on model properties
+    ticket_table = MilestoneTicketTable([{
+        'id': t.pk,
+        'title': t.title,
+        'estimate': t.estimate,
+        'actual': t.actual,
+        'percent_complete': t.percent_complete,
+        'due_on': t.due_date,
+        } for t in Ticket.objects.filter(milestone=milestone)])
+    RequestConfig(request).configure(ticket_table)
+
+    return render_to_response('helpdesk/edit_milestone.html', {
+        'milestone_form': milestone_form,
+        'table': ticket_table,
+        }, context_instance=RequestContext(request))
 
 def view_project(request, project_id):
     project = Queue.objects.get(pk=project_id)
@@ -282,8 +305,15 @@ def view_ticket(request, ticket_id):
     ticket = get_object_or_404(Ticket, id=ticket_id)
     
     # TODO: refactor view and update into the same action
-    TimeEntryFormSet = inlineformset_factory(Ticket, TimeEntry, form=TimeEntryForm, extra=5) 
-    time_entry_formset = TimeEntryFormSet(instance=ticket, prefix='time_entries')
+    time_entry_form = TimeEntryForm(prefix='time_entry', initial={'ticket': ticket})
+    if request.method == 'POST':
+        time_entry_form = TimeEntryForm(request.POST, prefix='time_entry')
+        if time_entry_form.is_valid():
+            time_entry_form.save()
+            return HttpResponseRedirect('')
+    # convert to dictionary in order to sort on model properties
+    time_entry_table = TimeEntryTable(TimeEntry.objects.filter(ticket=ticket))
+    #RequestConfig(request).configure(time_entry_table)
 
     if request.GET.has_key('take'):
         # Allow the user to assign the ticket to themselves whilst viewing it.
@@ -330,13 +360,12 @@ def view_ticket(request, ticket_id):
         initial['custom_'+cfv.field.name] = cfv.value
     form = ViewTicketForm(instance=ticket, initial=initial)
 
-
-
     return render_to_response('helpdesk/ticket.html',
         RequestContext(request, {
             'ticket': ticket,
             'form': form,
-            'time_entries': time_entry_formset,
+            'time_entry_form': time_entry_form,
+            'table': time_entry_table,
             'request': request,
             'active_users': users,
             'priorities': Ticket.PRIORITY_CHOICES,
@@ -345,6 +374,27 @@ def view_ticket(request, ticket_id):
             'taggit_enabled': HAS_TAGGIT_SUPPORT,
         }))
 view_ticket = staff_member_required(view_ticket)
+
+
+def edit_time_entry(request, time_entry_id):
+    time_entry = TimeEntry.objects.get(pk=time_entry_id)
+    time_entry_form = TimeEntryForm(instance=time_entry, prefix='edit_time_entry_form')
+   
+    if request.method == 'POST':
+        edit_time_entry_form = TimeEntryForm(request.POST, instance=time_entry, prefix='edit_time_entry_form')
+        if edit_time_entry_form.is_valid():
+            edit_time_entry_form.save()
+            return HttpResponseRedirect(reverse('helpdesk_view', args=[time_entry.ticket.id]))
+    
+    return render_to_response('helpdesk/edit_time_entry.html',
+        RequestContext(request, {
+            'time_entry_form': time_entry_form,
+        }))
+
+def delete_time_entry(request, time_entry_id):
+    time_entry = TimeEntry.objects.get(pk=time_entry_id)
+    time_entry.delete()
+    return HttpResponseRedirect(reverse('helpdesk_view', args=[time_entry.ticket.id]))
 
 
 def update_ticket(request, ticket_id, public=False):

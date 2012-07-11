@@ -313,13 +313,16 @@ class TimeEntryForm(forms.ModelForm):
     class Meta:
         model = TimeEntry
         widgets = {
-                'date_start': DateTimeWidget(),
-                'date_end': DateTimeWidget(),
+            'ticket': forms.HiddenInput,
+            'id': forms.HiddenInput,
         }
 
 class MilestoneForm(forms.ModelForm):
     class Meta:
         model = Milestone 
+        widgets = {
+            'queue': forms.HiddenInput,
+        }
 
 class PublicTicketForm(forms.Form):
     queue = forms.ChoiceField(

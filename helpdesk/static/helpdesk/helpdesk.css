@@ -561,7 +561,7 @@ table#milestones td, table#milestones tr {
     margin: 20px;
 }
 
-div#add_milestone {
+div#add_milestone, div#add_time_entry {
     clear: both;
     background: url(/static/admin/img/icon_addlink.gif) 0 50% no-repeat;
     padding: 20px 17px;
@@ -573,8 +573,6 @@ div#milestone_table table tfoot {
     background-color: lightgray;
 }
 
-div#add_milestone_dialog {
-    /*
-    display: none;
-    */
+.AnyTime-win {
+    z-index: 10000;
 }

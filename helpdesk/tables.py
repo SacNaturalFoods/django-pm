@@ -24,13 +24,35 @@ class TicketTable(tables.Table):
     modified = tables.Column(sortable=True)
 
     def render_priority(self, value):
-        return dict(Ticket.PRIORITY_CHOICES)[int(value)].split(' ')[-1]
+        if value:
+            return dict(Ticket.PRIORITY_CHOICES)[int(value)].split(' ')[-1]
 
     # can't get record values?
     #def render_order(self, value):
     #    return '<input id="ticket__%s" class="order" type="text" size="2" value="%s"/>' % (self.id, value)
     
     class Meta:
+        attrs = {'class': 'paleblue'}
+
+
+class MilestoneTicketTable(tables.Table):
+    title = tables.LinkColumn('helpdesk_view', args=[A('id')], sortable=True)
+    estimate = tables.Column(sortable=True)
+    percent_complete = tables.Column(sortable=True)
+    due_on = tables.Column(sortable=True)
+
+    class Meta:
+        attrs = {'class': 'paleblue'}
+
+
+class TimeEntryTable(tables.Table):
+    description = tables.Column()
+    date_start = tables.Column()
+    date_end = tables.Column()
+    time = tables.Column()
+
+    class Meta:
+        orderable = False
         attrs = {'class': 'paleblue'}
 
 

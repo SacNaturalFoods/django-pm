@@ -43,6 +43,10 @@
 
            $(function() {
 
+                $('input[id$=due_date]').AnyTime_picker();
+                $('input[id$=date_start]').AnyTime_picker();
+                $('input[id$=date_end]').AnyTime_picker();
+
                 $('body').click(function(e) {
                     if (e.target.id != "saved_search_dropdown_button") {
                         $('#saved_searches').toggle(false);

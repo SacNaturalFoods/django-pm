@@ -1,5 +1,6 @@
 {% extends "helpdesk/base.html" %}{% load i18n %}
 {% load wysiwyg %}
+{% load render_table from django_tables2 %}
 {% block helpdesk_title %}{% trans "View Ticket Details" %}{% endblock %}
 
 {% block helpdesk_head %}
@@ -8,20 +9,26 @@
 
     $(document).ready(function() {
 
-        $('.datetimepicker').AnyTime_picker();
+        /* dont auto focus date fields otherwise triggers datepicker */
+        $('#id_time_entry-date_start').attr('tabindex','-1');
+        $('#id_time_entry-date_end').attr('tabindex','-1');
 
-        // hide last four rows of time entry unless just 
-        $('#time_entries tbody tr').slice(-20).hide();
-
-        // unhide add form
-        var hidden_time_entry_start = -20; 
-        var hidden_time_entry_end = -16; 
-        $('#add_time_entry').click(function() {
-            $('#time_entries tbody tr').slice(hidden_time_entry_start, hidden_time_entry_end).show();
-            hidden_time_entry_start += 4; 
-            hidden_time_entry_end += 4; 
+        $('#add_timeentry_dialog').dialog({
+            autoOpen: false,
+            buttons: {
+                "OK": function() {
+                    $('#add_timeentry_form').submit();
+                },
+                "Cancel": function() {
+                    $(this).dialog('close');
+                }
+            }
         });
-      
+
+        $('#add_time_entry').click(function() {
+            $('#add_timeentry_dialog').dialog('open');
+        });
+
 
         processAddFileClick();
         $("#ShowFileUpload").click(function() {
@@ -125,7 +132,7 @@ function googleTranslateElementInit() {
 <div id='add-followup'>
 <h3>{% trans "Respond to this ticket" %}</h3>
 
-<form method='post' action='update/' enctype='multipart/form-data'>
+<form id="update_ticket_form" method='post' action='update/' enctype='multipart/form-data'>
 
 <fieldset>
     <dl>
@@ -252,10 +259,11 @@ function googleTranslateElementInit() {
 </div>
 
 <h2>Time Entries</h2>
-<table id="time_entries">
-    {{ time_entries }}
-</table>
+
+    {% include "helpdesk/time_entry_table.html" %}
+
 <div class="add-row" id="add_time_entry"><a href="javascript:void(0)">Add a Time Entry</a></div>
+
 
 </fieldset>
 
@@ -263,15 +271,15 @@ function googleTranslateElementInit() {
 
 {% csrf_token %}</form>
 
-<script type="text/javascript">
-    /*
-    $('.datetimepicker').datetimepicker({
-        dateFormat: 'yy-mm-dd'
-    });
-    */
-</script>
-
 
 </div>
+
+    <div id="add_timeentry_dialog"> 
+        <form id="add_timeentry_form" action="" method="post">
+            {% csrf_token %}
+            {{ time_entry_form.as_p }}
+        </form>
+    </div>
+
 
 {% endblock %}

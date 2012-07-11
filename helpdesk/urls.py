@@ -34,6 +34,14 @@ urlpatterns = patterns('helpdesk.views.staff',
         'edit_milestone',
         name='helpdesk_edit_milestone'),
 
+    url(r'^delete_time_entry/(?P<time_entry_id>[0-9]+)/$',
+        'delete_time_entry',
+        name='helpdesk_delete_time_entry'),
+
+    url(r'^edit_time_entry/(?P<time_entry_id>[0-9]+)?',
+        'edit_time_entry',
+        name='helpdesk_edit_time_entry'),
+
     url(r'^tickets/$',
         'ticket_list',
         name='helpdesk_list'),
