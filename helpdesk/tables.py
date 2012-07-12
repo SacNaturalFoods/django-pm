@@ -19,6 +19,7 @@ class TicketTable(tables.Table):
     title = tables.LinkColumn('helpdesk_view', args=[A('id')], sortable=True)
     assigned_to = tables.Column(verbose_name='owner', sortable=True)
     list = tables.Column(sortable=True, verbose_name='list')
+    milestone = tables.Column(sortable=True)
     status = tables.Column(sortable=True)
     due_date = tables.Column(sortable=True)
     modified = tables.Column(sortable=True)

@@ -85,6 +85,8 @@ function googleTranslateElementInit() {
 {% if ticket.followup_set.all %}
 <h3>{% trans "Follow-Ups" %}</h3>
 {% load ticket_to_link %}
+<div id="followups">
+<fieldset>
 {% for followup in ticket.followup_set.all %}
 {% if helpdesk_settings.HELPDESK_FOLLOWUP_MOD %}
     <div class='followup_mod'>
@@ -114,6 +116,7 @@ function googleTranslateElementInit() {
 <li>{% blocktrans with change.field as field and change.old_value as old_value and change.new_value as new_value %}Changed {{ field }} from {{ old_value }} to {{ new_value }}.{% endblocktrans %}</li>
 {% if forloop.last %}</div></ul>{% endif %}
 {% endfor %}
+</div>
 {% for attachment in followup.attachment_set.all %}{% if forloop.first %}<div class='attachments'><ul>{% endif %}
         <li><a href='{% url helpdesk_attachment_download ticket.id attachment.id %}'>{{ attachment.filename }}</a> ({{ attachment.mime_type }}, {{ attachment.size|filesizeformat }})
 {% if followup.user and request.user == followup.user %}
@@ -122,11 +125,11 @@ function googleTranslateElementInit() {
 </li>
 {% if forloop.last %}</ul></div>{% endif %}
 {% endfor %}
-</div>
 {% endfor %}
+</div>
 {% endif %}
 {% if helpdesk_settings.HELPDESK_TRANSLATE_TICKET_COMMENTS %}
-</div>
+</fieldset>
 {% endif %}
 
 <div id='add-followup'>
@@ -264,10 +267,10 @@ function googleTranslateElementInit() {
 
 <div class="add-row" id="add_time_entry"><a href="javascript:void(0)">Add a Time Entry</a></div>
 
+<input type='submit' value='{% trans "Update This Ticket" %}' />
 
 </fieldset>
 
-<input type='submit' value='{% trans "Update This Ticket" %}' />
 
 {% csrf_token %}</form>
 

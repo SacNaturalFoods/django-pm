@@ -313,6 +313,9 @@ div.followup {
     padding:0 0 2px;
 }
 
+div.followups {
+}
+
 div.followup_mod {
     width: auto;
     border: solid #666 1px;
@@ -561,7 +564,7 @@ table#milestones td, table#milestones tr {
     margin: 20px;
 }
 
-div#add_milestone, div#add_time_entry {
+div#add_milestone, div#add_time_entry, div.add_link {
     clear: both;
     background: url(/static/admin/img/icon_addlink.gif) 0 50% no-repeat;
     padding: 20px 17px;
@@ -571,6 +574,10 @@ div#add_milestone, div#add_time_entry {
 div#milestone_table table tfoot {
     font-weight: bold;
     background-color: lightgray;
+}
+
+div.milestone_table, div.time_entry_table, div.ticket_table {
+    width: 100% !important;
 }
 
 .AnyTime-win {

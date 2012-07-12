@@ -10,6 +10,7 @@ views/staff.py - The bulk of the application - provides most business logic and
 from datetime import datetime
 import sys
 import re
+from decimal import Decimal
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -159,11 +160,10 @@ def view_projects(request, project_id=None):
         #project_form = QueueForm(instance=project, prefix='project') 
         #milestone_formset = MilestoneFormSet(instance=project, prefix='milestones')
 
-        milestone_form = MilestoneForm(prefix='milestone') 
+        milestone_form = MilestoneForm(prefix='milestone', initial={'queue': project}) 
         if request.method == 'POST':
             project_form = QueueForm(request.POST, instance=project, prefix='project')
             milestone_form = MilestoneForm(request.POST, prefix='milestone')
-            #import ipdb; ipdb.set_trace()
             if milestone_form.is_valid():
                 milestone_form.save()
                 # redirect to return empty form
@@ -202,6 +202,10 @@ def edit_milestone(request, milestone_id):
 
     if request.method == 'POST':
         milestone_form = MilestoneForm(request.POST, instance=milestone)
+        if request.POST.get('delete'):
+            project_id = milestone.queue.pk
+            milestone.delete()
+            return HttpResponseRedirect(reverse('helpdesk_view_projects', args=[project_id]))
         if milestone_form.is_valid():
             milestone_form.save()
 
@@ -309,8 +313,9 @@ def view_ticket(request, ticket_id):
     if request.method == 'POST':
         time_entry_form = TimeEntryForm(request.POST, prefix='time_entry')
         if time_entry_form.is_valid():
-            time_entry_form.save()
-            return HttpResponseRedirect('')
+            return update_ticket(request, ticket_id)
+    #        time_entry_form.save()
+    #        return HttpResponseRedirect('')
     # convert to dictionary in order to sort on model properties
     time_entry_table = TimeEntryTable(TimeEntry.objects.filter(ticket=ticket))
     #RequestConfig(request).configure(time_entry_table)
@@ -405,12 +410,33 @@ def update_ticket(request, ticket_id, public=False):
     ticket = get_object_or_404(Ticket, id=ticket_id)
 
     # TODO: refactor view and update into the same action
-    TimeEntryFormSet = inlineformset_factory(Ticket, TimeEntry, form=TimeEntryForm, extra=1) 
-    prev_actual = ticket.actual
-    time_entry_formset = TimeEntryFormSet(request.POST, instance=ticket, prefix='time_entries')
-    if time_entry_formset.is_valid():
-        time_entry_formset.save()
+    #TimeEntryFormSet = inlineformset_factory(Ticket, TimeEntry, form=TimeEntryForm, extra=1) 
+    #prev_actual = ticket.actual
+    #time_entry_formset = TimeEntryFormSet(request.POST, instance=ticket, prefix='time_entries')
+    #if time_entry_formset.is_valid():
+    #    time_entry_formset.save()
 
+    #TODO: refactor entire view/update ticket logic
+    prev_actual = ticket.actual
+    if request.method == 'POST':
+        time_entry_form = TimeEntryForm(request.POST, prefix='time_entry')
+        if time_entry_form.is_valid():
+            time_entry_form.save()
+            f = FollowUp(ticket=ticket, date=datetime.now())
+            if request.user.is_staff or helpdesk_settings.HELPDESK_ALLOW_NON_STAFF_TICKET_UPDATE:
+                f.user = request.user
+            f.public = public
+            f.save()
+            if prev_actual != ticket.actual:
+                c = TicketChange(
+                    followup=f,
+                    field=_('Time Entries'),
+                    old_value=prev_actual,
+                    new_value=ticket.actual,
+                    )
+                c.save()
+            return HttpResponseRedirect('')
+    
     comment = request.POST.get('comment', '')
     new_status = int(request.POST.get('new_status', ticket.status))
     public = request.POST.get('public', False)
@@ -518,15 +544,6 @@ def update_ticket(request, ticket_id, public=False):
         c.save()
         ticket.milestone = milestone
 
-    if prev_actual != ticket.actual:
-        c = TicketChange(
-            followup=f,
-            field=_('Time Entries'),
-            old_value=prev_actual,
-            new_value=ticket.actual,
-            )
-        c.save()
-
     if priority != ticket.priority:
         c = TicketChange(
             followup=f,
@@ -537,7 +554,7 @@ def update_ticket(request, ticket_id, public=False):
         c.save()
         ticket.priority = priority
 
-    if estimate != ticket.estimate:
+    if Decimal('%.2f' % float(estimate or 0)) != ticket.estimate:
         c = TicketChange(
             followup=f,
             field=_('Estimate'),
@@ -1052,6 +1069,12 @@ def create_ticket(request):
             initial_data['submitter_email'] = request.user.email
         if request.GET.has_key('queue'):
             initial_data['queue'] = request.GET['queue']
+        # pre-populate queue and milestone if creating new ticket from milestone page
+        milestone_url = re.search('/milestone/(\d+)/', request.META['HTTP_REFERER'])
+        if milestone_url:
+            milestone = Milestone.objects.get(pk=milestone_url.group(1)) 
+            initial_data['milestone'] = milestone 
+            initial_data['queue'] = milestone.queue 
 
         form = TicketForm(initial=initial_data)
         form.fields['queue'].choices = [('', '--------')] + [[q.id, q.title] for q in Queue.objects.all()]
