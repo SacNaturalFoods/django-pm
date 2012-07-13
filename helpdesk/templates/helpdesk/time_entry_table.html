@@ -1,0 +1,130 @@
+{% load helpdesk_filters %} 
+{% load tz %}
+{% spaceless %}
+{% load querystring from django_tables2 %}
+{% load trans blocktrans from i18n %}
+
+<script type="text/javascript">
+
+
+    $(function() {
+
+        $('#edit_time_entry_dialog').dialog({
+            autoOpen: false,
+            buttons: {
+                "OK": function() {
+                    //TODO: wtf?  jquery ui dialog removes form tags
+                    $('#edit_time_entry_form').submit();
+                    //$('#update_ticket_form').submit();
+                    /*
+                    $.post('{{ , $('form').serialize(), function() {
+                        location = location.href;
+                    });
+                    */
+                },
+                "Cancel": function() {
+                    $(this).dialog('close');
+                }
+            }
+        });
+
+        $('.edit_time_entry').unbind('click');
+        $('.edit_time_entry').click(function() {
+            $('#edit_time_entry_form_body').load('{% url helpdesk_edit_time_entry %}' + this.id.split('__')[1]);  
+            $('#edit_time_entry_dialog').dialog('open');
+            setTimeout(function() {
+            $('#id_edit_time_entry_form-date_start').AnyTime_picker();
+            $('#id_edit_time_entry_form-date_end').AnyTime_picker();
+            }, 1000);
+        });
+
+
+        //TODO: wtf?  why is this getting bound twice?
+        $('.delete_time_entry').unbind('click');
+        $('.delete_time_entry').click(function() {
+            var confirmed = confirm('Are you sure you want to delete this time entry?');
+            if (!confirmed) {
+                return false;
+            }
+        });
+
+    });
+
+</script>
+
+
+<div class="table-container time_entry_table">
+
+{% block table %}
+<div id="time_entry_table">
+<table{% if table.attrs %} {{ table.attrs.as_html }}{% endif %}>
+    {% block table.thead %}
+    <thead>
+        <tr>
+        {% for column in table.columns %}
+            <th {{ column.attrs.th.as_html }}> 
+                {% if column.is_ordered %}
+                    <a href="{% querystring table.prefixed_order_by_field=column.order_by_alias.opposite %}" target="_self">{{ column.header }}</a>
+                {% else %} 
+                    <span>{{ column.header }}</span>
+                {% endif %}
+            </th>
+            {# action column #}
+            {% if forloop.last %}
+                <th>Actions</th>
+            {% endif %}
+        {% endfor %}
+        </tr>
+    </thead>
+    {% endblock table.thead %}
+    {% block table.tbody %}
+    <tbody>
+        {% for row in table.page.object_list|default:table.rows %} {# support pagination #}
+        {% block table.tbody.row %}
+        <tr class="{% cycle "odd" "even" %}">
+            {% for column, cell in row.items %}
+                <td {{ column.attrs.td.as_html }}>{{ cell|safe }}</td>
+                {% if forloop.last %}
+                    <td>
+                        <a id="edit_time_entry__{{ row.record.pk }}" class="edit_time_entry" href="javascript:void(0)">Edit</a>
+                        &nbsp;
+                        <a class="delete_time_entry" href="{% url helpdesk_delete_time_entry row.record.pk %}">Delete</a>
+                    </td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+        {% endblock table.tbody.row %}
+        {% empty %}
+        {% if table.empty_text %}
+        {% block table.tbody.empty_text %}
+        <tr class="no_results"><td colspan="{{ table.columns|length }}">{{ table.empty_text }}</td></tr>
+        {% endblock table.tbody.empty_text %}
+        {% endif %}
+        {% endfor %}
+    </tbody>
+    {% endblock table.tbody %}
+    {% block table.tfoot %}
+    <tfoot>
+    </tfoot>
+    {% endblock table.tfoot %}
+</table>
+
+{% endblock table %}
+
+</div>
+{% endspaceless %}
+
+</div>
+
+<div id="edit_time_entry_dialog">
+        <div id="edit_time_entry_form_body"></div>
+        {% comment %}
+        {# TODO: wtf?  jquery ui dialog removes my for tags? #}
+    <form id="edit_time_entry_form" action="" method="post">
+        {% csrf_token %}
+    </form>
+        <div id="edit_time_entry_form_body"></div>
+        {% endcomment %}
+</div>
+
+

@@ -1,0 +1,6 @@
+<form id="edit_time_entry_form" action="{% url helpdesk_edit_time_entry time_entry_form.instance.pk %}" method="post">
+    {% csrf_token %}
+    {{ time_entry_form.as_p }}
+</form>
+
+
