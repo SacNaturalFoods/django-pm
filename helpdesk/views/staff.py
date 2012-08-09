@@ -553,8 +553,8 @@ def update_ticket(request, ticket_id, public=False):
             )
         c.save()
         ticket.priority = priority
-
-    if Decimal('%.2f' % float(estimate or 0)) != ticket.estimate:
+    
+    if not (estimate == None and ticket.estimate == None) and Decimal('%.2f' % float(estimate or 0)) != ticket.estimate:
         c = TicketChange(
             followup=f,
             field=_('Estimate'),
