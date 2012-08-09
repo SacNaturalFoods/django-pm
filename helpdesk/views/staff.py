@@ -27,6 +27,7 @@ from django.template import loader, Context, RequestContext
 from django.utils.translation import ugettext as _
 from django.utils.html import escape
 from django.utils import timezone
+from django.utils.timezone import LocalTimezone
 from django.utils import simplejson as json
 from django import forms
 from django.forms.models import inlineformset_factory, modelformset_factory
@@ -564,7 +565,10 @@ def update_ticket(request, ticket_id, public=False):
         c.save()
         ticket.estimate = estimate
 
-    if due_date != ticket.due_date:
+    # TODO: why isn't this data stored with timezone info?
+    #import ipdb; ipdb.set_trace()
+    prev_due_date = ticket.due_date.replace(tzinfo=LocalTimezone()) if ticket.due_date else None 
+    if due_date != prev_due_date:
         c = TicketChange(
             followup=f,
             field=_('Due on'),
