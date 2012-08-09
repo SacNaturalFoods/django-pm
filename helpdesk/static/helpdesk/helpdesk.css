@@ -543,6 +543,10 @@ ul.projects {
     list-style-type: none;
 }
 
+table.paleblue {
+    white-space: normal;
+}
+
 table#milestones {
     border-collapse: collapse;
     border-color: #CCC;
