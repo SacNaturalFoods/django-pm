@@ -36,7 +36,7 @@
 {% if not request.path == '/helpdesk/login/' or user.is_authenticated %}
 	{% if user.is_authenticated %}<li><a href='{% url logout %}'>{% trans "Logout" %}</a></li>
 	{% else %}<ul><li>
-			<a href='{% url login %}?next={% if next %}{{ next|escape }}{% else %}{% url helpdesk_dashboard %}{% endif %}'>{% trans "Log In" %}</a>
+			<a href='{% url login %}?next={% if next %}{{ next|escape }}{% else %}{% url haystack_search %}{% endif %}'>{% trans "Log In" %}</a>
 		  </li></ul>
 	{% endif %}
 
