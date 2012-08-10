@@ -34,7 +34,7 @@ class QueueForm(forms.ModelForm):
 class EditTicketForm(forms.ModelForm):
     class Meta:
         model = Ticket
-        fields = ('title', 'description',)
+        fields = ('queue', 'title', 'description',)
     
 
     def save(self, *args, **kwargs):
@@ -293,9 +293,6 @@ class ViewTicketForm(TicketForm):
     class Meta(TicketForm.Meta):
         model = Ticket
         fields = ('queue', 'assigned_to', 'milestone', 'priority', 'estimate', 'due_date', 'tags')
-        widgets = {
-                'queue':    forms.HiddenInput,
-                }
 
 class DateTimeWidget(forms.DateTimeInput):
     format = '%Y-%m-%d %H:%M'

@@ -446,6 +446,7 @@ def update_ticket(request, ticket_id, public=False):
     milestone = request.POST.get('milestone', None)
     milestone = Milestone.objects.get(pk=milestone) if milestone else None
     priority = int(request.POST.get('priority', ticket.priority))
+    queue = Queue.objects.get(pk=request.POST.get('queue', ticket.queue))
     estimate = request.POST.get('estimate', ticket.estimate)
     estimate = str(float(estimate)) if estimate else None
     due_year = request.POST.get('due_date_year')
@@ -554,6 +555,17 @@ def update_ticket(request, ticket_id, public=False):
             )
         c.save()
         ticket.priority = priority
+
+    if queue != ticket.queue:
+        c = TicketChange(
+            followup=f,
+            field=_('Queue'),
+            old_value=ticket.queue,
+            new_value=queue,
+            )
+        c.save()
+        ticket.queue = queue
+ 
     
     if not (estimate == None and ticket.estimate == None) and Decimal('%.2f' % float(estimate or 0)) != ticket.estimate:
         c = TicketChange(
