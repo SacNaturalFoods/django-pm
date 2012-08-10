@@ -191,6 +191,16 @@ def ticket_from_message(message, queue, quiet):
                 body_plain = decodeUnknown(part.get_content_charset(), part.get_payload(decode=True))
             else:
                 body_html = part.get_payload(decode=True)
+		from BeautifulSoup import UnicodeDammit
+		if body_html:
+		    converted = UnicodeDammit(body_html)
+		    if not converted.unicode: 
+			raise UnicodeDecodeError( 
+		       "Failed to detect encoding, tried [%s]", 
+			', '.join(converted.triedEncodings))  
+		    body_html = converted.unicode
+
+
         else:
             if not name:
                 ext = mimetypes.guess_extension(part.get_content_type())
@@ -236,15 +246,6 @@ def ticket_from_message(message, queue, quiet):
         priority = 2
 
     if ticket == None:
-        from BeautifulSoup import UnicodeDammit
-        if body_html:
-            converted = UnicodeDammit(body_html)
-            if not converted.unicode: 
-                raise UnicodeDecodeError( 
-               "Failed to detect encoding, tried [%s]", 
-                ', '.join(converted.triedEncodings))  
-            body_html = converted.unicode
-
         t = Ticket(
             title=subject,
             queue=queue,
