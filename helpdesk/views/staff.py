@@ -460,7 +460,7 @@ def update_ticket(request, ticket_id, public=False):
 
     try:
         #TODO: why do I need to specify the timezone?
-        due_date = datetime(int(due_year), int(due_month), int(due_day), tzinfo=timezone.get_default_timezone())
+        due_date = datetime(int(due_year), int(due_month), int(due_day), tzinfo=LocalTimezone())
     except:
         due_date = ticket.due_date
     tags = request.POST.get('tags', '')
@@ -567,18 +567,21 @@ def update_ticket(request, ticket_id, public=False):
         ticket.queue = queue
  
     
-    if not (estimate == None and ticket.estimate == None) and Decimal('%.2f' % float(estimate or 0)) != ticket.estimate:
+    # make sure we're dealing with decimals and not empty strings, etc.
+    old_estimate = Decimal('%.2f' % float(ticket.estimate or 0))
+    new_estimate = Decimal('%.2f' % float(estimate or 0))
+    if new_estimate != old_estimate:
         c = TicketChange(
             followup=f,
             field=_('Estimate'),
-            old_value=ticket.estimate,
-            new_value=estimate,
+            old_value=old_estimate,
+            new_value=new_estimate,
             )
         c.save()
         ticket.estimate = estimate
 
     # TODO: why isn't this data stored with timezone info?
-    #import ipdb; ipdb.set_trace()
+    # make sure we're dealing with datetimes and not empty strings, etc.
     prev_due_date = ticket.due_date.replace(tzinfo=LocalTimezone()) if ticket.due_date else None 
     if due_date != prev_due_date:
         c = TicketChange(
