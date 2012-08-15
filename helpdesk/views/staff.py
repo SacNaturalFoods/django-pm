@@ -448,7 +448,7 @@ def update_ticket(request, ticket_id, public=False):
     priority = int(request.POST.get('priority', ticket.priority))
     queue = Queue.objects.get(pk=request.POST.get('queue', ticket.queue))
     estimate = request.POST.get('estimate', ticket.estimate)
-    estimate = str(float(estimate)) if estimate else None
+    estimate = Decimal('%.2f' % float(estimate or 0))
     due_year = request.POST.get('due_date_year')
     due_month = request.POST.get('due_date_month')
     due_day = request.POST.get('due_date_day')
@@ -566,7 +566,6 @@ def update_ticket(request, ticket_id, public=False):
         c.save()
         ticket.queue = queue
  
-    
     # make sure we're dealing with decimals and not empty strings, etc.
     old_estimate = Decimal('%.2f' % float(ticket.estimate or 0))
     new_estimate = Decimal('%.2f' % float(estimate or 0))
@@ -578,7 +577,7 @@ def update_ticket(request, ticket_id, public=False):
             new_value=new_estimate,
             )
         c.save()
-        ticket.estimate = estimate
+        ticket.estimate = new_estimate 
 
     # TODO: why isn't this data stored with timezone info?
     # make sure we're dealing with datetimes and not empty strings, etc.
